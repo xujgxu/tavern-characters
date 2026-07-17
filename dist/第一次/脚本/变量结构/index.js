@@ -1,0 +1,2 @@
+import{registerMvuSchema as e}from'https://testingcf.jsdelivr.net/gh/StageDog/tavern_resource/dist/util/mvu_zod.js';const t=z,r=t.z.object({世界:t.z.object({时间:t.z.string()}),主角:t.z.object({饱食度:t.z.coerce.number().transform(e=>_.clamp(e,0,100)),精神值:t.z.coerce.number().transform(e=>_.clamp(e,0,100))})});$(()=>{e(r)});
+//# sourceMappingURL=index.js.map

@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* 主体 */
+  --c-ink: #2b2b2b;
+  --c-paper: #faf8f3;
+  --c-border: #c8c0b0;
+
+  /* 饱食度色阶 */
+  --c-food-high: #5b9a68;
+  --c-food-mid: #d4a843;
+  --c-food-low: #c45c4a;
+
+  /* 精神值色阶 */
+  --c-spirit-high: #4a8fa8;
+  --c-spirit-mid: #8b9d83;
+  --c-spirit-low: #a06b7a;
+
+  --font-mono: 'Courier New', 'Microsoft YaHei', monospace;
+}

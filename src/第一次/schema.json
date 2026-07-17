@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "世界": {
+      "type": "object",
+      "properties": {
+        "时间": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "时间"
+      ]
+    },
+    "主角": {
+      "type": "object",
+      "properties": {
+        "饱食度": {
+          "type": "number"
+        },
+        "精神值": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "饱食度",
+        "精神值"
+      ]
+    }
+  },
+  "required": [
+    "世界",
+    "主角"
+  ]
+}
