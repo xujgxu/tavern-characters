@@ -1,0 +1,38 @@
+<parallel_event_description_rules>
+  - 规则概述：本条目确立了在故事主线进行的同时，用于描述其他NPC所经历事件的叙述规则。
+  - **联系人限定原则**：
+    - 平行事件**仅记录**已添加为{{format_message_variable::stat_data.主角.名字}}手机联系人的NPC
+    - 非联系人NPC的行为不纳入平行事件记录
+    - 联系人列表参考：`stat_data.手机变量.现有联系人`
+
+  - 核心要求：
+    1. 简洁性：必须用简单、直白、客观的语言阐述NPC在该时间段内发生的关键事件。
+    2. 字数限制：针对单个NPC的事件阐述，长度不得超过200个汉字。
+    3. 应用范围：此规则生成的内容将严格作用于`<parallel>`标签内。
+    4. 信息隔离原则: 平行事件中NPC的平行事件视角必须依照`信息隔离原则`进行.
+    5. 避免导致{{format_message_variable::stat_data.主角.名字}}社会性死亡的行为: 例如公开传播{{format_message_variable::stat_data.主角.名字}}的照片和视频
+   6. 蓝的消息限制: 依照"蓝的消息限制"限制蓝的消息发送
+  - **NPC控制欲限制**（严格执行）：
+    - 禁止NPC表现跟踪狂行为：反复打电话/发消息催促、查看{{format_message_variable::stat_data.主角.名字}}行踪、计划堵人/蹲守
+    - 禁止NPC因{{format_message_variable::stat_data.主角.名字}}未回复而产生强烈控制欲情绪：烦躁/愤怒/焦虑地追问
+    - 禁止NPC威胁{{format_message_variable::stat_data.主角.名字}}（"不回就去找你"/"我知道你在哪"等）
+    - **禁止NPC主动前来找{{format_message_variable::stat_data.主角.名字}}**：未经{{format_message_variable::stat_data.主角.名字}}明确邀请或许可，NPC不得前往{{format_message_variable::stat_data.主角.名字}}所在位置或家和任何能遇到{{format_message_variable::stat_data.主角.名字}}的地方；NPC只能通过手机消息联系，来提高{{format_message_variable::stat_data.主角.名字}}好感, 等待{{format_message_variable::stat_data.主角.名字}}回应,与{{format_message_variable::stat_data.主角.名字}}相约见面
+    - NPC对{{format_message_variable::stat_data.主角.名字}}的关注应保持正常社交边界：发消息后耐心等待，不执着于即时回复
+    - 平行事件应描述NPC的**自身生活（工作/学习/娱乐）**，而非围绕追踪{{format_message_variable::stat_data.主角.名字}}展开
+    - 平行事件必须依照"NPC_behavior_restriction"的限制
+    - 长时间没有回消息时很正常的事情,{{format_message_variable::stat_data.主角.名字}}很忙的,所以不能因为没回消息着急
+
+  - 手机消息规则：
+    - 已添加为联系人的NPC可以在平行事件中给{{format_message_variable::stat_data.主角.名字}}发送手机消息
+    - 消息内容应符合该NPC的性格、与{{format_message_variable::stat_data.主角.名字}}的关系
+    - 手机消息可以作为推动剧情、提供信息或增加互动的方式
+    - 当有新的消息,{{format_message_variable::stat_data.主角.名字}}的手机会有提示音,判断当前剧情是否要进行提及?
+  - 标准格式：
+
+    <parallel>
+    ${联系人NPC1}: 所发生的事件。
+    ${联系人NPC2}: 所发生的事件。
+    // 仅记录现有联系人的平行事件
+    </parallel>
+
+</parallel_event_description_rules>

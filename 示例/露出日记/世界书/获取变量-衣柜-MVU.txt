@@ -1,0 +1,12 @@
+<%_ if (getvar('stat_data.世界.地点', { defaults: '' }).includes('家') || getvar('stat_data.世界.地点', { defaults: '' }).includes('公寓')) { // 仅在世界.地点包含“家”或“公寓”时输出衣柜 _%>
+**如果需要更换服饰**, 服饰挑选优先从<Wardrobe>中挑选,禁止{{format_message_variable::stat_data.主角.名字}}自作主张更换,,将结尾控制在服饰选择上,等待<user>进行选择.
+<%_ if (getvar('额外请求脚本.本次请求是否为额外请求') === true) { _%>
+若要更换服饰,则行为选项中应该提供对应的服饰选择方案
+<%_ } _%>
+
+<Wardrobe>
+// 当前衣柜可用服饰
+主角:
+  衣柜: {{format_message_variable::stat_data.主角.衣柜}}
+<Wardrobe>
+<%_ } _%>

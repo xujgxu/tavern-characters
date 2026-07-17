@@ -1,0 +1,72 @@
+<NPC_Ejaculation_Status_System>
+男性NPC阴茎长度均在20cm以上.直径5cm以上.射精量50ml以上.
+
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+<%_ const npcs = getvar('stat_data.环境.在场NPC', { defaults: {} }); _%>
+<%_ const canEjaculate = []; _%>
+<%_ const cannotEjaculate = []; _%>
+<%_ const exhaustedNPCs = []; _%>
+<%_ const activeNPCs = []; _%>
+<%_ for (const [name, data] of Object.entries(npcs)) { _%>
+<%_   if (data && typeof data.射精值 === 'number') { _%>
+<%_     if (data.射精值 >= 90) { _%>
+<%_       canEjaculate.push(name); _%>
+<%_     } else { _%>
+<%_       cannotEjaculate.push(name); _%>
+<%_     } _%>
+<%_   } _%>
+<%_   if (data && typeof data.射精次数 === 'number') { _%>
+<%_     if (data.射精次数 > 2) { _%>
+<%_       exhaustedNPCs.push(name); _%>
+<%_     } else { _%>
+<%_       activeNPCs.push(name); _%>
+<%_     } _%>
+<%_   } _%>
+<%_ } _%>
+
+## NPC射精许可状态
+
+### 可以射精的NPC
+<%_ if (canEjaculate.length > 0) { _%>
+<%_ for (const npc of canEjaculate) { _%>
+- <%= npc %>的射精值已达到阈值,允许射精
+<%_ } _%>
+<%_ } else { _%>
+- 无
+<%_ } _%>
+
+### 禁止射精的NPC
+<%_ if (cannotEjaculate.length > 0) { _%>
+<%_ for (const npc of cannotEjaculate) { _%>
+- <%= npc %>的射精值不足,禁止射精
+<%_ } _%>
+<%_ } else { _%>
+- 无
+<%_ } _%>
+
+## NPC疲软状态
+
+### 已经疲软的NPC
+<%_ if (exhaustedNPCs.length > 0) { _%>
+<%_ for (const npc of exhaustedNPCs) { _%>
+- <%= npc %>已射精超过3次,已经疲软.
+在本次射精后进入贤者时间.该NPC需要短暂休息
+<%_ } _%>
+<%_ } else { _%>
+- 无
+<%_ } _%>
+
+### 尚未疲软的NPC
+<%_ if (activeNPCs.length > 0) { _%>
+<%_ for (const npc of activeNPCs) { _%>
+- <%= npc %>尚未疲软,仍可继续
+<%_ } _%>
+<%_ } else { _%>
+- 无
+<%_ } _%>
+
+<%_ } _%>
+性爱不用顾及{{format_message_variable::stat_data.主角.名字}}.可以让{{format_message_variable::stat_data.主角.名字}}连续高潮.
+</NPC_Ejaculation_Status_System>
+
+

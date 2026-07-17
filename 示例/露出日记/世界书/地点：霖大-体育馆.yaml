@@ -1,0 +1,45 @@
+# 地点：体育馆
+name: 体育馆
+type: 体育设施
+belongs_to: 霖州联合大学
+location: 西部体育与艺术区中心
+structure: 主馆 + 附属游泳馆
+
+environment:
+  smell: 汗水、消毒水、橡胶
+  sound: 喘息声、器械碰撞
+
+areas:
+  主场馆:
+    function: 篮球、羽毛球
+    feature: 空间开阔、视野良好
+
+  器械区:
+    equipment: 力量器械、有氧器械
+    feature: 墙面镜子、动作可见
+
+  舞蹈室_瑜伽室:
+    feature: 三面镜墙
+    usage: 身体展示任务
+
+  更衣室:
+    type: 男/女
+    feature: 半私密、有闯入风险
+
+  游泳馆:
+    position: 主建筑东侧
+    facility: 标准泳池、观众席
+
+  二楼看台_环形跑道:
+    position: 主场馆上方环绕
+    feature: 可俯视下方
+
+  器材储藏室:
+    position: 西南角
+    feature: 杂物堆放、可能有废弃通道
+    usage: 藏身点
+
+  体育老师办公室:
+    position: 西北角
+    facility: 独立淋浴间
+    feature: 位置僻静

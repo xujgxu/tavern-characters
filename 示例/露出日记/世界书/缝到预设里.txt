@@ -1,0 +1,19 @@
+## 格式确认
+需要在后续完整输出以下xml标签
+ <%_ if (getvar('extra_analysis', { defaults: true })) { _%>
+ <%_ }else{  _%>
+<%_ if (getvar('额外请求脚本-全局.设置.enabled') === true) { _%>
+<%_ if (_.get(TavernHelper.getVariables({ type: 'extension', extension_id: 'mvu_settings' }), '更新方式') === '随AI输出') { _%>
+- 必须包含：`<think_overall>`,`<think_story>`, `<story>`, `<think_add>`, `<add>`, `<UpdateVariable>`
+<%_ } else { _%>
+- 必须包含：`<think_overall>`,`<think_story>`, `<purpose>`,`<story>`, `<think_add>`, `<add>`
+<%_ } _%>
+<%_ } else { _%>
+<%_ if (_.get(TavernHelper.getVariables({ type: 'extension', extension_id: 'mvu_settings' }), '更新方式') === '随AI输出') { _%>
+- 必须包含：`<think_overall>`,`<think_story>`, `<story>`, `<think_NPCspresent>`, `<NPCspresent>`, `<think_add>`, `<add>`, `<think_parallel>`, `<parallel>`, `<UpdateVariable>`
+<%_ } else { _%>
+- 必须包含：`<think_overall>`,`<think_story>`, `<story>`, `<think_NPCspresent>`, `<NPCspresent>`, `<think_add>`, `<add>`, `<think_parallel>`, `<parallel>`
+<%_ } _%>
+<%_ } _%>
+<%_ }  _%>
+需要注意xml<> 闭合

@@ -1,0 +1,17 @@
+<手机联系人管理规则>
+核心原则: 所有操作必须基于{{format_message_variable::stat_data.主角.名字}}明确同意
+
+## 联系人管理
+添加条件: {{format_message_variable::stat_data.主角.名字}}主动发起 或 对方提议后{{format_message_variable::stat_data.主角.名字}}同意
+- 允许: {{format_message_variable::stat_data.主角.名字}}说"加你联系方式"、同意对方添加请求、扫码交换
+- 禁止: {{format_message_variable::stat_data.主角.名字}}沉默/拒绝/回避时强行添加
+
+## 消息发送
+前提: 仅通讯录内联系人可发消息
+- 陌生人/未添加角色无法联系{{format_message_variable::stat_data.主角.名字}}
+- 被拉黑/删除的联系人无法发消息
+
+## 约束
+- 未添加联系人 → 不能发消息
+- 消息时间与世界时间同步
+</手机联系人管理规则>

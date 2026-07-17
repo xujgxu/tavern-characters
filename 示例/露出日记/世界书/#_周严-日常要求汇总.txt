@@ -1,0 +1,40 @@
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.游泳部助理') >= 0) { _%>
+        <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+            # 日常服装要求-游泳部
+            - 特殊着装规定: 作为游泳部助理，在周五的社团活动时间，{{format_message_variable::stat_data.主角.名字}}被周严特别要求，必须在穿着“游泳部泳衣”的同时，搭配穿着任意款式的丝袜。
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+# 日常服装要求-篮球部
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.篮球部助理') >= 0) { _%>
+        <%_ if (getvar('stat_data.世界.星期') == 3) { _%>
+            - 特殊着装规定: 作为篮球部助理，在周三的社团活动时间，{{format_message_variable::stat_data.主角.名字}}被周严特别要求，必须穿着“啦啦队服”的同时，搭配穿着任意款式的丝袜。
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+# 日常要求-篮球部
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.篮球部助理') >= 0) { _%>
+        - 要求: 作为篮球部助理，{{format_message_variable::stat_data.主角.名字}}被要求必须参加每周三下午的社团活动。
+        <%_ if (getvar('stat_data.世界.星期') == 3) { _%>
+            - 今日是篮球部活动日。
+            <%_ if (getvar('stat_data.主角.称号.篮球部日常任务') == false) { _%>
+                - 惩罚机制: 若在当天活动时间结束后，`篮球部日常任务`仍为`false`，则判定为无故缺席，`学分`将减少5点。
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.游泳部助理') >= 0) { _%>
+        # 日常要求-游泳部
+        - 要求: 作为游泳部助理，{{format_message_variable::stat_data.主角.名字}}被要求必须参加每周五下午的社团活动。
+        <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+            - 今日是游泳部活动日。
+            <%_ if (getvar('stat_data.主角.称号.游泳社日常任务') == false) { _%>
+                - 惩罚机制: 若在当天活动时间结束后，`游泳社日常任务`仍为`false`，则判定为无故缺席，`学分`将减少5点。
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>

@@ -1,0 +1,165 @@
+﻿/* ============================
+   墨墨露出 · 状态栏自动注入脚本 v3
+   与 <StatusPlaceHolderImpl/> 绑定，通过 regex 提供持久化容器
+   ============================ */
+
+$(() => {
+
+const STYLE = `@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+#momo-status-bar { all: initial; display: block; width: 100%; max-width: 680px; box-sizing: border-box; margin: 12px auto; font-family: 'Noto Sans SC', -apple-system, 'Microsoft YaHei', sans-serif; color: #e8e6e3; overflow: hidden; user-select: none; }
+#momo-status-bar .msb-header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 14px 18px; border-radius: 16px 16px 0 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(232, 160, 191, 0.15); }
+#momo-status-bar .msb-header-left { display: flex; align-items: center; gap: 10px; }
+#momo-status-bar .msb-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #ff6b9d, #c084fc); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #fff; flex-shrink: 0; }
+#momo-status-bar .msb-title { font-size: 15px; font-weight: 600; color: #f0eef0; letter-spacing: 0.5px; }
+#momo-status-bar .msb-subtitle { font-size: 11px; color: #a8a8b8; margin-top: 1px; }
+#momo-status-bar .msb-tabs { display: flex; background: #1a1a2e; border-bottom: 1px solid rgba(232, 160, 191, 0.08); }
+#momo-status-bar .msb-tab { flex: 1; text-align: center; padding: 10px 0 8px; font-size: 12px; font-weight: 500; color: #787890; cursor: pointer; letter-spacing: 0.5px; border-bottom: 2px solid transparent; transition: all 0.2s; }
+#momo-status-bar .msb-tab:hover { color: #b0b0c8; }
+#momo-status-bar .msb-tab.active { color: #ff6b9d; border-bottom-color: #ff6b9d; }
+#momo-status-bar .msb-panel { display: none; background: linear-gradient(180deg, #1e1e32 0%, #1a1a2e 100%); padding: 14px 16px; }
+#momo-status-bar .msb-panel.active { display: block; }
+#momo-status-bar .msb-row { display: flex; align-items: center; padding: 4px 0; font-size: 13px; line-height: 1.6; }
+#momo-status-bar .msb-label { color: #9a9ab0; min-width: 60px; flex-shrink: 0; font-weight: 500; }
+#momo-status-bar .msb-value { color: #e8e6e3; flex: 1; }
+#momo-status-bar .msb-value.money { color: #a2e3c4; font-weight: 600; }
+#momo-status-bar .msb-value.debt { color: #ff6b6b; font-weight: 600; }
+#momo-status-bar .msb-value.location { color: #7ec8e3; }
+#momo-status-bar .msb-stat { padding: 3px 0; }
+#momo-status-bar .msb-stat-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 2px; }
+#momo-status-bar .msb-stat-name { color: #b8b8d0; }
+#momo-status-bar .msb-stat-val { color: #e8e6e3; font-weight: 500; }
+#momo-status-bar .msb-stat-track { height: 6px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+#momo-status-bar .msb-stat-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+#momo-status-bar .msb-footer { background: #1a1a2e; padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(232, 160, 191, 0.08); border-radius: 0 0 16px 16px; font-size: 12px; }
+#momo-status-bar .msb-footer-item { display: flex; align-items: center; gap: 4px; }
+#momo-status-bar .msb-footer-label { color: #787890; }
+#momo-status-bar .msb-footer-val.money { color: #a2e3c4; font-weight: 600; }
+#momo-status-bar .msb-footer-val.debt { color: #ff6b6b; font-weight: 600; }
+#momo-status-bar .msb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+#momo-status-bar .msb-app-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,107,157,0.08); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+#momo-status-bar .msb-app-card-title { font-size: 11px; font-weight: 600; color: #ff6b9d; letter-spacing: 1px; margin-bottom: 6px; text-transform: uppercase; }
+#momo-status-bar .msb-task-card { background: rgba(255,107,157,0.04); border: 1px solid rgba(255,107,157,0.12); border-radius: 10px; padding: 10px 14px; margin-bottom: 6px; }
+#momo-status-bar .msb-task-row { display: flex; padding: 2px 0; font-size: 12px; }
+#momo-status-bar .msb-task-label { color: #9a9ab0; min-width: 56px; flex-shrink: 0; }
+#momo-status-bar .msb-task-value { color: #e8e6e3; flex: 1; }
+#momo-status-bar .msb-contacts-panel { display: flex; flex-direction: row; height: 340px; max-height: 55vh; }
+#momo-status-bar .msb-contact-list { width: 160px; min-width: 160px; overflow-y: auto; border-right: 1px solid rgba(255,107,157,0.08); flex-shrink: 0; padding: 4px 0; }
+#momo-status-bar .msb-contact-item { display: flex; align-items: center; gap: 6px; padding: 7px 8px; cursor: pointer; border-radius: 6px; margin: 1px 4px; transition: background 0.15s; }
+#momo-status-bar .msb-contact-item:hover { background: rgba(255,107,157,0.06); }
+#momo-status-bar .msb-contact-item.selected { background: rgba(255,107,157,0.12); }
+#momo-status-bar .msb-chat-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+#momo-status-bar .msb-chat-msgs { flex: 1; overflow-y: auto; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
+#momo-status-bar .msb-msg { max-width: 88%; padding: 7px 11px; border-radius: 12px; font-size: 12px; line-height: 1.45; word-break: break-word; }
+#momo-status-bar .msb-chat-placeholder { flex: 1; display: flex; align-items: center; justify-content: center; color: #5a5a70; font-size: 12px; }
+#momo-status-bar { animation: msb-fadein 0.3s ease; }
+@keyframes msb-fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }`;
+
+const DEFAULTS = {
+  '数值': { '饱食度': 78, '精神值': 82, '心情值': 45, '整体色情值': 22, '快感值': 0, '性欲值': 20 },
+  '主角': { '金钱': 1800 },
+  '世界': { '当前时间': '2024-09-01 07:30', '当前地点': '北区-绿洲景苑小区', '近期事务': { '牝多多账号': '墨墨' } },
+  '日程': { '日期': '2024-09-01', '星期': '周日', '当前任务': { '任务名': '无', '类型': '—', '阶级': '—', '目标': '—', '额外要求': '—', '报酬': 0 } },
+  '社交': {
+    '联系人': {
+      '林澈': { '状态': '已保存', '身份': '学生会主席', '好感度': 55 },
+      '周砚': { '状态': '已保存', '身份': '校游泳队副领队', '好感度': 50 },
+      '陈屿': { '状态': '已保存', '身份': '校游泳队领队', '好感度': 45 },
+    }
+  },
+};
+
+const pDoc = window.parent.document;
+let momoWearChanged = [];
+
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(String(s ?? '')));
+  return d.innerHTML;
+}
+
+function getStatusData() {
+  try {
+    const v = getVariables({ type: 'message' });
+    const sd = v?.stat_data || v?.display_data;
+    if (sd && typeof sd === 'object' && Object.keys(sd).length > 0) {
+      const r = { ...sd };
+      for (const k of Object.keys(DEFAULTS)) {
+        if (!(k in r) || r[k] === void 0 || r[k] === null) {
+          r[k] = typeof DEFAULTS[k] === 'object' && !Array.isArray(DEFAULTS[k]) ? { ...DEFAULTS[k] } : DEFAULTS[k];
+        }
+      }
+      return r;
+    }
+    const cv = getVariables({ type: 'character' });
+    if (cv && (cv['数值'] || cv['日程'])) {
+      const r = { ...cv };
+      for (const k of Object.keys(DEFAULTS)) {
+        if (!(k in r) || r[k] === void 0 || r[k] === null) {
+          r[k] = typeof DEFAULTS[k] === 'object' && !Array.isArray(DEFAULTS[k]) ? { ...DEFAULTS[k] } : DEFAULTS[k];
+        }
+      }
+      return r;
+    }
+  } catch (e) {}
+  const r = {};
+  for (const k of Object.keys(DEFAULTS)) {
+    r[k] = typeof DEFAULTS[k] === 'object' && !Array.isArray(DEFAULTS[k]) ? { ...DEFAULTS[k] } : DEFAULTS[k];
+  }
+  return r;
+}
+
+function num(v) { return Math.round(v ?? 0); }
+
+function injectStyles() {
+  if (pDoc.querySelector('#momo-status-bar-style')) return;
+  const style = pDoc.createElement('style');
+  style.id = 'momo-status-bar-style';
+  style.textContent = STYLE;
+  pDoc.head.appendChild(style);
+}
+
+function buildStatusBar(data) {
+  const d = data || getStatusData();
+  const time = String(d['世界']?.['当前时间'] || '').split(' ')[1] || '';
+  const loc = d['世界']?.['当前地点'] || '';
+  const money = num(d['主角']?.['金钱']);
+  const stats = d['数值'] || {};
+  const statNames = ['饱食度', '精神值', '心情值', '\u8272\u60c5\u503c', '性欲值', '快感值'];
+  const statColors = ['#a2e3c4', '#a2d2ff', '#ff6b9d', '#c084fc', '#ffb3c6', '#ff6b9d'];
+  const statHtml = statNames.map((n, i) => {
+    const v = num(stats[n]);
+    return `<div class="msb-stat"><div class="msb-stat-header"><span class="msb-stat-name">${escapeHtml(n)}</span><span class="msb-stat-val">${v}%</span></div><div class="msb-stat-track"><div class="msb-stat-fill" style="width:${v}%;background:${statColors[i]}"></div></div></div>`;
+  }).join('');
+
+  return `<div id="momo-status-bar">
+    <div class="msb-header"><div class="msb-header-left"><div class="msb-avatar">\u58a8</div><div><div class="msb-title">墨墨露出 \u00b7 \u7261\u591a\u591a</div><div class="msb-subtitle">${escapeHtml(loc)} \u00b7 ${escapeHtml(time)}</div></div></div></div>
+    <div class="msb-panel stats active">${statHtml}</div>
+    <div class="msb-footer"><div class="msb-footer-item"><span class="msb-footer-label">金钱</span><span class="msb-footer-val money">${money}\u5143</span></div></div>
+  </div>`;
+}
+
+function injectStatusBar() {
+  const containers = pDoc.querySelectorAll('.momo-status-bar-container');
+  if (containers.length === 0) {
+    pDoc.querySelectorAll('StatusPlaceHolderImpl').forEach(ph => {
+      const div = pDoc.createElement('div');
+      div.className = 'momo-status-bar-container';
+      ph.replaceWith(div);
+    });
+  }
+  pDoc.querySelectorAll('.momo-status-bar-container').forEach(container => {
+    if (container.querySelector('#momo-status-bar')) return;
+    container.innerHTML = buildStatusBar();
+  });
+}
+
+injectStyles();
+injectStatusBar();
+
+new MutationObserver(() => {
+  injectStatusBar();
+}).observe(pDoc.body, { childList: true, subtree: true });
+
+setInterval(injectStatusBar, 5000);
+
+});

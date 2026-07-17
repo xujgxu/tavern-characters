@@ -1,0 +1,1149 @@
+/* ============================
+   澧ㄥⅷ闇插嚭 路 鐘舵€佹爮鑷姩娉ㄥ叆鑴氭湰 v3
+   涓?<StatusPlaceHolderImpl/> 缁戝畾锛岄€氳繃 regex 鎻愪緵鎸佷箙鍖栧鍣?   ============================ */
+
+const STYLE = `
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+
+#momo-status-bar {
+  all: initial;
+  display: block;
+  width: 100%;
+  max-width: 680px;
+  box-sizing: border-box;
+  margin: 12px auto;
+  font-family: 'Noto Sans SC', -apple-system, 'Microsoft YaHei', sans-serif;
+  color: #e8e6e3;
+  overflow: hidden;
+  user-select: none;
+}
+
+#momo-status-bar .msb-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 14px 18px;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(232, 160, 191, 0.15);
+}
+#momo-status-bar .msb-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+#momo-status-bar .msb-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b9d, #c084fc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: #fff;
+  flex-shrink: 0;
+}
+#momo-status-bar .msb-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f0eef0;
+  letter-spacing: 0.5px;
+}
+#momo-status-bar .msb-subtitle {
+  font-size: 11px;
+  color: #a8a8b8;
+  margin-top: 1px;
+}
+#momo-status-bar .msb-level-badge {
+  background: rgba(255, 107, 157, 0.15);
+  border: 1px solid rgba(255, 107, 157, 0.3);
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #ff6b9d;
+  white-space: nowrap;
+}
+
+#momo-status-bar .msb-tabs {
+  display: flex;
+  background: #1a1a2e;
+  border-bottom: 1px solid rgba(232, 160, 191, 0.08);
+}
+#momo-status-bar .msb-tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #787890;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+#momo-status-bar .msb-tab:hover { color: #b0b0c8; }
+#momo-status-bar .msb-tab.active {
+  color: #ff6b9d;
+  border-bottom-color: #ff6b9d;
+}
+#momo-status-bar .msb-tab .msb-tab-icon {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+#momo-status-bar .msb-panel {
+  display: none;
+  background: linear-gradient(180deg, #1e1e32 0%, #1a1a2e 100%);
+  padding: 14px 16px;
+}
+#momo-status-bar .msb-panel.active { display: block; }
+
+#momo-status-bar .msb-row {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#momo-status-bar .msb-label {
+  color: #9a9ab0;
+  min-width: 60px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+#momo-status-bar .msb-value { color: #e8e6e3; flex: 1; }
+#momo-status-bar .msb-value.money { color: #a2e3c4; font-weight: 600; }
+#momo-status-bar .msb-value.debt { color: #ff6b6b; font-weight: 600; }
+#momo-status-bar .msb-value.location { color: #7ec8e3; }
+
+#momo-status-bar .msb-stat { padding: 3px 0; }
+#momo-status-bar .msb-stat-erotic { cursor: pointer; }
+#momo-status-bar .msb-stat-erotic:hover .msb-stat-name { color: #ff6b9d; }
+#momo-status-bar .msb-stat-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+#momo-status-bar .msb-stat-name { color: #b8b8d0; }
+#momo-status-bar .msb-stat-val { color: #e8e6e3; font-weight: 500; }
+#momo-status-bar .msb-stat-track {
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+#momo-status-bar .msb-stat-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+#momo-status-bar .msb-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+#momo-status-bar .msb-app-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,107,157,0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+#momo-status-bar .msb-app-card-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ff6b9d;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+#momo-status-bar .msb-exp-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+#momo-status-bar .msb-exp-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+#momo-status-bar .msb-exp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b9d, #c084fc);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+#momo-status-bar .msb-exp-text {
+  font-size: 11px;
+  color: #a8a8b8;
+  white-space: nowrap;
+}
+
+#momo-status-bar .msb-task-card {
+  background: rgba(255,107,157,0.04);
+  border: 1px solid rgba(255,107,157,0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+}
+#momo-status-bar .msb-task-row {
+  display: flex;
+  padding: 2px 0;
+  font-size: 12px;
+}
+#momo-status-bar .msb-task-label {
+  color: #9a9ab0;
+  min-width: 56px;
+  flex-shrink: 0;
+}
+#momo-status-bar .msb-task-value { color: #e8e6e3; flex: 1; }
+#momo-status-bar .msb-task-na { color: #5a5a70; font-style: italic; }
+
+#momo-status-bar .msb-contacts-panel {
+  display: flex;
+  flex-direction: row;
+  height: 340px;
+  max-height: 55vh;
+}
+#momo-status-bar .msb-contact-list {
+  width: 160px;
+  min-width: 160px;
+  overflow-y: auto;
+  border-right: 1px solid rgba(255,107,157,0.08);
+  flex-shrink: 0;
+  padding: 4px 0;
+}
+#momo-status-bar .msb-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 8px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin: 1px 4px;
+  transition: background 0.15s;
+}
+#momo-status-bar .msb-contact-item:hover { background: rgba(255,107,157,0.06); }
+#momo-status-bar .msb-contact-item.selected { background: rgba(255,107,157,0.12); }
+#momo-status-bar .msb-ci-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 11px;
+  color: #fff;
+}
+#momo-status-bar .msb-ci-name {
+  font-size: 11px;
+  color: #d0d0e0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+#momo-status-bar .msb-ci-fav {
+  font-size: 10px;
+  flex-shrink: 0;
+}
+#momo-status-bar .msb-ci-fav.high { color: #ff6b9d; }
+#momo-status-bar .msb-ci-fav.mid { color: #a2d2ff; }
+#momo-status-bar .msb-ci-fav.low { color: #5a5a70; }
+
+#momo-status-bar .msb-chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+#momo-status-bar .msb-chat-header {
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ff6b9d;
+  border-bottom: 1px solid rgba(255,107,157,0.08);
+  text-align: center;
+  flex-shrink: 0;
+}
+#momo-status-bar .msb-chat-msgs {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+#momo-status-bar .msb-msg {
+  max-width: 88%;
+  padding: 7px 11px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  word-break: break-word;
+}
+#momo-status-bar .msb-msg.sent {
+  align-self: flex-end;
+  background: linear-gradient(135deg, rgba(255,107,157,0.2), rgba(192,132,252,0.15));
+  color: #e8e6e3;
+  border-bottom-right-radius: 4px;
+}
+#momo-status-bar .msb-msg.received {
+  align-self: flex-start;
+  background: rgba(162,210,255,0.08);
+  color: #d0d0d8;
+  border-bottom-left-radius: 4px;
+}
+#momo-status-bar .msb-msg-time {
+  font-size: 9px;
+  color: #6a6a80;
+  text-align: right;
+  margin-top: 3px;
+}
+#momo-status-bar .msb-chat-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5a5a70;
+  font-size: 12px;
+}
+#momo-status-bar .msb-chat-input {
+  display: flex;
+  border-top: 1px solid rgba(255,107,157,0.08);
+  padding: 6px 8px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+#momo-status-bar .msb-chat-input input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,107,157,0.7);
+  border-radius: 8px;
+  color: #e8e6e3;
+  font-size: 12px;
+  padding: 6px 10px;
+  outline: none;
+  font-family: inherit;
+}
+#momo-status-bar .msb-chat-input input:focus { border-color: rgba(255,107,157,0.4); }
+#momo-status-bar .msb-chat-input input::placeholder { color: #4a4a60; }
+#momo-status-bar .msb-chat-input button {
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #ff6b9d, #e05580);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+}
+#momo-status-bar .msb-chat-input button:hover { opacity: 0.85; }
+#momo-status-bar .msb-chat-input button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+#momo-status-bar .msb-footer {
+  background: #1a1a2e;
+  padding: 10px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(232, 160, 191, 0.08);
+  border-radius: 0 0 16px 16px;
+  font-size: 12px;
+}
+#momo-status-bar .msb-footer-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+#momo-status-bar .msb-footer-label { color: #787890; }
+#momo-status-bar .msb-footer-val.money { color: #a2e3c4; font-weight: 600; }
+#momo-status-bar .msb-footer-val.debt { color: #ff6b6b; font-weight: 600; }
+
+#momo-status-bar .msb-map-container {
+  background: #fff;
+  border-radius: 8px;
+  height: 320px;
+  max-height: 55vh;
+  overflow: hidden;
+  position: relative;
+}
+#momo-status-bar .msb-map-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#momo-status-bar .msb-loc-dot.msb-loc-current {
+  fill: #ff6b9d;
+  animation: msb-breathe 1.5s ease-in-out infinite;
+}
+#momo-status-bar .msb-loc-pulse {
+  fill: none;
+  stroke: #ff6b9d;
+  stroke-width: 2.5;
+  opacity: 0.6;
+  animation: msb-pulse 1.5s ease-out infinite;
+}
+@keyframes msb-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+@keyframes msb-pulse {
+  0% { opacity: 0.6; r: 11; }
+  100% { opacity: 0; r: 18; }
+}
+
+#momo-status-bar .msb-closet-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+#momo-status-bar .msb-closet-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+#momo-status-bar .msb-closet-col-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ff6b9d;
+  letter-spacing: 1px;
+  padding: 0 2px;
+  margin-bottom: 2px;
+}
+#momo-status-bar .msb-closet-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(232,160,191,0.12);
+  border-radius: 10px;
+  padding: 10px 12px;
+  transition: background 0.15s;
+}
+#momo-status-bar .msb-closet-card-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+#momo-status-bar .msb-closet-card-name {
+  flex: 1;
+  cursor: default;
+  font-size: 13px;
+  font-weight: 600;
+  color: #e8e6e3;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#momo-status-bar .msb-closet-card-row button {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border: 1px solid rgba(232,160,191,0.2);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.04);
+  color: #b8b8d0;
+  font-size: 10px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1.6;
+}
+#momo-status-bar .msb-closet-card-row button:hover {
+  background: rgba(255,107,157,0.12);
+  border-color: rgba(255,107,157,0.3);
+  color: #e8e6e3;
+}
+#momo-status-bar .msb-closet-card-row .msb-closet-toggle {
+  color: #ff6b9d;
+  border-color: rgba(255,107,157,0.3);
+  font-weight: 600;
+}
+#momo-status-bar .msb-closet-card-detail {
+  margin: 4px 0 0;
+}
+#momo-status-bar .msb-closet-extra-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+#momo-status-bar .msb-closet-detail-desc {
+  font-size: 11px;
+  color: #9a9ab0;
+  line-height: 1.5;
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 6px;
+}
+#momo-status-bar .msb-closet-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e8e6e3;
+  margin-bottom: 4px;
+}
+#momo-status-bar .msb-closet-erotic-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255,107,107,0.06);
+  border: 1px solid rgba(255,107,107,0.12);
+}
+#momo-status-bar .msb-closet-erotic-label {
+  font-size: 12px;
+  color: #a8a8b8;
+  font-weight: 500;
+}
+#momo-status-bar .msb-closet-erotic-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ff6b6b;
+}
+#momo-status-bar .msb-closet-send {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 0;
+  border: 1px solid rgba(255,107,157,0.4);
+  border-radius: 10px;
+  background: rgba(255,107,157,0.08);
+  color: #ff6b9d;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+  letter-spacing: 1px;
+}
+#momo-status-bar .msb-closet-send:hover {
+  background: rgba(255,107,157,0.15);
+}
+#momo-status-bar .msb-closet-empty {
+  font-size: 12px;
+  color: #5a5a70;
+  text-align: center;
+  padding: 20px 0;
+}
+#momo-status-bar .msb-closet-card.msb-closet-on {
+  border-color: rgba(162,227,196,0.8);
+  border-width: 2px;
+  box-shadow: 0 0 8px rgba(162,227,196,0.25);
+}
+#momo-status-bar .msb-closet-card.msb-closet-off {
+  border-color: rgba(255,107,107,0.7);
+  border-width: 2px;
+  opacity: 0.7;
+}
+#momo-status-bar .msb-closet-send:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: rgba(120,120,144,0.3);
+  color: #787890;
+  background: transparent;
+}
+#momo-status-bar .msb-closet-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+#momo-status-bar .msb-closet-card-tags-row {
+  margin-top: 4px;
+}
+#momo-status-bar .msb-closet-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+#momo-status-bar .msb-tag-part { background: rgba(162,210,255,0.15); color: #8ac4ff; }
+#momo-status-bar .msb-tag-style { background: rgba(255,193,7,0.12); color: #ffd54f; }
+#momo-status-bar .msb-tag-color { background: rgba(232,160,191,0.15); color: #e8a0bf; }
+#momo-status-bar .msb-tag-erotic { background: rgba(255,107,107,0.15); color: #ff6b6b; font-weight: 700; }
+#momo-status-bar .msb-tag-material { background: rgba(162,227,196,0.12); color: #a2e3c4; }
+#momo-status-bar .msb-tag-trait { background: rgba(255,193,7,0.08); color: #ffc107; }
+#momo-status-bar .msb-tag-price { background: rgba(162,227,196,0.1); color: #a2e3c4; }
+
+#momo-status-bar .msb-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+#momo-status-bar .msb-tag.low { background: rgba(162,227,196,0.12); color: #a2e3c4; }
+#momo-status-bar .msb-tag.mid { background: rgba(255,193,7,0.12); color: #ffc107; }
+#momo-status-bar .msb-tag.high { background: rgba(255,107,107,0.12); color: #ff6b6b; }
+
+#momo-status-bar { animation: msb-fadein 0.3s ease; }
+@keyframes msb-fadein {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+`;
+
+const LEVEL_NAMES = { 1: '闈掓订鏂颁汉', 2: '鍒濈骇澶栧洿', 3: '璧勬繁鐜╃墿', 4: '鐭ュ悕姣嶇嫍', 5: '鍏叡渚垮櫒' };
+const LEVEL_EXP = { 1: 150, 2: 1000, 3: 4000, 4: 15000, 5: Infinity };
+const COLORS = ['#ff6b9d', '#a2d2ff', '#a2e3c4', '#ffb3c6', '#c084fc', '#e8a0bf', '#7ec8e3', '#ffc107'];
+
+const DEFAULTS = {
+  鏁板€? { 楗遍搴? 78, 绮剧鍊? 82, 蹇冩儏鍊? 45, 鏁翠綋鑹叉儏鍊? 22, 蹇劅鍊? 0, 鎬ф鍊? 20 },
+  涓昏: { 閲戦挶: 1800 },
+  涓栫晫: { 褰撳墠鏃堕棿: '2024-09-01 07:30', 褰撳墠鍦扮偣: '鍖楀尯-缁挎床鏅嫅灏忓尯', 杩戞湡浜嬪姟: { 鐗濆澶氳处鍙? '澧ㄥⅷ' } },
+  鏃ョ▼: { 鏃ユ湡: '2024-09-01', 鏄熸湡: '鍛ㄦ棩', 褰撳墠浠诲姟: { 浠诲姟鍚? '鏃?, 绫诲瀷: '鈥?, 闃剁骇: '鈥?, 鐩爣: '鈥?, 棰濆瑕佹眰: '鈥?, 鎶ラ叕: 0 } },
+  绀句氦: {
+    鑱旂郴浜? {
+      鏋楁緢: { 鐘舵€? '宸蹭繚瀛?, 韬唤: '瀛︾敓浼氫富甯?, 濂芥劅搴? 55 },
+      鍛ㄧ牃: { 鐘舵€? '宸蹭繚瀛?, 韬唤: '鏍℃父娉抽槦鍓闃?, 濂芥劅搴? 50 },
+      闄堝笨: { 鐘舵€? '宸蹭繚瀛?, 韬唤: '鏍℃父娉抽槦棰嗛槦', 濂芥劅搴? 45 },
+    },
+  },
+  琛ｆ煖: {
+    鍙€夋湇瑁? {
+      '褰撳墠绌跨潃': { 鏉ユ簮: '韬笂姝ｅ湪绌?, 閮ㄤ綅鏍囩: ['鍐呰‖', '涓嬭'], 璇存槑: '鐧借壊钑句笣鐫¤' },
+      '鐧借壊钑句笣鐫¤': { 鏉ユ簮: '琛ｆ煖', 閮ㄤ綅鏍囩: ['鍐呰‖', '涓嬭'], 椋庢牸鏍囩: ['灞呭', '鐫＄湢'], 鏉愯川鏍囩: ['钑句笣', '姘ㄧ憾'], 棰滆壊鏍囩: ['鐧借壊'], 鐗硅川鏍囩: ['閬囨按閫忚'], 鑹叉儏鍊? 55, 浠锋牸: 0, 璇存槑: '钖勮川鍗婇€忥紝闀垮害鍒板ぇ鑵夸腑娈碉紝瑙︽按鍚庢箍韬创韬? },
+      '榛戣壊闀挎椋庤。': { 鏉ユ簮: '琛ｆ煖', 閮ㄤ綅鏍囩: ['澶栧'], 椋庢牸鏍囩: ['鏃ュ父', '閫氬嫟'], 鏉愯川鏍囩: ['鑱氶叝绾ょ淮'], 棰滆壊鏍囩: ['榛戣壊'], 鐗硅川鏍囩: ['闃查', '鍙伄鎸?], 鑹叉儏鍊? 20, 浠锋牸: 480, 璇存槑: '闀垮害鍙婅啙锛岀増鍨嬪亸鐩寸瓛锛屽彲閬尅涓婂崐韬笌鑵块儴杞粨' },
+      '妫夌櫧T鎭?: { 鏉ユ簮: '琛ｆ煖', 閮ㄤ綅鏍囩: ['鍐呰‖'], 椋庢牸鏍囩: ['鏃ュ父', '杩愬姩'], 鏉愯川鏍囩: ['绾'], 棰滆壊鏍囩: ['鐧借壊'], 鐗硅川鏍囩: ['瀹芥澗', '閫忔皵'], 鑹叉儏鍊? 25, 浠锋牸: 80, 璇存槑: '鍦嗛鐭 T 鎭わ紝鐗堝瀷瀹芥澗' },
+      '榛戣壊鍖呰噣鍗婅韩瑁?: { 鏉ユ簮: '琛ｆ煖', 閮ㄤ綅鏍囩: ['涓嬭'], 椋庢牸鏍囩: ['鏃ュ父', '宸ヤ綔'], 鏉愯川鏍囩: ['瑗胯闈㈡枡'], 棰滆壊鏍囩: ['榛戣壊'], 鐗硅川鏍囩: ['淇韩', '杞诲井璧板厜椋庨櫓'], 鑹叉儏鍊? 58, 浠锋牸: 260, 璇存槑: '楂樿叞鍖呰噣瑁欙紝瑁欐憜浣嶄簬鑶濈洊涓婃柟绾?12 鍘樼背' },
+      '榛戣壊钑句笣鍐呰。濂楄': { 鏉ユ簮: '琛ｆ煖', 閮ㄤ綅鏍囩: ['鍐呰。'], 椋庢牸鏍囩: ['鏃ュ父', '鎯呰叮'], 鏉愯川鏍囩: ['钑句笣'], 棰滆壊鏍囩: ['榛戣壊'], 鐗硅川鏍囩: ['鍗婇€忔槑', '鎬ф劅'], 鑹叉儏鍊? 75, 浠锋牸: 180, 璇存槑: '榛戣壊钑句笣鍐呰。濂楄锛屽彲浣滀负鍐呭眰绌跨潃' },
+      '榛戣壊钑句笣鍐呰￥': { 鏉ユ簮: '琛ｆ煖', 閮ㄤ綅鏍囩: ['鍐呰￥'], 椋庢牸鏍囩: ['鏃ュ父', '鎯呰叮'], 鏉愯川鏍囩: ['钑句笣'], 棰滆壊鏍囩: ['榛戣壊'], 鐗硅川鏍囩: ['鍗婇€忔槑'], 鑹叉儏鍊? 70, 浠锋牸: 60, 璇存槑: '榛戣壊钑句笣鍐呰￥锛屽彲浣滀负鍐呭眰绌跨潃' },
+      '杩愬姩鍐呰。': { 鏉ユ簮: '琛ｆ煖', 閮ㄤ綅鏍囩: ['鍐呰。'], 椋庢牸鏍囩: ['杩愬姩'], 鏉愯川鏍囩: ['娑ょ憾'], 棰滆壊鏍囩: ['鐏拌壊'], 鐗硅川鏍囩: ['閫忔皵', '楂樺脊鎬?], 鑹叉儏鍊? 30, 浠锋牸: 120, 璇存槑: '杩愬姩鍐呰。锛岄€傚悎杩愬姩鎴栨父娉冲満鏅? },
+      '瑁歌壊楂樿窡鍑夐瀷': { 鏉ユ簮: '琛ｆ煖', 閮ㄤ綅鏍囩: ['闉?], 椋庢牸鏍囩: ['閫氬嫟', '鏃ュ父'], 鏉愯川鏍囩: ['鐨潻'], 棰滆壊鏍囩: ['瑁歌壊'], 鐗硅川鏍囩: ['楂樿窡'], 鑹叉儏鍊? 35, 浠锋牸: 320, 璇存槑: '瑁歌壊楂樿窡鍑夐瀷锛岄€傚悎閫氬嫟鎴栧鍑? },
+      '鐧借壊鐭': { 鏉ユ簮: '琛ｆ煖', 閮ㄤ綅鏍囩: ['闉?], 椋庢牸鏍囩: ['鏃ュ父', '杩愬姩'], 鏉愯川鏍囩: ['绾'], 棰滆壊鏍囩: ['鐧借壊'], 鐗硅川鏍囩: ['閫忔皵'], 鑹叉儏鍊? 5, 浠锋牸: 15, 璇存槑: '鐧借壊鐭锛岄€傚悎鎼厤杩愬姩闉嬫垨鎷栭瀷' },
+      '榛戣壊閫氬嫟鍖?: { 鏉ユ簮: '琛ｆ煖', 閮ㄤ綅鏍囩: ['鍖?], 椋庢牸鏍囩: ['閫氬嫟', '鏃ュ父'], 鏉愯川鏍囩: ['鐨潻'], 棰滆壊鏍囩: ['榛戣壊'], 鐗硅川鏍囩: ['澶у閲?], 鑹叉儏鍊? 5, 浠锋牸: 350, 璇存槑: '閫氬嫟鍖咃紝鍙惡甯︽墜鏈恒€佽瘉浠跺拰灏戦噺闅忚韩琛ｇ墿' },
+    },
+  },
+};
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(String(s ?? '')));
+  return d.innerHTML;
+}
+
+function escRegex(s) {
+  return String(s ?? '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function num(v) { return Math.round(v ?? 0); }
+
+function parseTime(data) {
+  const t = String(data?.涓栫晫?.褰撳墠鏃堕棿 || '');
+  const parts = t.split(' ');
+  return { date: parts[0] || '', time: parts[1] || '' };
+}
+
+function getWeekDay(dateStr) {
+  const weekDays = ['鏃?, '涓€', '浜?, '涓?, '鍥?, '浜?, '鍏?];
+  if (!dateStr) return '';
+  const d = new Date(dateStr.replace(/-/g, '/'));
+  return isNaN(d.getTime()) ? '' : weekDays[d.getDay()];
+}
+
+function getData() {
+  try {
+    const v = getVariables({ type: 'message' });
+    const sd = v?.stat_data || v?.display_data;
+    if (sd && typeof sd === 'object' && Object.keys(sd).length > 0) {
+      const r = { ...sd };
+      for (const k of Object.keys(DEFAULTS)) {
+        if (!(k in r) || r[k] === undefined || r[k] === null) {
+          r[k] = typeof DEFAULTS[k] === 'object' && !Array.isArray(DEFAULTS[k])
+            ? { ...DEFAULTS[k] } : DEFAULTS[k];
+        }
+      }
+      return r;
+    }
+    const cv = getVariables({ type: 'character' });
+    if (cv?.鏁板€?|| cv?.鏃ョ▼) {
+      const r = { ...cv };
+      for (const k of Object.keys(DEFAULTS)) {
+        if (!(k in r) || r[k] === undefined || r[k] === null) {
+          r[k] = typeof DEFAULTS[k] === 'object' && !Array.isArray(DEFAULTS[k])
+            ? { ...DEFAULTS[k] } : DEFAULTS[k];
+        }
+      }
+      return r;
+    }
+  } catch (e) {}
+  try {
+    const r = {};
+    for (const k of Object.keys(DEFAULTS)) {
+      if (typeof DEFAULTS[k] === 'object' && !Array.isArray(DEFAULTS[k])) {
+        r[k] = { ...DEFAULTS[k] };
+      } else {
+        r[k] = DEFAULTS[k];
+      }
+    }
+    return r;
+  } catch (e) {
+    return { ...DEFAULTS };
+  }
+}
+
+const TAG_ORDER = ['澶栧', '鍐呰‖', '鍐呰。', '涓嬭', '鍐呰￥', '鑵块儴', '闉?, '鍖?, '鍏跺畠'];
+
+function sortEntries(entries) {
+  const items = entries.map(([n]) => {
+    const tags = getClothingTags(n);
+    const pri = tags.map(t => { const i = TAG_ORDER.indexOf(t); return i >= 0 ? i : 99; });
+    return [n, Math.min(...pri), Math.max(...pri)];
+  });
+  items.sort((a, b) => a[1] - b[1] || a[2] - b[2]);
+  return items.map(([n]) => n);
+}
+
+function riskClass(level) {
+  const m = { '浣?: 'low', '涓?: 'mid', '楂?: 'high' };
+  return m[level] || 'low';
+}
+
+function statColor(name) {
+  const map = {
+    '楗遍搴?: '#a2e3c4', '绮剧鍊?: '#a2d2ff', '蹇冩儏鍊?: '#ff6b9d',
+    '蹇劅鍊?: '#ff6b9d', '鑹叉儏鍊?: '#c084fc', '鎬ф鍊?: '#ffb3c6',
+  };
+  return map[name] || '#a2d2ff';
+}
+
+function renderHeader(data) {
+  const { date, time } = parseTime(data);
+  return `
+<div class="msb-header">
+  <div class="msb-header-left">
+    <div class="msb-avatar">澧?/div>
+    <div>
+      <div class="msb-title">澧ㄥⅷ闇插嚭 路 銈广儐銉笺偪銈?/div>
+      <div class="msb-subtitle">${esc(data?.涓栫晫?.褰撳墠鍦扮偣 || '')} 路 ${esc(time)}</div>
+    </div>
+  </div>
+</div>`;
+}
+
+function label(s) { return s.length === 2 ? s[0] + '  ' + s[1] : s; }
+
+function renderStatsPanel(data) {
+  const { date, time } = parseTime(data);
+  const wd = data?.鏃ョ▼?.鏄熸湡 || getWeekDay(data?.鏃ョ▼?.鏃ユ湡);
+  const bars = [
+    ['楗遍搴?, num(data?.鏁板€?.楗遍搴?],
+    ['绮剧鍊?, num(data?.鏁板€?.绮剧鍊?],
+    ['蹇冩儏鍊?, num(data?.鏁板€?.蹇冩儏鍊?],
+    ['鑹叉儏鍊?, num(data?.鏁板€?.鏁翠綋鑹叉儏鍊?],
+    ['鎬ф鍊?, num(data?.鏁板€?.鎬ф鍊?],
+    ['蹇劅鍊?, num(data?.鏁板€?.蹇劅鍊?],
+  ];
+  return `
+<div class="msb-row">
+  <span class="msb-label">${label('鏃?)}${label('鏈?)}</span>
+  <span class="msb-value">${esc(date)} ${esc(wd)}</span>
+</div>
+<div class="msb-row">
+  <span class="msb-label">${label('鏃?)}${label('闂?)}</span>
+  <span class="msb-value">${esc(time)}</span>
+</div>
+<div class="msb-row">
+  <span class="msb-label">${label('鍦?)}${label('鐐?)}</span>
+  <span class="msb-value">${esc(data?.涓栫晫?.褰撳墠鍦扮偣 || '')}</span>
+</div>
+<div class="msb-row">
+  <span class="msb-label">${label('閲?)}${label('閽?)}</span>
+  <span class="msb-value money">${num(data?.涓昏?.閲戦挶)}鍏?/span>
+</div>
+<div>
+  ${bars.map(([name, val]) => `
+    <div class="msb-stat${name === '鑹叉儏鍊? ? ' msb-stat-erotic' : ''}"${name === '鑹叉儏鍊? ? ' data-stat="erotic"' : ''}>
+      <div class="msb-stat-header">
+        <span class="msb-stat-name">${esc(name)}</span>
+        <span class="msb-stat-val">${val}%</span>
+      </div>
+      <div class="msb-stat-track">
+        <div class="msb-stat-fill" style="width:${val}%;background:${statColor(name)}"></div>
+      </div>
+    </div>`).join('')}
+</div>`;
+}
+
+function renderAppPanel(data) {
+  const lv = num(data?.鏃ョ▼?.鐗濆澶氱瓑绾?;
+  const exp = num(data?.鏃ョ▼?.鐗濆澶氱粡楠?;
+  const expMax = LEVEL_EXP[lv] || 150;
+  const expPct = Math.min(100, Math.round((exp / expMax) * 100));
+  const lvName = LEVEL_NAMES[lv] || '';
+  const task = data?.鏃ョ▼?.褰撳墠浠诲姟;
+  const hasTask = task?.浠诲姟鍚?&& task?.浠诲姟鍚?!== '鏃?;
+
+  return `
+<div class="msb-app-card">
+  <div class="msb-app-card-title">鉂わ笍 鐗濆澶?/div>
+  <div class="msb-row"><span class="msb-label">鐢ㄦ埛鍚?/span><span class="msb-value">澧ㄥⅷ</span></div>
+  <div class="msb-row"><span class="msb-label">绛夌骇</span><span class="msb-value">Lv.${lv} ${esc(lvName)}</span></div>
+  <div class="msb-exp-bar">
+    <span style="font-size:11px;color:#9a9ab0;min-width:32px">EXP</span>
+    <div class="msb-exp-track"><div class="msb-exp-fill" style="width:${expPct}%"></div></div>
+    <span class="msb-exp-text">${exp}/${expMax}</span>
+  </div>
+  <div class="msb-app-card-title" style="margin-top:8px;color:#a2d2ff">馃幆 褰撳墠浠诲姟</div>
+  ${hasTask ? `
+    <div class="msb-task-card">
+      <div class="msb-task-row"><span class="msb-task-label">浠诲姟绫诲瀷</span><span class="msb-task-value">${esc(task.绫诲瀷 || '')}</span></div>
+      <div class="msb-task-row"><span class="msb-task-label">浠诲姟闃剁骇</span><span class="msb-task-value">${esc(task.闃剁骇 || '')}</span></div>
+      <div class="msb-task-row"><span class="msb-task-label">浠诲姟瑕佹眰</span><span class="msb-task-value">${esc(task.鐩爣 || '')}</span></div>
+      <div class="msb-task-row"><span class="msb-task-label">棰濆瑕佹眰</span><span class="msb-task-value">${esc(task.棰濆瑕佹眰 || '')}</span></div>
+      <div class="msb-task-row"><span class="msb-task-label">浠诲姟鎶ラ叕</span><span class="msb-task-value" style="color:#a2e3c4;font-weight:600">${num(task.鎶ラ叕)}鍏?/span></div>
+    </div>` : `
+    <div style="text-align:center;padding:12px 0;color:#5a5a70;font-size:13px">
+      <div style="font-size:24px;margin-bottom:4px">馃摥</div>
+      鏆傛棤浠诲姟
+    </div>`}
+</div>`;
+}
+
+function renderContactsPanel(data) {
+  const contacts = data?.绀句氦?.鑱旂郴浜?|| {};
+  const entries = Object.entries(contacts);
+  const listHtml = entries.map(([name, info], i) => {
+    const color = COLORS[i % COLORS.length];
+    return `<div class="msb-contact-item" data-contact="${esc(name)}" data-likes="${num(info?.濂芥劅搴?}">
+      <div class="msb-ci-avatar" style="background:${color}">${esc(name.charAt(0))}</div>
+      <span class="msb-ci-name">${esc(name)}</span>
+      <span class="msb-ci-fav">鉂?${num(info?.濂芥劅搴?}</span>
+    </div>`;
+  }).join('');
+
+  const hasContact = currentContact && entries.some(([k]) => k === currentContact);
+  const savedVal = hasContact ? (contactInputs[currentContact] || '') : '';
+  const inputDisabled = hasContact ? '' : ' disabled';
+  const sendDisabled = hasContact ? '' : ' disabled';
+
+  return `
+<div class="msb-contacts-panel">
+  <div class="msb-contact-list">${listHtml}</div>
+  <div class="msb-chat-area">
+    <div class="msb-chat-header">${hasContact ? ('馃摫 ' + esc(currentContact)) : '馃摫 閫夋嫨涓€涓仈绯讳汉'}</div>
+    ${hasContact ? '<div class="msb-chat-msgs">' + renderContactArea(currentContact) + '</div>' : '<div class="msb-chat-placeholder">鐐瑰嚮宸︿晶鑱旂郴浜哄紑濮嬭亰澶?/div>'}
+    <div class="msb-chat-input"><input type="text" placeholder="杈撳叆娑堟伅..."${inputDisabled} value="${esc(savedVal)}"><button${sendDisabled}>鍙戦€?/button></div>
+  </div>
+</div>`;
+}
+
+  function isAI(el) {
+    const mes = el.closest('.mes, [mesid]');
+    if (!mes) return false;
+    try {
+      const st = (window.parent.SillyTavern || window.SillyTavern);
+      const ctx = st?.getContext?.();
+      const id = mes.getAttribute('mesid');
+      if (id) {
+        const msg = ctx?.chat?.[parseInt(id)];
+        if (msg) return !msg.is_user;
+      }
+      const nameEl = mes.querySelector('.ch_name, .ch_name_text, .name_text');
+      const name = nameEl?.textContent?.trim() || '';
+      const charName = ctx?.characterQuery?.name || ctx?.character?.name || '';
+      if (name && charName && name.includes(charName)) return true;
+      return false;
+    } catch (e) { return true; }
+  }
+
+  function renderContactArea(contactName) {
+    const data = getData();
+    const ts = parseTime(data).time || '00:00';
+    const chat = contactChats[contactName] || { sent: [], received: [] };
+    const allMsgs = [];
+    const maxLen = Math.max(chat.sent.length, chat.received.length);
+    for (let i = 0; i < maxLen; i++) {
+      if (chat.received[i]) {
+        allMsgs.push(`<div class="msb-msg received"><div>${esc(chat.received[i])}</div><div class="msb-msg-time">${ts}</div></div>`);
+      }
+      if (chat.sent[i]) {
+        allMsgs.push(`<div class="msb-msg sent"><div>${esc(chat.sent[i])}</div><div class="msb-msg-time">${ts}</div></div>`);
+      }
+    }
+    return allMsgs.join('\n');
+  }
+
+  function resetClosetState() {
+    momoWearChanged = [];
+    momoWearPutOn = new Set();
+    momoWearTakenOff = new Set();
+  }
+
+  const pDoc = window.parent.document;
+
+  function initWearList() {
+    momoWearList = ['鐧借壊钑句笣鐫¤'];
+    resetClosetState();
+    pDoc.querySelectorAll('#momo-status-bar').forEach(b => {
+      const panel = b.querySelector('.msb-panel.closet');
+      if (panel) panel.innerHTML = renderClosetPanel(getData());
+    });
+  }
+
+  const start = () => {
+    injected = false;
+    injectStyles();
+    initWearList();
+
+    try { injectStatusBar(); } catch (e) {
+      console.warn('[MomoStatusBar] first insert failed', e);
+    }
+
+    (async () => {
+      try { await waitGlobalInitialized('Mvu'); } catch (e) {}
+      injectStatusBar();
+      refreshAllBars();
+    })();
+
+    pDoc.addEventListener('click', function (e) {
+      if (momoWearChanged.length > 0 && e.target.closest('#send_but')) {
+        const input = pDoc.querySelector('textarea#send_textarea');
+        if (input && input.value.trim()) {
+          const changeText = momoWearChanged.join('锛?);
+          input.value = '鎴? + changeText + '锛? + input.value;
+          momoWearChanged = [];
+        }
+      }
+    }, true);
+
+    function doSend(contactName, contactMsg, mainMsg) {
+      if (!contactChats[contactName]) contactChats[contactName] = { sent: [], received: [] };
+      contactChats[contactName].sent.push(contactMsg);
+      pendingContactReply = contactName;
+
+      const area = pDoc.querySelector('#momo-status-bar .msb-panel.contacts');
+      const msgsEl = area?.querySelector('.msb-chat-msgs');
+      if (msgsEl) {
+        msgsEl.innerHTML = renderContactArea(contactName);
+        msgsEl.scrollTop = msgsEl.scrollHeight;
+      }
+
+      const mainInput = pDoc.querySelector('textarea#send_textarea');
+      const theMsg = (mainMsg && mainMsg.trim()) ?
+        '[鍙戦€佺粰鑱旂郴浜?' + contactName + ']锛? + contactMsg + '\n' + mainMsg.trim() :
+        '[鍙戦€佺粰鑱旂郴浜?' + contactName + ']锛? + contactMsg;
+      if (mainInput) {
+        mainInput.value = theMsg;
+        const sendBtn = pDoc.querySelector('#send_but');
+        if (sendBtn) {
+          sendBtn.click();
+        }
+      }
+    }
+
+    pDoc.addEventListener('click', function (e) {
+      const btn = e.target.closest('#momo-status-bar .msb-chat-input button');
+      if (btn) {
+        const input = btn.previousElementSibling;
+        if (!input || input.tagName !== 'INPUT' || !input.value.trim()) return;
+        const name = btn.closest('.msb-chat-area')?.querySelector('.msb-chat-header')?.textContent?.trim();
+        const cleanName = name?.replace(/^馃摫\s*/, '') || '';
+        if (!cleanName) return;
+        const contactMsg = input.value.trim();
+        input.value = '';
+        const mainInput = pDoc.querySelector('textarea#send_textarea');
+        const mainMsg = mainInput?.value?.trim() || '';
+        doSend(cleanName, contactMsg, mainMsg);
+        return;
+      }
+
+      const mainBtn = e.target.closest('#send_but');
+      if (mainBtn) {
+        const mainInput = pDoc.querySelector('textarea#send_textarea');
+        if (!mainInput || !mainInput.value.trim()) return;
+        const mainMsg = mainInput.value.trim();
+        if (mainMsg.startsWith('[鍙戦€佺粰鑱旂郴浜?')) return;
+        const selected = pDoc.querySelector('#momo-status-bar .msb-contact-item.selected');
+        if (selected) {
+          const contactInput = pDoc.querySelector('#momo-status-bar .msb-chat-input input');
+          if (!contactInput || !contactInput.value.trim()) return;
+          const contactName = selected.dataset.contact;
+          const contactMsg = contactInput.value.trim();
+          contactInput.value = '';
+          doSend(contactName, contactMsg, mainMsg);
+          return;
+        }
+        // Regular send: prepend clothing change if any
+        if (momoWearChanged.length > 0) {
+          const changeText = momoWearChanged.join('锛?);
+          const separator = mainInput.value.includes('鎴戣劚鎺変簡') || mainInput.value.includes('鎴戠┛涓婁簡') ? '\n' : '';
+          mainInput.value = '鎴? + changeText + (separator || '锛?) + mainInput.value;
+          momoWearChanged = [];
+        }
+        return;
+      }
+
+      const item = e.target.closest('#momo-status-bar .msb-contact-item');
+      if (item) {
+        const currentInput = item.closest('.msb-panel.contacts')?.querySelector('.msb-chat-input input');
+        if (currentInput && currentContact) {
+          contactInputs[currentContact] = currentInput.value;
+        }
+        const list = item.closest('.msb-contact-list');
+        list.querySelectorAll('.msb-contact-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+        const name = item.dataset.contact;
+        currentContact = name;
+        const panel = item.closest('.msb-panel.contacts');
+        const area = panel.querySelector('.msb-chat-area');
+        const header = area.querySelector('.msb-chat-header');
+        const placeholder = area.querySelector('.msb-chat-placeholder');
+        const inputRow = area.querySelector('.msb-chat-input');
+        const inputField = inputRow?.querySelector('input');
+        const sendBtn = inputRow?.querySelector('button');
+        header.textContent = '馃摫 ' + name;
+        if (placeholder) {
+          const msgsDiv = pDoc.createElement('div');
+          msgsDiv.className = 'msb-chat-msgs';
+          msgsDiv.innerHTML = renderContactArea(name);
+          placeholder.replaceWith(msgsDiv);
+        } else {
+          const msgsDiv = area.querySelector('.msb-chat-msgs');
+          if (msgsDiv) msgsDiv.innerHTML = renderContactArea(name);
+        }
+        if (inputField) {
+          inputField.disabled = false;
+          inputField.value = contactInputs[name] || '';
+        }
+        if (sendBtn) sendBtn.disabled = false;
+        inputField?.focus();
+        return;
+      }
+    });
+
+    pDoc.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        const input = e.target.closest('#momo-status-bar .msb-chat-input input');
+        if (input && input.value.trim()) {
+          const btn = input.nextElementSibling;
+          if (btn && btn.tagName === 'BUTTON') btn.click();
+        }
+      }
+    });
+
+    pDoc.addEventListener('input', function (e) {
+      const input = e.target.closest('#momo-status-bar .msb-chat-input input');
+      if (input && currentContact) {
+        contactInputs[currentContact] = input.value;
+      }
+    });
+
+    let lastMsgCount = 0;
+    let t2 = null;
+    new MutationObserver(() => {
+      clearTimeout(t2);
+      t2 = setTimeout(() => {
+        const currentCount = pDoc.querySelectorAll('.mes_text').length;
+        if (currentCount !== lastMsgCount) {
+          lastMsgCount = currentCount;
+          injectStatusBar();
+        }
+        refreshAllBars();
+      }, 1500);
+    }).observe(pDoc.body, { childList: true, subtree: true });
+
+    let retries = 0;
+    const retryInterval = setInterval(() => {
+      injectStatusBar();
+      if (++retries > 15) clearInterval(retryInterval);
+    }, 1000);
+
+    setInterval(() => {
+      injectStatusBar();
+      refreshAllBars();
+    }, 3000);
+
+    const st = window.parent.SillyTavern || window.SillyTavern;
+    eventOn(tavern_events.MESSAGE_RECEIVED, message_id => {
+      const contactName = pendingContactReply;
+      if (!contactName) return;
+      pendingContactReply = null;
+      try {
+        const ctx = st?.getContext?.();
+        const msg = ctx?.chat?.[message_id];
+        if (!msg || msg.is_user) return;
+        const text = msg.mes || '';
+        let foundLines = [];
+
+        function isMetaLine(s) {
+          return /<\|?\/?(update|analysis|jsonpatch|begin|end|thought|reasoning|prism|user_input)/i.test(s)
+            || /(updateRow|JSONPatch|\{.*:.*\})/.test(s)
+            || /^seen\s*\d/.test(s)
+            || /^<\|/.test(s)
+            || /^<!--/.test(s);
+        }
+
+        function cleanDialogue(s) {
+          return s.replace(/^["銆屻€嶾s]+|["銆嶃€廫s]+$/g, '');
+        }
+
+        let m;
+        const variants = [escRegex(contactName), escRegex(contactName) + '(?:瀛﹂暱|鑰佸笀|瀵煎笀|涓诲腑|棰嗛槦|闃熼暱|缁忕悊|鑰佹澘)'];
+        for (const variant of variants) {
+          const pattern = new RegExp('(?:' + variant + ')\\s*[锛?]\\s*[銆屻€嶿?([^銆嶃€廫\n]{1,99})', 'g');
+          while ((m = pattern.exec(text)) !== null) {
+            const line = cleanDialogue(m[1].trim());
+            if (line.length > 0 && line.length < 100 && !isMetaLine(line)) foundLines.push(line);
+          }
+          if (foundLines.length > 0) break;
+        }
+        if (foundLines.length === 0) {
+          for (const para of text.split(/\n+/)) {
+            if (isMetaLine(para)) continue;
+            if (para.includes('寰俊') || para.includes('娑堟伅') || para.includes('鍥炲')) {
+              const sub = para.match(/["銆屻€嶿([^銆嶃€?]{1,99})["銆嶃€廬/);
+              if (sub) {
+                const line = cleanDialogue(sub[1].trim());
+                if (line.length > 0 && !isMetaLine(line)) foundLines.push(line);
+              }
+            }
+          }
+        }
+        if (foundLines.length === 0) return;
+
+        if (!contactChats[contactName]) contactChats[contactName] = { sent: [], received: [] };
+        for (const line of foundLines) {
+          contactChats[contactName].received.push(line);
+        }
+
+        const msgsEl = pDoc.querySelector('#momo-status-bar .msb-contact-item.selected')?.closest('.msb-panel.contacts')?.querySelector('.msb-chat-msgs');
+        if (msgsEl && currentContact === contactName) {
+          msgsEl.innerHTML = renderContactArea(contactName);
+          msgsEl.scrollTop = msgsEl.scrollHeight;
+        }
+      } catch (e) {
+        console.warn('[MomoStatusBar] failed to extract contact reply', e);
+      }
+    });
+  };
+
+  if (pDoc.readyState !== 'loading') {
+    start();
+  } else {
+    pDoc.addEventListener('DOMContentLoaded', start);
+  }
+});

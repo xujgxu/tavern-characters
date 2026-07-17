@@ -1,0 +1,73 @@
+<momo_anal_semen_status>
+# 状态：肛门精液 (Anal Semen)
+# 类别：核心状态 / 色情表现引擎
+
+## 概括
+这是一个纯粹的数值追踪条目专门用于量化和记录积存在{{format_message_variable::stat_data.主角.名字}}肛门与直肠内的精液数量。此数值将作为感官描写的直接驱动力并与其他系统（如任务评分、堕落行为解锁）进行联动。
+
+## 运行机制
+  - 1. 核心数值: `肛门精液` (单位: ml)
+    - 定义: 一个范围为0-100+的数值精确记录{{format_message_variable::stat_data.主角.名字}}肛门内的精液总量。初始值为0。
+    - 增加方式: 当且仅当{{format_message_variable::stat_data.主角.名字}}被肛内射精时此数值才会根据射精量而增加。
+    - 减少方式:
+      - 自然排出: 当数值超过50ml后，肛门内的精液会开始不受控制地流出。流出的数量由“当前肛门精液阶段”中的“本次对话外部精液转化数量”与“本次对话精液环境流失数量”共同决定。
+      - 主动清洁: 通过灌肠或洗澡可以一次性将此数值清零。
+
+## 当前肛门精液阶段
+<%_ if (getvar('initialized_lorebooks') !== undefined) { // 加载安全检查 _%>
+<%_ if (getvar('stat_data.主角.色情状态.肛门精液') === undefined || getvar('stat_data.主角.身体色情记录.性爱状态') === undefined) { // 检查变量是否存在 _%>
+
+<%_ }else if (getvar('stat_data.主角.色情状态.肛门精液') <= 0) { _%>
+# {{format_message_variable::stat_data.主角.名字}}肛门精液状态表现：无精液
+<%_ } else if (getvar('stat_data.主角.色情状态.肛门精液') <= 50) { // 阶段1 & 2: 容纳与满溢边缘 (<= 50ml) _%>
+# {{format_message_variable::stat_data.主角.名字}}肛门精液状态表现：容纳与满溢边缘
+<%_ if (getvar('stat_data.主角.色情状态.肛门精液') <= 25) { _%>
+- 色情感官表现:
+  - 在这个阶段{{format_message_variable::stat_data.主角.名字}}的后穴里只有少量温热的液体。{{format_message_variable::stat_data.主角.名字}}能清晰地感觉到直肠深处传来一股微弱的、不自然的坠胀感让{{format_message_variable::stat_data.主角.名字}}时刻意识到自己那禁忌的部位被侵犯过的痕迹。
+<%_ } else { _%>
+- 色情感官表现:
+  - {{format_message_variable::stat_data.主角.名字}}的直肠被完全撑满。小腹下部能感受到清晰的、沉甸甸的坠胀感。每当{{format_message_variable::stat_data.主角.名字}}行走或改变姿势时都能感觉到内部液体的晃动让{{format_message_variable::stat_data.主角.名字}}不得不夹紧臀部以防止它们流出来。
+<%_ } _%>
+- 本次对话外部精液转化数量:
+  - 0ml。肠道还能勉强容纳这些液体液体不会主动流出。
+- 本次对话精液环境流失数量:
+  - 0ml。没有液体流失到环境中。
+<%_ } else if (getvar('stat_data.主角.色情状态.肛门精液') <= 80) { // 阶段3: 失控的流溢 (51-80ml) _%>
+# {{format_message_variable::stat_data.主角.名字}}肛门精液状态表现：失控的流溢
+<%_ if (getvar('stat_data.主角.身体色情记录.性爱状态') == true) { // 性爱状态: TRUE _%>
+- 色情感官表现:
+  - 肠道已经再也容纳不下更多。在阳具拔出又插入的间隙能看到一股股浓稠的白浊从紧绷的穴口被挤压出来顺着臀缝向下流淌。持续的抽插更像是在用活塞将{{format_message_variable::stat_data.主角.名字}}体内的液体不断泵出。
+- 本次对话外部精液转化数量:
+  - <%= Math.round((getvar('stat_data.主角.色情状态.肛门精液') - 50) * 0.2) %>ml。因为持续的抽插活动在本次对话中将有适量的肛门精液被挤压出来转化为外部精液。
+- 本次对话精液环境流失数量:
+  - <%= Math.round((getvar('stat_data.主角.色情状态.肛门精液') - 50) * 0.3) %>ml。在交合的动作中将有部分精液滴落到环境中。
+<%_ } else { // 性爱状态: FALSE _%>
+- 色情感官表现:
+  - 身体的容器已经失控。温热、黏稠的精液开始不受控制地从后穴少量地向外渗出。在{{format_message_variable::stat_data.主角.名字}}行走时大腿根部会被黏腻的液体弄脏内裤的后部也会被浸湿一小块。
+- 本次对话外部精液转化数量:
+  - <%= Math.round((getvar('stat_data.主角.色情状态.肛门精液') - 50) * 0.1) %>ml。在重力的影响下在本次对话中将有少量的肛门精液被动地转化为外部精液。
+- 本次对话精液环境流失数量:
+  - <%= Math.round((getvar('stat_data.主角.色情状态.肛门精液') - 50) * 0.15) %>ml。由于身体无法完全留存将有少量精液滴落在地面或坐过的椅子上。
+<%_ } _%>
+<%_ } else if (getvar('stat_data.主角.色情状态.肛门精液') > 80) { // 阶段4: 彻底的满溢 (81ml+) _%>
+# {{format_message_variable::stat_data.主角.名字}}肛门精液状态表现：彻底的满溢
+<%_ if (getvar('stat_data.主角.身体色情记录.性爱状态') == true) { // 性爱状态: TRUE _%>
+- 色情感官表现:
+  - {{format_message_variable::stat_data.主角.名字}}的后庭变成了一个不断泄洪的缺口。每一次抽插都会带出大量的精液不仅让两人交合之处变得一片狼藉更是在{{format_message_variable::stat_data.主角.名字}}身下汇聚成一小滩白色的液体。{{format_message_variable::stat_data.主角.名字}}的整个臀部都被这些液体覆盖充满了被彻底侵犯和玷污的淫乱景象。
+- 本次对话外部精液转化数量:
+  - <%= Math.round((getvar('stat_data.主角.色情状态.肛门精液') - 50) * 0.4) %>ml。在剧烈的交合中在本次对话中将有大量的肛门精液被泵出转化为外部精液。
+- 本次对话精液环境流失数量:
+  - <%= Math.round((getvar('stat_data.主角.色情状态.肛门精液') - 50) * 0.5) %>ml。在本次对话中将有大量的精液由于满溢而直接流淌到环境中形成一片淫靡的痕迹。
+<%_ } else { // 性爱状态: FALSE _%>
+- 色情感官表现:
+  - 内部的液体已经完全失控。精液不再是缓慢渗出而是在{{format_message_variable::stat_data.主角.名字}}的大幅动作（如快走、跑动、弯腰）时成股地涌出轻易就能浸透内裤和外裤。{{format_message_variable::stat_data.主角.名字}}能清晰地感觉到温热的液体顺着臀缝滑落的轨迹有一部分甚至会直接滴落在鞋子上或地板上。
+- 本次对话外部精液转化数量:
+  - <%= Math.round((getvar('stat_data.主角.色情状态.肛门精液') - 50) * 0.2) %>ml。由于内部液体过多在本次对话中将有较多的肛门精液因重力作用大量流出转化为外部精液。
+- 本次对话精液环境流失数量:
+  - <%= Math.round((getvar('stat_data.主角.色情状态.肛门精液') - 50) * 0.25) %>ml。在本次对话中将有较多的精液因为无法抑制的满溢而直接流失到环境中留下公然的淫荡印记。
+<%_ } _%>
+<%_ } else { // 所有条件都不满足时的后备情况 _%>
+
+<%_ } _%>
+<%_ } _%>
+</momo_anal_semen_status>

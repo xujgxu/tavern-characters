@@ -1,0 +1,315 @@
+<变量更新规则>
+#变量更新规则
+在所有文本的最后，进行变量更新。
+
+rule:
+  - You must output the update analysis in the end of the next reply
+  - Only update variables when their specific update conditions are met
+  - Do not repeatedly update the same variable for the same event in continuous discussion
+  - Every update must include a clear and brief reason related to current interaction
+
+---
+变量更新规则:
+  世界:
+    当前时间:
+      format: YYYY-MM-DD HH:MM
+      check:
+        - 根据回复正文中描述的动作和事件，模拟现实中完成这些事情所需的时间来推进
+        - 参考锚点（单次动作的时间消耗）：
+          - 打开App/发一条消息/穿脱一件衣服：不超过1分钟
+          - 刷牙洗脸/更换整套服装：3-5分钟
+          - 吃一顿饭/洗完澡：15-30分钟
+          - 步行一个公交站/坐地铁2-3站：10-15分钟
+          - 等公交/地铁：2-10分钟
+          - 上课一节课：45分钟
+          - 实习半日：4小时
+          - 跳过时间段（如"过了20分钟"）：按描述中的时间推进
+        - 多条回复中的连续动作累积时间应合理叠加，不应每次独立重置
+    当前地点:
+      format: "区域_具体位置"
+      check:
+        - 移动到新位置时更新
+    近期事务:
+      type: |-
+        {
+          [事务名: string]: string; // 事务描述
+        }
+      check:
+        - 记录需要完成的任务、约定、重要事件等
+        - 完成后从列表中移除
+  主角:
+    姓名:
+      check:
+        - 初始设定即可，通常不需修改
+    年龄:
+      type: number
+      check:
+        - 生日时更新
+    身份:
+      check:
+        - 工作、角色身份变化时更新
+    金钱:
+      type: number
+      check:
+        - 实习工资、任务报酬、奖励等收入时增加
+        - 消费、购物、还款、交租时减少
+        - 不得为负数
+    衣物:
+      type: |-
+        {
+          [服装部位: string]: string; // 服装名称+描述
+        }
+      check:
+        - 换装时更新对应部位
+  数值:
+    饱食度:
+      type: number
+      range: 0~100
+      check:
+        - 随时间自然消耗（睡眠-1/h，静息-2/h，活动-4/h，剧烈运动-10/h）
+        - 进食增加（零食+15，正餐+40）
+    精神值:
+      type: number
+      range: 0~100
+      check:
+        - 放空状态-1/h，社交-2/h，高强度脑力-6/h，喝酒-25/杯
+        - 高质量睡眠+12/h，打盹+5/h，功能饮料+20/次
+        - 归零时强制昏睡12小时，醒来仅恢复至50
+    心情值:
+      type: number
+      range: 0~100
+      check:
+        - 自然流失-1/h
+        - 娱乐、高级消费、正面事件增加
+        - 被指责、负面事件减少
+        - 归零时游戏结束
+    性欲值:
+      type: number
+      range: 0~100
+      check:
+        - 自然积累+1/h，性刺激+1/次，性行为中+5/分钟
+        - 高潮后清零
+    快感值:
+      type: number
+      range: 0~100
+      check:
+        - 轻度性刺激+5/分钟，深度性刺激+10/分钟
+        - 刺激停止-20/分钟，高潮后重置为60
+    整体色情值:
+      type: number
+      range: 0~100
+      check:
+        - 根据当前穿着服装的色情值平均值动态计算
+        - 遵循视觉掩蔽原则和风格标签修正
+  日程:
+    日期:
+      check:
+        - 每天随着时间推进更新
+    星期:
+      check:
+        - 与日期同步更新
+    是否学期:
+      type: boolean
+      check:
+        - 根据年度时间表切换
+    固定日程:
+      type: |-
+        [
+          {
+            时间: string;
+            事项: string;
+            地点: string;
+            完成: boolean;
+          }
+        ]
+      check:
+        - 按周日程表生成当天固定日程
+        - 事件完成后标记为true
+    课程掌握度:
+      type: |-
+        {
+          [课程名: string]: number; // 0~100
+        }
+      check:
+        - 认真听讲+4%/h，自学+1%/h
+        - 上限100%
+    志愿者时长:
+      type: number
+      check:
+        - 每次完成医院义工+2h
+        - 毕业要求20h
+    论文完成度:
+      type: number
+      range: 0~100
+      check:
+        - 导师辅导+2.5%/h，自写+1%/h
+    实习小时:
+      type: number
+      check:
+        - 每周固定实习20h
+        - 毕业要求1000h
+    牝多多等级:
+      type: number
+      range: 1~5
+      check:
+        - 经验达到阈值时升级
+        - 1:青涩新人 2:初级外围 3:资深玩物 4:知名母狗 5:公共便器
+    牝多多经验:
+      type: number
+      check:
+        - 完成任务获得报酬时按1元=1EXP增加
+    可用任务:
+      type: |-
+        [
+          {
+            任务名: string;
+            类型: "露出类" | "道具类" | "拍摄类" | "陪玩类" | "临时工类";
+            阶级: string;
+            截止?: string;
+            目标: string;
+            报酬: number;
+            额外要求?: string;
+          }
+        ]
+      check:
+        - 任务日生成3个任务供选择
+        - 接取后转移到当前任务
+    当前任务:
+      type: |-
+        {
+          任务名: string;
+          类型: "露出类" | "道具类" | "拍摄类" | "陪玩类" | "临时工类";
+          阶级: string;
+          截止?: string;
+          目标: string;
+          报酬: number;
+          完成?: boolean;
+        }
+      check:
+        - 接取任务时设置
+        - 完成后标记完成=true
+     任务历史:
+       type: |-
+         {
+           [任务名: string]: { [字段: string]: unknown };
+         }
+       check:
+         - 任务完成后移入此处保留记录
+     用户日程:
+       type: |-
+         [
+           {
+             时间: string;  // YYYY-MM-DD HH:MM 格式
+             事项: string;
+             地点?: string;
+             联系人?: string;
+             类型: "固定" | "约定" | "提醒";
+             完成?: boolean;
+           }
+         ]
+        check:
+          - 添加新人约定时，将双方约定的时间、地点、联系人写入
+          - 固定日程从硬性日程表自动同步（考试、运动会等），写入时标记类型为"固定"
+          - 用户自己设定的提醒（如"记得去买东西"）写入类型为"提醒"
+          - 事件发生后标记完成=true
+          - 已经过期的事件在分析阶段标记完成
+          - 长周期事件（如期末考试周 1月8日-14日）只需在事件日期写入一条日程，事项标注起止日期范围
+   服装库:
+    type: |-
+      {
+        [服装名: string]: {
+          部位标签: string[];
+          风格标签: string[];
+          材质标签: string[];
+          颜色标签: string[];
+          特质标签: string[];
+          色情值: number;
+          表象值: number;
+          价格: number;
+          描述: string;
+        }
+      }
+    check:
+      - 添加新服装时一次性写入完整标签体系
+      - 服装改造时更新对应标签
+  衣柜:
+    当前环境:
+      check:
+        - 每次切换场景时更新
+    可选服装:
+      type: |-
+        {
+          [部位: string]: { [服装名: string]: string };
+        }
+      check:
+        - 根据当前环境可用衣柜更新
+    等待换装:
+      type: boolean
+      check:
+        - 需要玩家选择服装时设为true
+        - 玩家确认穿着后设为false
+    出门目的地:
+      check:
+        - 玩家选择移动目的时设置
+    已提示地点:
+      check:
+        - 记录上次提示换装的地点，避免重复提示
+    最近选择:
+      type: string[]
+      check:
+        - 记录最近几次换装选择，用于推荐
+  穿着:
+    type: |-
+      {
+        [部位: string]: string; // 服装名
+      }
+    check:
+      - 换装时更新对应部位
+      - 脱下时删除该键
+  场景:
+    当前区域:
+      check:
+        - 玩家移动到新区时更新
+    环境秩序:
+      check:
+        - 根据当前场景描述设定（严肃/日常/拥挤/昏暗等）
+    人员密度:
+      check:
+        - 根据当前场景和人流设定（极少/稀疏/适中/密集/拥挤）
+    风险等级:
+      check:
+        - 根据服装色情值和环境综合判定（安全/低/中/高/极度危险）
+    可中止条件:
+      check:
+        - 描述当前场景下中止行为的可能性
+    近期NPC:
+      type: string[]
+      check:
+        - 进入新场景时生成在场NPC列表
+        - 离开场景时清空
+  社交:
+    联系人:
+      type: |-
+        {
+          [联系人名: string]: {
+            状态: "已保存" | "未保存" | "工作联系" | "拉黑";
+            身份: string;
+            好感度: number; // 0~100
+          }
+        }
+      check:
+        - 获得联系方式时添加联系人
+        - 好感度随互动变化±1~20
+    微信:
+      收件箱:
+        type: |-
+          [{ [消息内容: string]: string }] // 消息内容: 时间
+        check:
+          - NPC主动发消息时添加
+          - 玩家阅读后删除
+      发件箱:
+        type: |-
+          [{ [消息内容: string]: string }]
+        check:
+          - 玩家发送消息时记录
+</变量更新规则>

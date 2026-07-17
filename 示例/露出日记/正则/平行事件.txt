@@ -1,0 +1,4 @@
+<details>
+<summary>平行事件</summary>
+$1
+</details>

@@ -1,0 +1,27 @@
+<性欲变化规则>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+<%_ if (getvar('stat_data.主角.色情状态.性欲') < 30) { _%>
+# 阶段0: 平静期 (0-29)
+状态: 理智
+变化公式: { "op": "delta", "path": "/{{format_message_variable::stat_data.主角.名字}}/色情状态/性欲", "value": 心理刺激*1.5 + 物理刺激*0.5 }
+<%_ } else if (getvar('stat_data.主角.色情状态.性欲') < 50) { _%>
+# 阶段1: 唤醒期 (30-49)
+变化公式: { "op": "delta", "path": "/{{format_message_variable::stat_data.主角.名字}}/色情状态/性欲", "value": 心理刺激*1 + 物理刺激*1 }
+<%_ } else if (getvar('stat_data.主角.色情状态.性欲') < 70) { _%>
+# 阶段2: 涌动期 (50-69)
+变化公式: { "op": "delta", "path": "/{{format_message_variable::stat_data.主角.名字}}/色情状态/性欲", "value": 心理刺激*0.5 + 物理刺激*1.5 }
+<%_ } else if (getvar('stat_data.主角.色情状态.性欲') < 90) { _%>
+# 阶段3: 临界期 (70-89)
+状态: 临界
+变化公式: { "op": "delta", "path": "/{{format_message_variable::stat_data.主角.名字}}/色情状态/性欲", "value": 物理刺激*1 }
+<%_ } else { _%>
+# 阶段4: 高潮期 (90+)
+状态: 高潮
+变化公式: { "op": "delta", "path": "/{{format_message_variable::stat_data.主角.名字}}/色情状态/性欲", "value": 物理刺激*1.5 }
+<%_ } _%>
+<%_ } _%>
+
+高潮后重置:
+- 性行为停止: 性欲→0, 进入不应期, 敏感度暂降
+- 性行为持续: 性欲→50, 进入余韵期, 高敏感状态
+</性欲变化规则>

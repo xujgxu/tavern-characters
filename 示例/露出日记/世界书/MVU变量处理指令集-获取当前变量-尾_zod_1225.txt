@@ -1,0 +1,8 @@
+发布者:
+  发布者满意度: {{format_message_variable::stat_data.发布者.发布者满意度}}
+  惩罚中: {{format_message_variable::stat_data.发布者.惩罚中}}
+  惩罚措施: {{format_message_variable::stat_data.发布者.惩罚措施}}
+
+任务: {{format_message_variable::stat_data.任务}}
+
+</status_current_variables>

@@ -1,0 +1,40 @@
+<%_ if (getvar('stat_data.主角.记录方式.直播') === true) { _%>
+<live_streaming_mechanism>
+  # 机制: 直播间机制
+  # 类别: 核心叙事格式 / 任务表现形式
+
+  ## 一、 核心原则：格式化的沉浸感
+  本机制旨在为“深井”平台上的直播活动提供一个统一且规范的叙事框架。其核心目的是通过固定的格式，模拟出真实的直播间氛围，将{{format_message_variable::stat_data.主角.名字}}的行为、直播画面和观众的实时反应整合在一起，为{{user}}提供沉浸式的互动体验。
+
+  ## 二、 触发条件
+  - 当{{format_message_variable::stat_data.主角.名字}}在“深井”系统中的状态为`{{format_message_variable::stat_data.主角.名字}}.任务记录方式.直播`设定为`true`时，本机制将被强制激活。
+
+  ## 三、 输出格式规范
+  - 在直播状态下，所有的叙事内容都必须严格遵循以下XML格式进行输出。此格式为最高优先级，将覆盖其他常规的叙事方式。
+
+  - **标准格式结构:**
+    ```xml
+    <live_streaming>
+        <live_name>{{直播间名字}}</live_name>
+        <live_picture>{{对当前直播画面的简明文字描述}}</live_picture>
+        <live_paidbarrage>{{直播间付费弹幕}}{{付费金额}}</live_paidbarrage>
+        <live_barrage1>{{第一条模拟观众弹幕}}</live_barrage1>
+        <live_barrage2>{{第二条模拟观众弹幕}}</live_barrage2>
+        <live_barrage3>{{第三条模拟观众弹幕}}</live_barrage3>
+        <live_barrage4>{{第四条模拟观众弹幕}}</live_barrage4>
+    </live_streaming>
+    ```
+
+  ## 四、 内容生成指导
+  - `<live_name>`: 直播间的标题应根据任务内容和{{format_message_variable::stat_data.主角.名字}}的`堕落等级`动态生成，需简短且具有吸引力。
+  - `<live_picture>`: 画面描述应聚焦于{{format_message_variable::stat_data.主角.名字}}当前的核心动作、身体状态和所处的环境，语言要精炼、直观。
+  - `<live_paidbarrage>`:
+    - 付费弹幕是直播间的核心互动，其内容通常比普通弹幕更具指令性、更露骨或包含特定的要求。
+    - 生成时需包含两部分：弹幕文本和括号内的付费金额（例如：[快把镜头对准你的脚！(500元)]）。
+  - `<live_barrage>`:
+    - 普通弹幕内容应多样化，反映出“深井”用户的不同心态，可以包含：对{{format_message_variable::stat_data.主角.名字}}行为的直接指令、对其身体的评价、对任务风险的讨论、纯粹的下流言语或是用户之间的互动。
+    - 弹幕的生成应与`live_picture`中描述的画面内容紧密相关，形成实时的互动感。
+    - 弹幕的数量固定为四条，以保持信息的清晰度和阅读节奏。
+
+</live_streaming_mechanism>
+<%_ } _%>

@@ -1,0 +1,5 @@
+<linzhou_worldview_metadata>
+  # 霖州世界观元数据
+  world_name: 霖州是一座日本现代的都市
+  theme_tags: 日本现代都市|日常叙事|男性向
+</linzhou_worldview_metadata>

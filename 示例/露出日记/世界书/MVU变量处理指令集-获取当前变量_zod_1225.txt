@@ -1,0 +1,55 @@
+<%_ setLocalVar('initialized_lorebooks.-SnowYuki', true); _%>
+{{// 这个值是用来判别世界书是否初始化的，在世界书加载一次之后就永久为true，可以在某些变量需要屏蔽来自LLM的更新时使用，避免将初始化设置也屏蔽掉}}
+{{// 不要使用setvar，会插入到用户消息变量中导致消息swipe出错}}
+
+以下是故事中需要追踪的关键变量，当前状态以这些变量的值为准。
+<status_current_variables>
+世界:
+  地点: {{format_message_variable::stat_data.世界.地点}}
+  日期: {{format_message_variable::stat_data.世界.日期}}
+  时间:
+    小时: {{format_message_variable::stat_data.世界.时间.小时}}
+    分钟: {{format_message_variable::stat_data.世界.时间.分钟}}
+  星期: {{format_message_variable::stat_data.世界.星期}}
+
+手机变量: {{format_message_variable::stat_data.手机变量}}
+
+主角:
+  常规物品:
+    金钱: {{format_message_variable::stat_data.主角.常规物品.金钱}}
+    学分: {{format_message_variable::stat_data.主角.常规物品.学分}}
+  外观数据:
+    发色: {{format_message_variable::stat_data.主角.外观数据.发色}}
+    发型: {{format_message_variable::stat_data.主角.外观数据.发型}}
+    臀围: {{format_message_variable::stat_data.主角.外观数据.臀围}}
+    腰围: {{format_message_variable::stat_data.主角.外观数据.腰围}}
+  服装状态: {{format_message_variable::stat_data.主角.服装状态}}
+  身处状态: {{format_message_variable::stat_data.主角.身处状态}}
+  身份暴露度: {{format_message_variable::stat_data.主角.身份暴露度}}
+  称号: {{format_message_variable::stat_data.主角.称号}}
+  色情状态:
+    性欲: {{format_message_variable::stat_data.主角.色情状态.性欲}}
+    暴露值: {{format_message_variable::stat_data.主角.色情状态.暴露值}}
+    宫内精液: {{format_message_variable::stat_data.主角.色情状态.宫内精液}}
+    肛门精液: {{format_message_variable::stat_data.主角.色情状态.肛门精液}}
+    外部精液: {{format_message_variable::stat_data.主角.色情状态.外部精液}}
+    高潮阶段: {{format_message_variable::stat_data.主角.色情状态.高潮阶段}}
+  身体色情记录:
+    阴道处女: {{format_message_variable::stat_data.主角.身体色情记录.阴道处女}}
+    性经验: {{format_message_variable::stat_data.主角.身体色情记录.性经验}}
+    肛门处女: {{format_message_variable::stat_data.主角.身体色情记录.肛门处女}}
+    性爱状态: {{format_message_variable::stat_data.主角.身体色情记录.性爱状态}}
+    口穴开发度: {{format_message_variable::stat_data.主角.身体色情记录.口穴开发度}}
+    私处开发度: {{format_message_variable::stat_data.主角.身体色情记录.私处开发度}}
+    肛门开发度: {{format_message_variable::stat_data.主角.身体色情记录.肛门开发度}}
+    乳房开发度: {{format_message_variable::stat_data.主角.身体色情记录.乳房开发度}}
+    屁股敏感度: {{format_message_variable::stat_data.主角.身体色情记录.屁股敏感度}}
+    精液适应度: {{format_message_variable::stat_data.主角.身体色情记录.精液适应度}}
+  记录方式: {{format_message_variable::stat_data.主角.记录方式}}
+  备忘录: {{format_message_variable::stat_data.主角.备忘录}}
+  任务经验: {{format_message_variable::stat_data.主角.任务经验}}
+  背包: {{format_message_variable::stat_data.主角.背包}}
+
+环境:
+  可互动元素: {{format_message_variable::stat_data.环境.可互动元素}}
+  在场NPC: {{format_message_variable::stat_data.环境.在场NPC}}

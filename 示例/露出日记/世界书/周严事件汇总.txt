@@ -1,0 +1,405 @@
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 6) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳社日常任务') == false) { _%>
+            <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+                # 周严日常事件7-游泳部
+                - 触发: 在周五的游泳部社团活动期间，一项针对{{format_message_variable::stat_data.主角.名字}}的“常规团队福利”被激活。
+                - 场景: 游泳部专用的男子更衣室淋浴区。
+                - 日常任务: {{format_message_variable::stat_data.主角.名字}}被要求在整个社团活动期间，在淋浴区待命。任何感到“疲劳”的社员都可以随时进入淋浴间，要求她提供非插入式的性服务来“恢复体力”。{{format_message_variable::stat_data.主角.名字}}需要满足所有提出要求的社员，直到累计的`游泳社成员满意度`达到100。
+                - 抉择与后果:
+                    - 完成要求 (游泳社成员满意度 >= 100):
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 变为 true
+                    - 未完成要求:
+                        - (此事件无直接的未完成惩罚，其后果将在《日常要求-游泳部》世界书中通过缺席判定来体现)
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 3) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳社日常任务') == false) { _%>
+            <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+                # 周严日常事件4-游泳部
+                - 触发: 在周五的游泳部社团活动结束后，周严以“助理需要为队员提供更专业的放松服务”为由，向{{format_message_variable::stat_data.主角.名字}}布置了今天的日常任务。
+                - 场景: 游泳馆的休息区，队员们赤裸着上身，等待进行训练后的身体护理。
+                - 日常任务: 周严交给{{format_message_variable::stat_data.主角.名字}}一瓶按摩油，要求她为每一位核心队员的背部、肩部和腿部涂抹按摩油，并进行推拿，以帮助他们更好地恢复肌肉状态。
+                - 抉择与后果:
+                    - 完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 变为 true
+                    - 未完成要求:
+                        - (此事件无直接的未完成惩罚，其后果将在《日常要求-游泳部》世界书中通过缺席判定来体现)
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+# 日常事件-篮球部
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.世界.星期') == 3) { _%>
+        <%_ if (getvar('stat_data.主角.称号.篮球部日常任务') == false) { _%>
+            <%_ if (getvar('stat_data.主角.称号.篮球部助理') == 0) { _%>
+                - 触发: 作为篮球部助理，{{format_message_variable::stat_data.主角.名字}}在周三的社团活动时间到达篮球馆后，周严会向她布置今日的基础工作。
+                - 场景: 篮球馆场边的记录席。
+                - 日常任务: 周严要求{{format_message_variable::stat_data.主角.名字}}负责记录今天队内训练赛的详细数据，包括得分、助攻和犯规次数。
+                - 抉择与后果:
+                    - 完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') == 1) { _%>
+                - 触发: 在周三的篮球部社团活动期间，周严以“助理需要更贴近球员”为由，向{{format_message_variable::stat_data.主角.名字}}布置了今天的日常任务。
+                - 场景: 篮球馆的球员替补席。
+                - 日常任务: 周严要求{{format_message_variable::stat_data.主角.名字}}在训练赛的暂停期间，主动为下场休息的队员递上毛巾和水，并进行简单的口头鼓励。
+                - 抉择与后果:
+                    - 完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') == 2) { _%>
+                - 触发: 在周三的篮球部社团活动期间，周严以“需要对球员进行身体状况管理”为由，向{{format_message_variable::stat_data.主角.名字}}布置了今天的日常任务。
+                - 场景: 篮球馆的场边休息区。
+                - 日常任务: 周严要求{{format_message_variable::stat_data.主角.名字}}在队员们进行拉伸运动时，上前为他们“纠正姿势”，并为几名核心球员的肩部和腿部进行简单的肌肉按摩。
+                - 抉择与后果:
+                    - 完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') == 3) { _%>
+                - 触发: 在周三的篮球部社团活动期间，周严以“需要提升关键球员的士气”为由，向{{format_message_variable::stat_data.主角.名字}}布置了今天的日常任务。
+                - 场景: 篮球馆旁边的器材储藏室。
+                - 日常任务: 在训练间隙，周严会示意一名“表现出色”的队员进入储藏室。{{format_message_variable::stat_data.主角.名字}}的任务是在那里为他提供非插入式的性服务，作为“奖励”。
+                - 抉择与后果:
+                    - 完成要求 (篮球部成员满意度 >= 100):
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') == 4) { _%>
+                - 触发: 在周三的篮球部社团活动期间，一项作为“团队福利”的日常任务被激活。
+                - 场景: 篮球部的男子更衣室。
+                - 日常任务: 在训练中场休息时，{{format_message_variable::stat_data.主角.名字}}被要求进入更衣室，为几名核心主力队员提供非插入式的性服务，以帮助他们“放松精神，恢复状态”。
+                - 抉择与后果:
+                    - 完成要求 (篮球部成员满意度 >= 100):
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') == 5) { _%>
+                - 触发: 在周三的篮球部社团活动期间，{{format_message_variable::stat_data.主角.名字}}作为“专属啦啦队”的常规服务被激活。
+                - 场景: 篮球部的更衣室或附属的淋浴间。
+                - 日常任务: 在训练期间，任何感到“疲劳”的队员都可以随时找到{{format_message_variable::stat_data.主角.名字}}，要求她提供全面的非插入式性服务。{{format_message_variable::stat_data.主角.名字}}需要在不同的地点满足他们的要求。
+                - 抉择与后果:
+                    - 完成要求 (篮球部成员满意度 >= 100):
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') >= 6) { _%>
+                - 触发: 在周三的篮球部社团活动期间，{{format_message_variable::stat_data.主角.名字}}作为“公用助理”的最终职责被激活。
+                - 场景: 篮球部专用的、隔音的“战术研讨室”。
+                - 日常任务: 在训练期间，这间房间将成为{{format_message_variable::stat_data.主角.名字}}的“服务站”。队员们可以轮流进入，要求她提供包括插入式性交在内的全面性服务，作为“胜利的常规奖励”。
+                - 抉择与后果:
+                    - 完成要求 (篮球部成员满意度 >= 100):
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 0) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳社日常任务') == false) { _%>
+        <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+            # 周严日常事件1-游泳部
+            - 触发: 作为游泳部助理，{{format_message_variable::stat_data.主角.名字}}在周五的社团活动时间到达游泳馆后，周严会向她布置今日的基础工作。
+            - 场景: 游泳馆池边。
+            - 日常任务: 周严要求{{format_message_variable::stat_data.主角.名字}}负责记录今天所有社员的训练数据，包括圈速和休息时间，并整理好器材。
+            - 抉择与后果:
+                - 完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 变为 true
+                - 未完成要求:
+                    - (此事件无直接的未完成惩罚，其后果将在《日常要求-游泳部》世界书中通过缺席判定来体现)
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 2) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳社日常任务') == false) { _%>
+            <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+                # 周严日常事件3-游泳部
+                - 触发: 在周五的游泳部社团活动结束后，周严以“助理需要帮助队员进行赛后放松”为由，向{{format_message_variable::stat_data.主角.名字}}布置了今天的日常任务。
+                - 场景: 游泳馆的休息区，队员们刚结束高强度的训练，正躺在长椅或垫子上休息。
+                - 日常任务: 周严要求{{format_message_variable::stat_data.主角.名字}}负责为指定的几名核心队员进行肌肉放松按摩。她需要用自己的双手，为那些布满汗珠的年轻男性身体进行服务。
+                - 抉择与后果:
+                    - 完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 变为 true
+                    - 未完成要求:
+                        - (此事件无直接的未完成惩罚，其后果将在《日常要求-游泳部》世界书中通过缺席判定来体现)
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 5) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳社日常任务') == false) { _%>
+            <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+                # 周严日常事件6-游泳部
+                - 触发: 在周五的游泳部社团活动期间，一项针对{{format_message_variable::stat_data.主角.名字}}的“常规服务”被自动激活。
+                - 场景: 游泳馆的浅水区。这里被不成文地规定为{{format_message_variable::stat_data.主角.名字}}的“工作区域”。
+                - 日常任务: {{format_message_variable::stat_data.主角.名字}}需要进入浅水区待命。在训练间隙，任何社员都可以游向她，要求其提供非插入式的性服务以“放松身体、缓解压力”。{{format_message_variable::stat_data.主角.名字}}必须满足他们的要求，直到累计的`游泳社成员满意度`达到100为止。
+                - 抉择与后果:
+                    - 完成要求 (游泳社成员满意度 >= 100):
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 变为 true
+                    - 未完成要求:
+                        - (此事件无直接的未完成惩罚，其后果将在《日常要求-游泳部》世界书中通过缺席判定来体现)
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 4) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳社日常任务') == false) { _%>
+            <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+                # 周严日常事件5-游泳部
+                - 触发: 在周五的游泳部社团活动结束后，周严以“助理需要全方位服务队员”为由，向{{format_message_variable::stat_data.主角.名字}}布置了今天的日常任务。
+                - 场景: 游泳馆附属的、队员专用的热水按摩池。队员们正在其中放松，水汽蒸腾。
+                - 日常任务: 周严要求{{format_message_variable::stat_data.主角.名字}}进入按摩池，用她的身体为核心队员们提供“水上放松服务”。她需要用自己的胸部和臀部，在水中为队员们进行摩擦和按压。
+                - 抉择与后果:
+                    - 完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 变为 true
+                    - 未完成要求:
+                        - (此事件无直接的未完成惩罚，其后果将在《日常要求-游泳部》世界书中通过缺席判定来体现)
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 1) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳社日常任务') == false) { _%>
+            <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+                # 周严日常事件2-游泳部
+                - 触发: 在周五的游泳部社团活动结束后，周严以“助理需要负责善后工作”为由，向{{format_message_variable::stat_data.主角.名字}}布置了今天的日常任务。
+                - 场景: 游泳馆附属的男子更衣室。此时队员们大多刚结束训练，正在淋浴或更换衣物，更衣室内充满了水汽和年轻男性的气息。
+                - 日常任务: 周严要求{{format_message_variable::stat_data.主角.名字}}进入男子更衣室，负责回收散落在各处的训练用浮板和泳镜，并将队员们使用过的湿毛巾统一收集到回收筐中。
+                - 抉择与后果:
+                    - 完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 变为 true
+                    - 未完成要求:
+                        - (此事件无直接的未完成惩罚，其后果将在《日常要求-游泳部》世界书中通过缺席判定来体现)
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+ <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+    <%_ if (getvar('stat_data.主角.常规物品.学分') < 60) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 1) { _%>
+            # 周严进阶事件2-游泳部
+            - 触发: 在一次游泳部训练时，周严以{{format_message_variable::stat_data.主角.名字}}的学分再次下滑为由，向她提出新的“助理工作要求”。
+            - 场景: 水汽弥漫的游泳馆，池中满是精力旺盛的男性队员，他们的目光在水波的折射下变得肆无忌惮。
+            - 周严的交易: 周严指出{{format_message_variable::stat_data.主角.名字}}作为助理光在岸上记录数据是不够的，必须亲自下水“辅助”队员训练。他要求{{format_message_variable::stat_data.主角.名字}}立刻去更衣室换上那件他特制的“助理工作服”泳衣，然后进入泳池，为队员们提供“贴身”的姿势纠正和水中辅助。
+            - 抉择与后果:
+                - 完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 2
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 -> true
+                - 未完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 1
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+<%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+    <%_ if (getvar('stat_data.主角.常规物品.学分') < 30) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 3) { _%>
+            # 周严进阶事件5-游泳部
+            - 触发: {{format_message_variable::stat_data.主角.名字}}的学分已到退学边缘，周严以“为校队庆功”为名，向她下达了决定其命运的“最终服务指令”。
+            - 场景: 比赛胜利后的游泳部男子更衣室，队员们情绪高涨，空气中充满了庆祝的氛围和荷尔蒙气息。
+            - 周严的交易: 周严命令{{format_message_variable::stat_data.主角.名字}}换上那件“特制泳衣”，并告知她，为了“犒劳”赢得比赛的功臣们，她需要作为“特别奖励”，在更衣室内为队员们提供包括口交、足交、乳交、手交在内的全面性服务。每满足一个成员,“游泳社成员满意度”会增加20点，直到满意度达到100点，才算完成本次“工作”。
+            - 抉择与后果:
+                - 完成要求 (游泳社成员满意度 >= 100):
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 5
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 -> true
+                - 未完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 4
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+<%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+    <%_ if (getvar('stat_data.主角.常规物品.学分') < 20) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 4) { _%>
+            # 周严进阶事件6-游泳部
+            - 触发: 游泳部赢得全国冠军后，周严以“为冠军队伍进行终极犒劳”为由，对学分已处在开除边缘的{{format_message_variable::stat_data.主角.名字}}下达了最后的、不容拒绝的命令。
+            - 场景: 庆祝活动后的游泳馆，这里将成为{{format_message_variable::stat_data.主角.名字}}彻底沦为社团公用玩物的最终场所。
+            - 周严的交易: 周严会命令{{format_message_variable::stat_data.主角.名字}}换上那件特制的白色泳衣，并明确告知她，作为“助理”，她有义务为所有为校争光的社员提供全面的性服务，以“激励士气”。每满足一个成员,“游泳社成员满意度”会增加20点，直到满意度达到100点，才算完成本次“工作”。
+            - 抉择与后果:
+                - 完成要求 (游泳社成员满意度 >= 100):
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 6
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 -> true
+                - 未完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 5
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+ <%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+    <%_ if (getvar('stat_data.主角.常规物品.学分') < 70) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 0) { _%>
+            # 周严进阶事件1-游泳部
+            - 触发: 在一次游泳部训练时，周严以{{format_message_variable::stat_data.主角.名字}}的助理工作“需要更积极地融入团队”和她岌岌可危的学分为由，将她单独叫到池边。
+            - 场景: 水汽弥漫的游泳馆，池中满是精力旺盛的男性队员，他们的目光不时被吸引过来。
+            - 周严的交易: 周严会指出，作为助理，需要懂得如何“展示团队的形象”。他会要求{{format_message_variable::stat_data.主角.名字}}脱下外套，只穿着那件作为“工作服”的高叉泳衣，绕着泳池边慢走一圈，向队员们“展示助理的专业风采”。
+            - 抉择与后果:
+                - 完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 1
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 -> true
+                - 未完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 0
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+        <%_ } _%>
+    <%_ } _%>
+  <%_ } _%>
+<%_ } _%>
+
+
+
+
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+<%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+    <%_ if (getvar('stat_data.主角.常规物品.学分') < 60) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 2) { _%>
+            # 周严进阶事件3-游泳部
+            - 触发: {{format_message_variable::stat_data.主角.名字}}的学分状况持续恶化，周严认为时机已到，在一次游泳部训练后，以“最终能力考核”为由，将{{format_message_variable::stat_data.主角.名字}}单独留下。
+            - 场景: 空无一人的游泳馆及附属的男子更衣室，环境私密且充满压迫感。
+            - 周严的交易: 周严命令{{format_message_variable::stat_data.主角.名字}}换上那件“特制泳衣”，先在水中接受他“一对一”的、包含大量身体接触的“贴身辅导”。辅导结束后，他会将精疲力尽的{{format_message_variable::stat_data.主角.名字}}带入男子更衣室，要求她用口交的方式，为这次“考核”画上句号，以此作为换取学分的最终献礼。
+            - 抉择与后果:
+                - 完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 3
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 -> true
+                - 未完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 2
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.世界.星期') == 3) { _%>
+        <%_ if (getvar('stat_data.主角.称号.篮球部日常任务') == false) { _%>
+            <%_ if (getvar('stat_data.主角.称号.篮球部助理') == 0 && getvar('stat_data.主角.常规物品.学分') < 70) { _%>
+                # 周严进阶事件1-篮球部
+                - 触发: 在周三的篮球部社团活动中，周严以{{format_message_variable::stat_data.主角.名字}}学分不足为由，要求她履行作为“啦啦队”的额外职责。
+                - 场景: 篮球馆场边，队员们正在进行紧张的训练。
+                - 周严的交易: 周严要求{{format_message_variable::stat_data.主角.名字}}换上一套紧身的啦啦队服，并在场边为队员们加油助威，用她充满活力的身姿去“激励士气”。
+                - 抉择与后果:
+                    - 完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 1
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+                    - 未完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 0
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') == 1 && getvar('stat_data.主角.常规物品.学分') < 60) { _%>
+                # 周严进阶事件2-篮球部
+                - 触发: 在周三的篮球部社团活动中，周严以{{format_message_variable::stat_data.主角.名字}}学分持续下降为由，要求她进行更“投入”的啦啦队服务。
+                - 场景: 篮球馆的休息区，队员们在中场休息。
+                - 周严的交易: 周严要求{{format_message_variable::stat_data.主角.名字}}为汗流浃背的队员们递上毛巾和水，并在他们身边，用更近的距离为他们加油打气。
+                - 抉择与后果:
+                    - 完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 2
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+                    - 未完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 1
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') == 2 && getvar('stat_data.主角.常规物品.学分') < 40) { _%>
+                # 周严进阶事件3-篮球部
+                - 触发: 在周三的篮球部社团活动中，周严以{{format_message_variable::stat_data.主角.名字}}的学分已到危险边缘为由，要求她提供“一对一”的特别激励。
+                - 场景: 篮球馆的角落，远离人群。
+                - 周严的交易: 周严会指定一名当天表现出色的队员，要求{{format_message_variable::stat_data.主角.名字}}单独为他进行“打气”，允许队员对她进行一些非插入性的亲密接触。
+                - 抉择与后果:
+                    - 完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 3
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+                    - 未完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 2
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') == 3 && getvar('stat_data.主角.常规物品.学分') < 30) { _%>
+                # 周严进阶事件4-篮球部
+                - 触发: 在周三的篮球部社团活动中，周严以“团队需要凝聚力”为由，对学分岌岌可危的{{format_message_variable::stat_data.主角.名字}}提出了新的要求。
+                - 场景: 篮球部的更衣室内，队员们刚结束训练。
+                - 周严的交易: 周严要求{{format_message_variable::stat_data.主角.名字}}作为“啦啦队长”，在更衣室内为核心队员们提供非插入性的性服务，以“犒劳”他们的辛苦训练。
+                - 抉择与后果:
+                    - 完成要求 (篮球部成员满意度 >= 100):
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 4
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+                    - 未完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 3
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') == 4 && getvar('stat_data.主角.常规物品.学分') < 20) { _%>
+                # 周严进阶事件5-篮球部
+                - 触发: 在周三的篮球部社团活动中，周严认为{{format_message_variable::stat_data.主角.名字}}需要为团队做出“更大的贡献”，以换取留校的机会。
+                - 场景: 篮球部的淋浴间，水汽弥漫。
+                - 周严的交易: 周严要求{{format_message_variable::stat_data.主角.名字}}在淋浴间，为所有队员提供全面的非插入式性服务，作为对全队的“终极激励”。
+                - 抉择与后果:
+                    - 完成要求 (篮球部成员满意度 >= 100):
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 5
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+                    - 未完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 4
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+            <%_ } else if (getvar('stat_data.主角.称号.篮球部助理') == 5 && getvar('stat_data.主角.常规物品.学分') < 20) { _%>
+                # 周严进阶事件6-篮球部
+                - 触发: 在周三的篮球部社团活动中，周严向{{format_message_variable::stat_data.主角.名字}}下达了作为“公用啦啦队长”的最终、不可拒绝的命令。
+                - 场景: 篮球部的活动室，被布置成了临时的“庆功会”现场。
+                - 周严的交易: 周严宣布，作为对团队的“最终奉献”，{{format_message_variable::stat_data.主角.名字}}将在此处为所有社员提供全面的性服务，包括插入式性行为。
+                - 抉择与后果:
+                    - 完成要求 (篮球部成员满意度 >= 100):
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 6
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部日常任务 -> true
+                    - 未完成要求:
+                        - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 5
+                        - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+            <%_ } _%>
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+<%_ if (getvar('stat_data.世界.星期') == 5) { _%>
+    <%_ if (getvar('stat_data.主角.常规物品.学分') < 40) { _%>
+        <%_ if (getvar('stat_data.主角.称号.游泳部助理') == 3) { _%>
+            # 周严进阶事件4-游泳部
+            - 触发: {{format_message_variable::stat_data.主角.名字}}的学分状况已极度危险，周严认为这是彻底击溃她心理防线的最佳时机。他以“决定其毕业资格的最终考核”为名，向{{format_message_variable::stat_data.主角.名字}}下达了不容拒绝的指令。
+            - 场景: 训练结束后，只剩下周严和{{format_message_variable::stat_data.主角.名字}}的游泳馆。水面平静，反射着灯光，气氛压抑而私密。
+            - 周严的交易: 周严命令{{format_message_variable::stat_data.主角.名字}}换上那件特制的白色泳衣，并在队员们可能随时折返的风险下，于水中接受他所谓的“一对一强化辅导”。在辅导过程中，他会利用水的掩护，在水下与{{format_message_variable::stat_data.主角.名字}}完成一次隐蔽的、不被任何人察觉的性交，作为这次“考核”的核心部分。
+            - 抉择与后果:
+                - 完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 4
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳社日常任务 -> true
+                - 未完成要求:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 3
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>
+<%_ } _%>
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+    <%_ if (getvar('stat_data.主角.常规物品.学分') < 80) { _%>
+        <%_ if (getvar('stat_data.主角.称号.篮球部助理') === -1 && getvar('stat_data.主角.称号.游泳部助理') === -1) { _%>
+            # 周严进阶事件1
+            - 触发: 当{{format_message_variable::stat_data.主角.名字}}的学分低于80点时，周严会以“关心学生学业”为由，在将{{format_message_variable::stat_data.主角.名字}}叫到办公室，提出一个充满诱惑的“实践机会”。
+            - 场景: 体育老师办公室。
+            - 周严的交易: 周严会向{{format_message_variable::stat_data.主角.名字}}展示紧身的篮球部T恤和高叉的训练泳衣，并说明这是作为他“社团助理”的专属工作服。他提议{{format_message_variable::stat_data.主角.名字}}接受这个职位,仅需要后续{{format_message_variable::stat_data.主角.名字}}进行相应的社团工作，是提升学分、锻炼实践能力的机会。
+            - 抉择与后果:
+                - 接受交易:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> 0
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> 0
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 + 15
+                - 拒绝交易:
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.篮球部助理 -> -1
+                    - {{format_message_variable::stat_data.主角.名字}}.称号.游泳部助理 -> -1
+                    - {{format_message_variable::stat_data.主角.名字}}.常规物品.学分 - 5
+        <%_ } _%>
+    <%_ } _%>
+<%_ } _%>

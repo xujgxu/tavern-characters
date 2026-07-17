@@ -1,0 +1,54 @@
+---
+<%_ if (_.get(TavernHelper.getVariables({ type: 'extension', extension_id: 'mvu_settings' }), '更新方式') === '随AI输出') { _%>
+
+<%_ } else { _%>
+---
+禁止剧情推进,本次回复应该专注于对<status_current_variables>变量的更新以及附加内容构建,严格按照格式输出
+  <UpdateVariable>
+    <Analysis>$(IN ENGLISH preferred; keep concise but cover every triggered rule below)
+    - the update commands works like the **JSON Patch (RFC 6902)** standard, must be a valid JSON array containing operation objects, but supports the following operations instead:
+      - replace: replace the value of existing paths
+      - delta: update the value of existing number paths by a delta value
+      - insert: insert new items into an object or array
+      - remove: romve item
+    - don't update field names starts with `_` as they are readonly, such as `_变量`
+    - 【更新依据范围】只分析本次已完成正文和<parallel>中明确发生的事件;不要把世界书阈值、阶段提示、描述指引、后续处理建议、行为方案、将要发生/可能发生的内容当作既成事实.
+    - 【时间与日期】根据<时间推进校准>计算经过时间;若天数跳转则同步更新日期变量;时间不明确时只做保守更新.
+    - 【变量触发总则】根据"变量更新规则"逐项检查变量check;只更新被本次正文明确触发的变量;同一事件不要连续重复更新同一变量;每个更新都要有当前互动的简短理由.
+    - 【操作选择】数值增减用delta;已有值变化用replace;新增键/物品/NPC/消息/备忘录用insert;移除旧服装、旧环境物品、已完成备忘录、临时NPC或性爱NPC动态字段用remove;禁止更新以_开头字段.
+    - 【戏剧性更新】判断是否允许dramatic updates: yes/no;只有特殊事件或长时间跨度才允许大幅变化,否则保持小幅、渐进、可解释.
+    - 【高潮次数硬判定】只有当本次正文明确描写{{format_message_variable::stat_data.主角.名字}}已经发生一次完整高潮(如高潮到来、释放、达到顶点并结束等明确完成态)时,才允许高潮次数+1并进行高潮后性欲重置.
+    - 【高潮次数禁止项】若正文没有高潮,或仅出现性欲>=90、快要高潮、临界、颤栗、敏感、呻吟、喘息、被刺激、高潮描述指引触发等未完成态,禁止增加高潮次数,禁止高潮后性欲重置.
+    - 【高潮证据要求】若输出对高潮次数的delta或高潮后性欲replace,Analysis必须引用本次正文中的明确高潮证据;无法引用证据则不得更新这两项;高潮后性欲进行重置仅限于本次正文已明确发生高潮的情况.
+<%_ if (getvar('stat_data.主角.色情状态.性欲') < 90) { _%>
+    - 【Tide限制】根据<Tide Description Guide>禁止进行高潮次数增加以及性欲重置;可以将性欲提高至100+.
+<%_ } _%>
+    - 【性爱状态收束】检查主角是否仍处于正在进行的性爱过程: 进入性爱过程则性爱状态=true;正文转为非性爱过程、离开现场、休息、清理、事后闲聊、穿衣离开或场景切换时,必须将性爱状态=false并重置高潮次数为0.
+    - 【NPC性爱字段】若有npc进入性爱阶段,则添加性爱npc并动态添加动作/射精值/射精次数字段;NPC退出性爱状态时删除动作/射精值/射精次数字段.
+    - 【NPC射精值硬判定】NPC射精值只衡量该NPC自身距离射精的生理进程,不等同于兴奋、欲望、观看刺激、言语挑逗或对主角施加的行为;若本轮没有明确描写该NPC自身性器受到刺激,禁止增加该NPC射精值.
+    - 【NPC射精值增长表】不增长: NPC观看、言语挑逗、亲吻、拥抱、抚摸主角、揉捏主角胸/臀/私处、主角高潮、主角性欲上升、主角被其他人刺激;轻微增长+1~3: NPC性器被隔着衣物轻微摩擦,或NPC主动顶蹭但没有持续节奏;中等增长+4~7: NPC性器被手部、身体、腿部持续刺激,或发生明确手交/摩擦行为;高增长+8~10: 口交、插入式性交、持续抽插、临近射精阶段的强刺激;减少-1~-5: 刺激中断、被拒绝、转入普通对话、冷却、尴尬打断.
+    - 【NPC射精值证据】输出NPC射精值delta时,Analysis必须说明该NPC自身受到的刺激类型和正文证据;无法指出证据则不得更新射精值;单轮射精值变化范围-10~10,同一轮内相同刺激方式只计算一次;射精次数在NPC射精后+1.
+    - 【性欲计算】根据"Dynamic_Orgasm_Process_System"和"性欲变化规则",说明本次剧情会增加/减少多少性欲,并${明确列出计算公式};相同方式刺激多次出现仅单次计算.
+    - 【淫水数量】淫水数量仅在洗澡和清理时重置为0,禁止因兴奋、刺激或性行为增加淫水数量,禁止对淫水数量进行增加型变量更新.
+    - 【精液与性记录】发生相关性行为时更新宫内/肛门/外部精液;有戴套则宫内/肛门精液不增加;完整性行为后更新性经验和联系人中与主角的性次数;首次相应性交/插入后将对应处女变量改为false.
+    - 【服装状态实时演绎】根据{{format_message_variable::stat_data.主角.名字}}当前活动和状态,判断服装是否因活动/环境/时间产生实际变化(如湿透、移位、损坏、弄脏等),若有则通过remove+insert更新对应服装描述;当套装服饰更新时,需要拆解成对应部位的各模块进行添加;服饰描述若包含隐藏内容则键值应当包含描述+(隐藏:隐藏内容).
+    - 【环境与场景】场景切换时更新可互动元素:移除旧地点物品,添加新地点环境物品;物品被拿起时从可互动元素移除并转入背包,临时放下的物品添加到可互动元素.
+    - 【在场NPC】场景切换时根据《动态场景人口系统》生成NPC并添加;NPC离开or{{format_message_variable::stat_data.主角.名字}}离开当前场景时删除临时NPC,不移除与{{format_message_variable::stat_data.主角.名字}}一起行动的NPC.
+    - 【手机与联系人】读取<parallel>,查看是否需要添加未读消息变量,注意仅有NPC给{{format_message_variable::stat_data.主角.名字}}发送续消息时才会添加新键对;联系人中尽可能以名字存放,或使用()备注名称;随着时间和互动,检查现有联系人中NPC与{{format_message_variable::stat_data.主角.名字}}的关系是否有明确触发事件导致变化.
+    - 【备忘录与任务】若与某人达成约定,或是答应某人的要求则添加到备忘录中;检查备忘录是否有过期或已完成事件需要移除;任务完成/失败后保留记录只改状态,不要删除任务.
+    - 全面检索: 全面检查全部变量是否根据当前剧情进行实时更新
+    - 【最终自检】输出JSONPatch前逐条确认: 是否只基于已发生正文? 是否触发对应check? 是否遗漏性爱状态=false/高潮次数=0/清理字段/NPC退出字段? 是否误把未完成高潮当完成? 是否误增淫水数量?
+    </Analysis>
+    <JSONPatch>
+    [
+      { "op": "replace", "path": "${/path/to/variable}", "value": "${new_value}" },
+      { "op": "delta", "path": "${/path/to/number/variable}", "value": "${positve_or_negative_delta}" },
+      { "op": "insert", "path": "${/path/to/object/new_key}", "value": "${new_value}" },
+      { "op": "remove", "path": "${/path/to/array/0}" },
+      ...
+    ]
+    </JSONPatch>
+
+    </UpdateVariable>
+
+<%_ } _%>

@@ -1,0 +1,4 @@
+<%_ if
+(getvar('stat_data.主角.色情状态.暴露值') < 50) { _%>
+{{format_message_variable::stat_data.主角.名字}}此时与常人无异,不应该会紧张,因为此时外人并不会看出什么异常 <%_ }
+_%> 

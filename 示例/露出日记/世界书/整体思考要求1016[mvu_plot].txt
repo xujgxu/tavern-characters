@@ -1,0 +1,67 @@
+
+<think_overall>
+# 整体输出规划
+<%_ if (getvar('initialized_lorebooks') !== undefined) { _%>
+## 阶段0: character_knowledge
+- ${依照"信息隔离原则",角色和npc们知道那些内容?不知道哪些内容?如何合理规划使得角色不会超出自己的认知限度?}
+- NPC不做推测和臆想,仅能根据所见所得的信息.所有知道的内容,都需要有依据,并列出前文依据,如果没有依据则不得表明为知晓.
+- 远距离NPC无法知晓{{format_message_variable::stat_data.主角.名字}}与他人的近距离对话
+- 格式为:
+  人物:
+     依据1:{前文的依据};已知/不知:{知道/不知道的信息}
+     依据X:{前文的依据X}:已知/不知:{知道/不知道的信息}
+## 阶段一：指令解析与状态加载
+
+### 1.1 指令意图判定
+- 如果为段中思考则跳过，如果为用户输入后首次思考则极简要解读<interactive_input>{{getvar::meizhu1}}：
+- 核心动作识别：本次回复需要执行什么行为？
+- {{getvar::kebanyinxiang}}
+- 意图导向判定：
+  - ${if $(用户指令意图为压制性欲或理性行为 )
+  → 叙事必须导向{{format_message_variable::stat_data.主角.名字}}成功抵制情欲、恢复理性}
+- 第一人称转化：如何将指令转化为{{format_message_variable::stat_data.主角.名字}}视角？
+- **强制暂停检测**：是否存在{{format_message_variable::stat_data.主角.名字}}犹豫/软拒绝/硬拒绝/妥协提议？→ 若有，详见<think_story>步骤9
+
+### 1.2 世界状态加载
+环境:
+  地点: {{format_message_variable::stat_data.世界.地点}}
+  日期: {{format_message_variable::stat_data.世界.日期}}
+  星期: {{format_message_variable::stat_data.世界.星期}}
+  时间: {{format_message_variable::stat_data.世界.时间.小时}}:{{format_message_variable::stat_data.世界.时间.分钟}}
+  天气: {{format_message_variable::stat_data.世界.天气}}
+- 当前环境有哪些可互动要素?
+- 近日课程表：根据星期确定
+- 备忘录检查：{{format_message_variable::stat_data.主角.备忘录}}
+
+### 1.3 {{format_message_variable::stat_data.主角.名字}}状态加载
+
+- 金钱：{{format_message_variable::stat_data.主角.常规物品.金钱}}
+- 当前的服装状态是? (状态数据以当前提供的数据为准,不得进行修改)：
+  - 上装 : {{format_message_variable::stat_data.主角.服装状态.上装}}
+  - 下装 : {{format_message_variable::stat_data.主角.服装状态.下装}}
+  - 套装 : {{format_message_variable::stat_data.主角.服装状态.套装}}
+  - 内衣 : {{format_message_variable::stat_data.主角.服装状态.内衣}}
+  - 内裤 : {{format_message_variable::stat_data.主角.服装状态.内裤}}
+  - 袜子 : {{format_message_variable::stat_data.主角.服装状态.袜子}}
+  - 鞋子 : {{format_message_variable::stat_data.主角.服装状态.鞋子}}
+  - 饰品 : {{format_message_variable::stat_data.主角.服装状态.饰品}}
+  - 性玩具 : {{format_message_variable::stat_data.主角.服装状态.性玩具}}
+  - 特殊分类 : {{format_message_variable::stat_data.主角.服装状态.特殊分类}}
+
+- 外观数据：{{format_message_variable::stat_data.主角.外观数据}}
+- 色情状态：
+  - 性欲：{{format_message_variable::stat_data.主角.色情状态.性欲}}
+  - 暴露值：{{format_message_variable::stat_data.主角.色情状态.暴露值}}
+  - 高潮阶段：{{format_message_variable::stat_data.主角.色情状态.高潮阶段}}
+
+- 性器状态确认：
+  - {{format_message_variable::stat_data.主角.名字}}口腔状态: <momo_oral_status>
+  - {{format_message_variable::stat_data.主角.名字}}私处状态: <momo_vagina_status>
+  - {{format_message_variable::stat_data.主角.名字}}肛门状态: <momo_anal_status>
+  - {{format_message_variable::stat_data.主角.名字}}乳房状态: <momo_breast_status>
+  - {{format_message_variable::stat_data.主角.名字}}屁股状态: <momo_buttocks_status>
+  - {{format_message_variable::stat_data.主角.名字}}精液适应度状态: <momo_semen_adaptation>
+
+<%_ } _%>
+</think_overall>
+

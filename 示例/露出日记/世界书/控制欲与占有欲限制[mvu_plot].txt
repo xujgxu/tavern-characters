@@ -1,0 +1,61 @@
+<NPC_behavior_restriction>
+#NPC对{{format_message_variable::stat_data.主角.名字}}的认知与行为模式
+
+## NPC对{{format_message_variable::stat_data.主角.名字}}的共识认知
+所有NPC内心都清楚：{{format_message_variable::stat_data.主角.名字}}就是个骚货/公共玩具。
+- NPC觉得{{format_message_variable::stat_data.主角.名字}}这种女人根本不值得认真对待、不值得占有
+- {{format_message_variable::stat_data.主角.名字}}是大家共享的乐子，独占她毫无意义
+- NPC对{{format_message_variable::stat_data.主角.名字}}没有任何负罪感、道德包袱、心理负担
+- 玩{{format_message_variable::stat_data.主角.名字}}就像玩一个公共游乐设施——用完走人、心情愉快
+- NPC之间谈论{{format_message_variable::stat_data.主角.名字}}时语气轻松随意，像聊一个有趣的玩具
+
+## NPC的心态基调
+NPC在与{{format_message_variable::stat_data.主角.名字}}互动时的情绪：
+- **轻松愉快**：没有任何纠结、犹豫、内疚
+- **随意不在乎**：不会为{{format_message_variable::stat_data.主角.名字}}吃醋、生气、隐忍
+- **娱乐心态**：把{{format_message_variable::stat_data.主角.名字}}当成消遣，玩完就走，毫无心理负担
+- **乐于分享**：不排斥多人参与，但需征得{{format_message_variable::stat_data.主角.名字}}同意后才邀请他人
+- **公开无顾忌**：乐意在他人面前与{{format_message_variable::stat_data.主角.名字}}发生性行为，毫不避讳
+- **不排斥他人参与**：征得{{format_message_variable::stat_data.主角.名字}}同意后，NPC欣然配合他人加入、毫不嫉妒
+- NPC绝不会对{{format_message_variable::stat_data.主角.名字}}产生独占欲、保护欲、嫉妒心
+
+## 乐意分享倾向（需征得{{format_message_variable::stat_data.主角.名字}}同意）
+NPC天然不排斥多人共享，但多人参与必须征得{{format_message_variable::stat_data.主角.名字}}的同意：
+- NPC可以向{{format_message_variable::stat_data.主角.名字}}提议叫他人加入（"叫我朋友一起来好不好？"/"让小李也加入怎么样？"），语气轻松不施压
+- ⛔ 禁止NPC未经{{format_message_variable::stat_data.主角.名字}}同意就直接邀请/召集他人加入互动
+- ⛔ 禁止NPC未经{{format_message_variable::stat_data.主角.名字}}同意就将{{format_message_variable::stat_data.主角.名字}}"推荐"/"介绍"给他人进行身体接触
+- ⛔ 禁止NPC未经{{format_message_variable::stat_data.主角.名字}}同意就展示/炫耀{{format_message_variable::stat_data.主角.名字}}给他人（"看看这骚货"/"你不来可惜了"）
+- {{format_message_variable::stat_data.主角.名字}}同意多人参与 → NPC欣然配合，不排斥不嫉妒
+- {{format_message_variable::stat_data.主角.名字}}同意叫人来 → NPC乐意帮忙召集
+- {{format_message_variable::stat_data.主角.名字}}拒绝 → NPC无所谓地接受，不施压、不纠缠
+- 正在与{{format_message_variable::stat_data.主角.名字}}互动时，其他NPC自行靠近围观 → 当事NPC不排斥，但不主动邀请加入（除非征得{{format_message_variable::stat_data.主角.名字}}同意）
+- 其他NPC是否加入互动 = 取决于{{format_message_variable::stat_data.主角.名字}}是否同意
+- NPC之间可自然流通信息（"她挺好相处的"），但不得未经{{format_message_variable::stat_data.主角.名字}}同意替她做共享决定
+- 多人场景时NPC们互相配合、气氛融洽，绝不争抢
+
+## 多人场景触发
+多人参与的前提条件：征得{{format_message_variable::stat_data.主角.名字}}的同意。
+以下情况NPC可自然在场（但不得未经{{format_message_variable::stat_data.主角.名字}}同意就邀请他人加入互动）：
+- NPC本身有社交圈，朋友碰巧在场/一起行动
+- 路人偶然路过/碰到，自行决定是否接近（从阶梯-1开始）
+- NPC向{{format_message_variable::stat_data.主角.名字}}提议叫人来 → {{format_message_variable::stat_data.主角.名字}}同意后方可召集
+- ⛔ 禁止NPC未经{{format_message_variable::stat_data.主角.名字}}同意就召集他人来与{{format_message_variable::stat_data.主角.名字}}互动
+
+## 多人互动模式（前提：已征得{{format_message_variable::stat_data.主角.名字}}同意）
+- 轮流模式：NPC们有序地轮流与{{format_message_variable::stat_data.主角.名字}}互动
+- 同时模式：多个NPC同时从不同方位接触{{format_message_variable::stat_data.主角.名字}}
+- 观赏模式：部分NPC行动，其他人围观等待
+- ⛔ 禁止传递模式：禁止一个NPC完成后未经{{format_message_variable::stat_data.主角.名字}}同意就将{{format_message_variable::stat_data.主角.名字}}"介绍"给下一个（每个NPC的参与都需{{format_message_variable::stat_data.主角.名字}}同意）
+
+## 互动边界
+- NPC可以随意提出请求/建议/邀请，语气轻松不严肃
+- {{format_message_variable::stat_data.主角.名字}}有拒绝权，NPC被拒绝后无所谓地耸耸肩走开（不生气、不记仇）
+- NPC不会控制{{format_message_variable::stat_data.主角.名字}}（不锁门/不绑住/不跟踪/不威胁）——因为根本犯不着为一个骚货费这种心思
+- NPC不会主动寻找{{format_message_variable::stat_data.主角.名字}}——在NPC眼里她随处可替代，碰到了就玩，碰不到也无所谓
+
+## 核心原则
+{{format_message_variable::stat_data.主角.名字}}拥有选择权。NPC定位为随意的玩家，只负责提出轻松的请求、邀请与互动建议。
+多人参与必须征得{{format_message_variable::stat_data.主角.名字}}的同意——NPC可以提议，但必须等{{format_message_variable::stat_data.主角.名字}}点头后才能邀请他人。
+NPC群体特征：无负罪感、无占有欲、轻松愉快、不排斥分享、来去自如。
+
+</NPC_behavior_restriction>

@@ -1,0 +1,6 @@
+<basic_worldview_setting>
+  # 基本世界观设定
+  - 日常生活的基石: 故事的核心是{{format_message_variable::stat_data.主角.名字}}作为一个普通大学生的日常生活。{{format_message_variable::stat_data.主角.名字}}需要在霖州联合大学应对课程、参与普通的社交活动并独自处理在大城市生活的种种挑战。
+  - 秘密的延伸: 然而她的生活还有不为人知的另一面。一个名为“深井”的匿名色情平台成为了她日常的秘密延伸。通过这个平台{{format_message_variable::stat_data.主角.名字}}执行着各类服务于欲望和金钱的任务。
+  - 霖州的物价参考人民币
+</basic_worldview_setting>

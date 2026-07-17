@@ -1,0 +1,198 @@
+```
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+      :root {
+        --pink: #fb6f92;
+        --lavender: #c7b2de;
+        --panel-bg: rgba(255, 255, 255, 0.85);
+        --wrapper-bg: #ffffff;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      body {
+        background-color: transparent;
+        font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        animation: fadeIn 0.8s ease-out;
+      }
+      .container {
+        display: grid;
+        gap: 15px;
+        padding: 15px;
+      }
+
+      details {
+        border-radius: 14px;
+        background-color: var(--panel-bg);
+        box-shadow: 0 6px 24px 0 rgba(231, 181, 195, 0.2);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      details[open] {
+        box-shadow: 0 8px 32px 0 rgba(231, 181, 195, 0.3);
+      }
+
+      summary {
+        color: var(--pink);
+        font-size: 1.2em;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
+        padding: 15px 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffdde5;
+        transition: background-color 0.3s ease;
+        list-style: none;
+      }
+      summary:hover {
+        background-color: #fdd0da;
+      }
+      summary::-webkit-details-marker {
+        display: none;
+      }
+      summary i {
+        margin-right: 12px;
+      }
+      summary::after {
+        content: '▲';
+        font-size: 0.7em;
+        margin-left: 15px;
+        transition: transform 0.3s ease-in-out;
+        transform: rotate(180deg);
+      }
+      details[open] > summary::after {
+        transform: rotate(0deg);
+      }
+
+      .content-wrapper {
+        background-color: var(--wrapper-bg);
+        border-radius: 0 0 12px 12px;
+        margin: 0 1px 1px 1px;
+        padding: 20px;
+        animation: fadeInContent 0.5s ease-out;
+      }
+      @keyframes fadeInContent {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .options-body {
+        padding: 0;
+      }
+      .options-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .action-option {
+        background-color: #fafdff;
+        border: 1px solid #eef6fc;
+        color: #7b6d8d;
+        padding: 15px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease-out;
+        font-size: 1.05em;
+        line-height: 1.5;
+        display: flex;
+        align-items: center;
+        text-align: left;
+      }
+      .action-option:hover {
+        border-color: var(--lavender);
+        background-color: #f8f5fb;
+        color: #6a557d;
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(200, 178, 222, 0.3);
+      }
+      .empty-state {
+        color: #b0a8b9;
+        text-align: center;
+        padding: 20px;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 核心修改 1：使用 script 标签来安全存储原始文本数据 -->
+    <script id="raw-options-data" type="text/plain">
+      $2
+    </script>
+
+    <div class="container">
+      <details>
+        <summary><i class="fas fa-tasks"></i>行为选项$1</summary>
+        <div class="content-wrapper">
+          <div class="options-body">
+            <!-- 核心修改 2：删除了这里的 data-content -->
+            <div class="options-container" id="options-container"></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const optionsContainer = document.getElementById('options-container');
+        // 核心修改 3：从 script 标签获取文本内容，而不是 dataset
+        const rawDataElement = document.getElementById('raw-options-data');
+
+        if (optionsContainer && rawDataElement) {
+          const optionsString = rawDataElement.textContent; // 获取纯文本，不受引号影响
+          const optionMatches = optionsString.matchAll(/<(option(?:_\d+)?)>([\s\S]*?)<\/\1>/g);
+          let hasOptions = false;
+
+          for (const match of optionMatches) {
+            const optionText = match[2].trim();
+            if (optionText) {
+              hasOptions = true;
+              const optionDiv = document.createElement('div');
+              optionDiv.className = 'action-option';
+              optionDiv.textContent = optionText;
+              optionDiv.onclick = event => {
+                const text = event.currentTarget.textContent.trim();
+                if (typeof triggerSlash === 'function') {
+                  triggerSlash(`/setinput ${text}`);
+                }
+              };
+              optionsContainer.appendChild(optionDiv);
+            }
+          }
+          if (!hasOptions) {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            emptyState.textContent = '无可用选项';
+            optionsContainer.innerHTML = '';
+            optionsContainer.appendChild(emptyState);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
+
+```

@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.json
+
+user名称: 青空黎
+
+配置:
+  角色卡示例:
+    类型: 角色卡
+    酒馆中的名称: 露出日记-0613
+    本地文件路径: 示例/露出日记/index
+    导出文件路径: 示例/角色卡示例/角色卡示例
+
+  墨墨露出:
+    类型: 角色卡
+    酒馆中的名称: 墨墨露出
+    本地文件路径: src/墨墨露出/index
+    导出文件路径: src/墨墨露出/墨墨露出

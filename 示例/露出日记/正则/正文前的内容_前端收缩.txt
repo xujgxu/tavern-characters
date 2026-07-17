@@ -1,0 +1,5 @@
+<details>
+<summary>整体思考过程</summary>
+$1
+</details>
+$2

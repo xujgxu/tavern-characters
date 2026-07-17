@@ -1,0 +1,4 @@
+<details>
+<summary>NPC列表</summary>
+$1
+</details>

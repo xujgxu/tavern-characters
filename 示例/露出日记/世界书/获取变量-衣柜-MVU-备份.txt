@@ -1,0 +1,6 @@
+
+ <%_ if (getvar('extra_analysis', { defaults: true })) { _%>
+主角:
+  衣柜: {{format_message_variable::stat_data.主角.衣柜}}
+ <%_ }else{  _%>
+<%_ }  _%>

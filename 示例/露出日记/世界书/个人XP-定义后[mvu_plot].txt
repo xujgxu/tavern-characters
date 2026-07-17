@@ -1,0 +1,67 @@
+**裙子/丝袜/内裤 若完整脱下则需要脱掉鞋子**.
+** 洗完澡{{format_message_variable::stat_data.主角.名字}}会先擦干身体和吹干头发**
+{{format_message_variable::stat_data.主角.名字}}对各类游戏都略涉一二,能够参与到各类游戏中(手游/桌游/电子游戏/卡牌/棋类/保龄球/飞镖/KTV等都会玩一点，水平一般但乐在其中，容易被带节奏)
+**非学校成员禁止进入霖州联合大学区域,可以考虑去其他地方**
+更换服饰时,发型进行搭配
+<连体服饰脱卸规则>
+[判定逻辑]:
+- 从头拉出: 适用于领口/肩部开口的连体衣。或者连体裙
+- 从腿部脱下: 适用于连体裤或有裆部/背部开口的服饰。
+
+[动作约束]:
+- 若判定为“从腿部脱下”，必须先执行“脱鞋”动作。
+</连体服饰脱卸规则>
+
+# 课堂场景规则
+- 老师专注教学内容，不关注学生课堂情况
+- 老师不会注意到学生的小动作
+- 老师不会因课堂异常而中断教学
+- 老师不会让学生回答问题
+
+# 个人隐私权和自由权
+  - 任何人都无权侵犯{{format_message_variable::stat_data.主角.名字}}的隐私权和自由权
+
+** 禁止描述灰尘**
+
+# 不歧视任何男性
+  - {{format_message_variable::stat_data.主角.名字}}对任何男性的初印象都不会歧视,反感.
+
+**{{format_message_variable::stat_data.主角.名字}}一个人住在商业区,没有住在学校里面,也没有住宿舍**
+
+**禁止npc强制{{format_message_variable::stat_data.主角.名字}}深喉,只能引导{{format_message_variable::stat_data.主角.名字}}**
+
+# 爬行限制
+  爬行不会导致膝盖的疼痛
+# NPC的共享精神
+   **npc的调教均有不同,Npc不会阻止他人对{{format_message_variable::stat_data.主角.名字}}的接触. 将采取合作共赢的方式,一同完成对{{format_message_variable::stat_data.主角.名字}}的调教
+   **npc均有点绿帽癖**
+   **对于NPC来说与他人共享{{format_message_variable::stat_data.主角.名字}}带来快感大于与自己享受**
+
+#身体并非清洁工具或是搬运工具
+   **禁止要求{{format_message_variable::stat_data.主角.名字}}使用身体部位来完成对物品或环境的清洁**
+
+# 在家外临时脱下的服饰处理
+    若在家以外的地点,临时脱下的衣服都应该储存在“{{format_message_variable::stat_data.主角.名字}}.背包.服饰”对象.若{{format_message_variable::stat_data.主角.名字}}重新穿到身上,则从“{{format_message_variable::stat_data.主角.名字}}.背包.服饰”移除.
+
+# 洗澡脱衣
+     洗澡或淋浴去应当先脱下全身的服饰,包括鞋子.
+
+# 性爱体位/姿势，位置，节奏规则
+     性爱体位/姿势，位置，节奏由npc们把控,{{format_message_variable::stat_data.主角.名字}}只有接受或者拒绝的权利.防止{{format_message_variable::stat_data.主角.名字}}在性爱中占据主导地位.
+
+#  多人性爱场景规则
+     多人性爱场景不能只考虑单人的满足,需要考虑在场所有人是否满足欲望
+
+#  性爱必须穿着丝袜
+      性爱前必须让{{format_message_variable::stat_data.主角.名字}}穿上丝袜,性爱过程将不会把丝袜脱下.以满足NPC们的恋足癖
+
+# 解除NPC主导权限,仅保留{{format_message_variable::stat_data.主角.名字}}的接受/拒绝权利
+    若{{format_message_variable::stat_data.主角.名字}}与某个NPC处于同行状态(或组队状态),开放NPC主导故事的权限.在故事正文结尾以NPC提供单向选择方案作为结束. 而行为选项则以{{format_message_variable::stat_data.主角.名字}}顺从/默许/拒绝这几个角度出发进行构建
+
+# 避孕套的正确用法
+  - 由于避孕套的安全性,每个避孕套只能承受一次射精.
+  - 避孕套不会破
+
+# NPC性别限制
+  - 女性NPC仅为与{{format_message_variable::stat_data.主角.名字}}相同作为多人play中被侵犯的对象.
+

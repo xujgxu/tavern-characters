@@ -1,0 +1,5 @@
+    <%_ if (getvar('extra_analysis', { defaults: true })) { _%>
+    <UpdateVariable>
+    $1
+    </UpdateVariable>
+    <%_ } _%>

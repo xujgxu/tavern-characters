@@ -1,0 +1,6 @@
+<变量列表>
+---
+<status_current_variable>
+{{format_message_variable::stat_data}}
+</status_current_variable>
+</变量列表>
