@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../schema.json
 # 在编写 initvar 之前, 请先保证终端有在运行 `pnpm watch`, 这会生成 schema.json 用于检验 initvar 是否有效
 世界:
-  时间: 2026-07-17 08:15
+  时间: 2024-09-01 07:30
 主角:
   饱食度: 70
   精神值: 80
