@@ -9,12 +9,19 @@
           "type": "string"
         },
         "地点": {
-          "default": "西部住宅区_绿洲景苑小区-6幢601",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
-        "时间"
+        "时间",
+        "地点"
       ]
     },
     "主角": {
