@@ -106,8 +106,10 @@
           </div>
 
           <div v-if="store.data.APP.待选任务 && store.data.APP.待选任务.length === 3 && !store.data.APP.当前任务">
-            <div class="task-header">📋 可选任务（三选一）</div>
-            <div class="task-card" v-for="(t, i) in store.data.APP.待选任务" :key="i">
+            <div class="task-header">📋 可选任务（点击选择）</div>
+            <div class="task-card" v-for="(t, i) in store.data.APP.待选任务" :key="i"
+                 :class="{ selected: selectedTask === i }" @click="selectedTask = selectedTask === i ? -1 : i">
+              <div class="task-title">{{ t.名称 || '任务' + (i + 1) }}</div>
               <div class="task-info">
                 <div class="task-row"><span class="task-label">类型</span><span class="task-val">[{{ t.类型 }}] Lv.{{ t.等级 }}</span></div>
                 <div class="task-row"><span class="task-label">色情</span><span class="task-val">{{ t.色情维度 }} 级</span></div>
@@ -117,10 +119,11 @@
                 <div class="task-row" v-if="t.可选挑战"><span class="task-label">挑战</span><span class="task-val task-desc">{{ t.可选挑战 }}</span></div>
               </div>
             </div>
+            <button class="confirm-btn" :disabled="selectedTask === -1" @click="acceptTask">确认接取</button>
           </div>
 
           <div class="task-card" v-else-if="store.data.APP.当前任务">
-            <div class="task-header">📋 当前任务</div>
+            <div class="task-header">📋 当前任务 · {{ store.data.APP.当前任务.名称 || '未命名' }}</div>
             <div class="task-info">
               <div class="task-row"><span class="task-label">类型</span><span class="task-val">{{ store.data.APP.当前任务.类型 }}</span></div>
               <div class="task-row"><span class="task-label">色情</span><span class="task-val">{{ store.data.APP.当前任务.色情维度 }} 级</span></div>
@@ -134,7 +137,7 @@
           </div>
 
           <div class="empty-state" v-else-if="!store.data.APP.当前任务">
-            <span>等待任务日（周四/周日）…</span>
+            <span>{{ taskDayCountdown }}</span>
           </div>
         </div>
       </div>
@@ -161,6 +164,20 @@ const tabs = [
 ];
 
 const activeTab = ref('basic');
+const selectedTask = ref(-1);
+
+function acceptTask() {
+  const t = store.data.APP.待选任务?.[selectedTask.value];
+  if (!t) return;
+  const msg = `我选择接取任务「${t.名称}」`;
+  const ta = (window.parent.document as Document).querySelector('#send_textarea') as HTMLTextAreaElement;
+  if (ta) {
+    ta.value = msg;
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    const btn = window.parent.document.querySelector('#send_but') as HTMLElement;
+    if (btn) btn.click();
+  }
+}
 
 const levelNames: Record<number, string> = {
   1: '青涩新人', 2: '初级外围', 3: '资深玩物', 4: '知名母狗', 5: '公共便器'
@@ -182,12 +199,22 @@ const expPercent = computed(() => {
   return Math.round(((cur - min) / (next - min)) * 100);
 });
 
-const expDisplay = computed(() => {
-  const lv = store.data.APP.等级 || 1;
-  const cur = store.data.APP.经验值 || 0;
-  if (lv >= 5) return `${cur}`;
-  const next = levelExpNext[lv] || 15000;
-  return `${cur} / ${next}`;
+const taskDayCountdown = computed(() => {
+  const timeStr = store.data.世界.时间 || '';
+  const d = new Date(timeStr);
+  if (isNaN(d.getTime())) return '';
+  const today = d.getDay();
+  const done = store.data.APP?.本周已完成;
+  if ((today === 4 || today === 0) && done) return '本周期任务已完成，等待下个任务日';
+  if (today === 4 || today === 0) return '任务日已到，打开APP接取任务';
+  const now = d.getTime();
+  const getNext = (day: number) => { const n = new Date(now); n.setDate(n.getDate() + ((day - n.getDay() + 7) % 7 || 7)); n.setHours(0, 0, 0, 0); return n.getTime(); };
+  const next = Math.min(getNext(4), getNext(0));
+  const diff = next - now;
+  const dd = Math.floor(diff / 86400000);
+  const hh = Math.floor((diff % 86400000) / 3600000);
+  const mm = Math.floor((diff % 3600000) / 60000);
+  return `距离下个任务日还有 ${dd} 天 ${hh} 小时 ${mm} 分钟`;
 });
 
 const activeTabName = computed(() => {
@@ -353,10 +380,40 @@ const locationLabel = computed(() => {
 }
 
 .task-card {
-  margin-top: 4px;
+  margin-top: 8px;
   border: 1px solid var(--c-border);
   border-radius: 6px;
   padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+
+  &:hover { border-color: var(--c-accent); }
+  &.selected { border-color: var(--c-accent); background: rgba(196, 74, 74, 0.08); }
+}
+
+.task-title {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--c-text);
+  margin-bottom: 8px;
+}
+
+.confirm-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  background: var(--c-accent);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:disabled { opacity: 0.35; cursor: default; }
+  &:not(:disabled):hover { opacity: 0.85; }
 }
 
 .task-header {

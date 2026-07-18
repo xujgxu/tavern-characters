@@ -67,6 +67,10 @@
           "default": 0,
           "type": "number"
         },
+        "本周已完成": {
+          "default": false,
+          "type": "boolean"
+        },
         "当前任务": {
           "default": null,
           "anyOf": [

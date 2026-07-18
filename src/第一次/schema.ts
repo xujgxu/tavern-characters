@@ -17,6 +17,7 @@ export const Schema = z.object({
     等级: z.coerce.number().prefault(1).transform(v => _.clamp(v, 1, 5)),
     经验值: z.coerce.number().prefault(0),
     已完成任务数: z.coerce.number().prefault(0),
+    本周已完成: z.boolean().prefault(false),
     当前任务: z.object({
       名称: z.string(),
       类型: z.string(),
