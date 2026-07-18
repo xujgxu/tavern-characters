@@ -652,7 +652,7 @@
             ```
             <body>
             <script>
-            $('body').load('https://testingcf.jsdelivr.net/gh/xujgxu/tavern-characters@86e11c0/dist/第一次/界面/状态栏/index.html')
+            $('body').load('https://testingcf.jsdelivr.net/gh/xujgxu/tavern-characters@4b60f5c/dist/第一次/界面/状态栏/index.html')
             </script>
             </body>
             ```
