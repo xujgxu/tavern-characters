@@ -1,34 +1,37 @@
 <template>
   <div class="status-card">
-    <div class="time-section">
-      <span class="time-value">{{ store.data.世界.时间 }}</span>
-    </div>
-
-    <div class="stats-section">
-      <div class="stat-item">
-        <div class="stat-header">
-          <span class="stat-icon">🍞</span>
-          <span class="stat-name">饱食度</span>
-          <span class="stat-num">{{ store.data.主角.饱食度 }}</span>
-          <span class="stat-tag" :class="satietyStatus.color">{{ satietyStatus.label }}</span>
-        </div>
-        <div class="stat-bar">
-          <div class="stat-bar-inner" :class="satietyStatus.color" :style="{ width: store.data.主角.饱食度 + '%' }"></div>
-        </div>
-        <div class="stat-hint">{{ satietyStatus.hint }}</div>
+    <div class="wave-bg"></div>
+    <div class="card-content">
+      <div class="time-section">
+        <span class="time-value">{{ store.data.世界.时间 }}</span>
       </div>
 
-      <div class="stat-item">
-        <div class="stat-header">
-          <span class="stat-icon">🧠</span>
-          <span class="stat-name">精神值</span>
-          <span class="stat-num">{{ store.data.主角.精神值 }}</span>
-          <span class="stat-tag" :class="mentalStatus.color">{{ mentalStatus.label }}</span>
+      <div class="stats-section">
+        <div class="stat-item">
+          <div class="stat-header">
+            <span class="stat-icon">🍞</span>
+            <span class="stat-name">饱食度</span>
+            <span class="stat-num">{{ store.data.主角.饱食度 }}</span>
+            <span class="stat-tag" :class="satietyStatus.color">{{ satietyStatus.label }}</span>
+          </div>
+          <div class="stat-bar">
+            <div class="stat-bar-inner" :class="satietyStatus.color" :style="{ width: store.data.主角.饱食度 + '%' }"></div>
+          </div>
+          <div class="stat-hint">{{ satietyStatus.hint }}</div>
         </div>
-        <div class="stat-bar">
-          <div class="stat-bar-inner" :class="mentalStatus.color" :style="{ width: store.data.主角.精神值 + '%' }"></div>
+
+        <div class="stat-item">
+          <div class="stat-header">
+            <span class="stat-icon">🧠</span>
+            <span class="stat-name">精神值</span>
+            <span class="stat-num">{{ store.data.主角.精神值 }}</span>
+            <span class="stat-tag" :class="mentalStatus.color">{{ mentalStatus.label }}</span>
+          </div>
+          <div class="stat-bar">
+            <div class="stat-bar-inner" :class="mentalStatus.color" :style="{ width: store.data.主角.精神值 + '%' }"></div>
+          </div>
+          <div class="stat-hint">{{ mentalStatus.hint }}</div>
         </div>
-        <div class="stat-hint">{{ mentalStatus.hint }}</div>
       </div>
     </div>
   </div>
@@ -63,6 +66,7 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
 
 <style lang="scss" scoped>
 .status-card {
+  position: relative;
   width: 100%;
   max-width: 380px;
   margin: 0 auto;
@@ -70,10 +74,42 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
   color: var(--c-text);
   font-size: 11px;
   line-height: 1.45;
-  background: var(--c-surface);
   border: 1px solid var(--c-border);
   border-radius: 10px;
   overflow: hidden;
+}
+
+.wave-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(180, 40, 40, 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(200, 60, 60, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(140, 20, 20, 0.3) 0%, transparent 70%),
+    linear-gradient(180deg, var(--c-bg-deep) 0%, var(--c-bg-mid) 50%, var(--c-bg-deep) 100%);
+  background-size: 200% 200%;
+  animation: waveFlow 8s ease-in-out infinite;
+}
+
+@keyframes waveFlow {
+  0%, 100% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 30%;
+  }
+  50% {
+    background-position: 50% 100%;
+  }
+  75% {
+    background-position: 0% 70%;
+  }
+}
+
+.card-content {
+  position: relative;
+  z-index: 1;
 }
 
 .time-section {
@@ -158,7 +194,7 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
 .stat-bar {
   height: 4px;
   border-radius: 2px;
-  background: var(--c-bg);
+  background: rgba(255, 255, 255, 0.06);
   overflow: hidden;
 }
 

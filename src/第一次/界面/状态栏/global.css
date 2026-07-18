@@ -5,20 +5,17 @@
 }
 
 :root {
-  --c-bg: #1a1a1a;
-  --c-surface: #242424;
-  --c-border: #333333;
-  --c-text: #cccccc;
-  --c-text-dim: #777777;
-  --c-accent: #888888;
+  --c-bg-deep: #1a0a0a;
+  --c-bg-mid: #2d1015;
+  --c-surface: rgba(45, 16, 21, 0.85);
+  --c-border: #4a1a22;
+  --c-text: #d4b8b8;
+  --c-text-dim: #8a6a6a;
+  --c-accent: #c44a4a;
 
   --c-food-high: #4ecb71;
   --c-food-mid: #d4a843;
   --c-food-low: #e05545;
-
-  --c-spirit-high: #5badd4;
-  --c-spirit-mid: #8b9d83;
-  --c-spirit-low: #b87a8a;
 
   --font-mono: 'Courier New', 'Microsoft YaHei', monospace;
 }
