@@ -27,7 +27,7 @@ export const Schema = z.object({
       内容: z.string(),
       报酬: z.coerce.number(),
       可选挑战: z.string(),
-      状态: z.string(),
+      状态: z.string().prefault('进行中'),
     }).nullable().prefault(null),
     待选任务: z.array(z.object({
       名称: z.string(),
