@@ -56738,7 +56738,10 @@ class Character_syncer extends Syncer_interface {
                     else if (glob_files.length === 1) {
                         file_to_write = glob_files[0];
                         file_to_set = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+<<<<<<< HEAD
                         entry.content = __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_readFileSync__(glob_files[0], 'utf8');
+=======
+>>>>>>> b6c722413d8cfdaf014bbb3f87518fd8c19754be
                     }
             else {
                 file_to_write = file;
@@ -56787,12 +56790,20 @@ class Character_syncer extends Syncer_interface {
                         file_to_set = file;
                     }
                     files.push({
+<<<<<<< HEAD
                         name: `!!!正则${entry.script_name}`,
                         path: file_to_write,
                         content: entry.content ?? '',
                     });
                     // 保持 content 供酒馆使用（酒馆不使用 file 字段）
                     // lodash_default().unset(entry, 'content');
+=======
+                        name: `!!!第一条消息${index}`,
+                        path: file_to_write,
+                        content: entry.content,
+                    });
+                    lodash_default().unset(entry, 'content');
+>>>>>>> b6c722413d8cfdaf014bbb3f87518fd8c19754be
                     lodash_default().set(entry, 'file', file_to_set);
                 };
                 const state = states.find(state => state.name === `!!!第一条消息${index}`);
@@ -56855,12 +56866,20 @@ class Character_syncer extends Syncer_interface {
                         file_to_set = file;
                     }
                     files.push({
+<<<<<<< HEAD
                         name: `!!!正则${entry.script_name}`,
                         path: file_to_write,
                         content: entry.content ?? '',
                     });
                     // 保持 content 供酒馆使用
                     // lodash_default().unset(entry, 'content');
+=======
+                        name: entry.name,
+                        path: file_to_write,
+                        content: append_yaml_endline(entry.content),
+                    });
+                    lodash_default().unset(entry, 'content');
+>>>>>>> b6c722413d8cfdaf014bbb3f87518fd8c19754be
                     lodash_default().set(entry, 'file', file_to_set);
                 };
                 const state = states.find(state => state.name === entry.name);
@@ -58316,7 +58335,10 @@ class Worldbook_syncer extends Syncer_interface {
                     else if (glob_files.length === 1) {
                         file_to_write = glob_files[0];
                         file_to_set = __WEBPACK_EXTERNAL_MODULE_node_path_02319fef_relative__(this.dir, glob_files[0]).replace(/\.[^\\/.]+$/, '');
+<<<<<<< HEAD
                         entry.content = __WEBPACK_EXTERNAL_MODULE_node_fs_75ed2103_readFileSync__(glob_files[0], 'utf8');
+=======
+>>>>>>> b6c722413d8cfdaf014bbb3f87518fd8c19754be
                     }
                 else {
                     file_to_write = file;
