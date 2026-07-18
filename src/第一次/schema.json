@@ -9,7 +9,7 @@
           "type": "string"
         },
         "地点": {
-          "default": "",
+          "default": "西部住宅区_绿洲景苑小区",
           "type": "string"
         }
       },
@@ -27,7 +27,7 @@
           "type": "number"
         },
         "金钱": {
-          "default": 0,
+          "default": 1800,
           "type": "number"
         },
         "心情值": {
