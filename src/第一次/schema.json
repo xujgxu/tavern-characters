@@ -51,10 +51,114 @@
         "饱食度",
         "精神值"
       ]
+    },
+    "APP": {
+      "type": "object",
+      "properties": {
+        "等级": {
+          "default": 1,
+          "type": "number"
+        },
+        "经验值": {
+          "default": 0,
+          "type": "number"
+        },
+        "已完成任务数": {
+          "default": 0,
+          "type": "number"
+        },
+        "当前任务": {
+          "default": null,
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "类型": {
+                  "type": "string"
+                },
+                "等级": {
+                  "type": "number"
+                },
+                "色情维度": {
+                  "type": "number"
+                },
+                "社会维度": {
+                  "type": "number"
+                },
+                "内容": {
+                  "type": "string"
+                },
+                "报酬": {
+                  "type": "number"
+                },
+                "可选挑战": {
+                  "type": "string"
+                },
+                "状态": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "类型",
+                "等级",
+                "色情维度",
+                "社会维度",
+                "内容",
+                "报酬",
+                "可选挑战",
+                "状态"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "待选任务": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "类型": {
+                "type": "string"
+              },
+              "等级": {
+                "type": "number"
+              },
+              "色情维度": {
+                "type": "number"
+              },
+              "社会维度": {
+                "type": "number"
+              },
+              "内容": {
+                "type": "string"
+              },
+              "报酬": {
+                "type": "number"
+              },
+              "可选挑战": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "类型",
+              "等级",
+              "色情维度",
+              "社会维度",
+              "内容",
+              "报酬",
+              "可选挑战"
+            ]
+          }
+        }
+      }
     }
   },
   "required": [
     "世界",
-    "主角"
+    "主角",
+    "APP"
   ]
 }
