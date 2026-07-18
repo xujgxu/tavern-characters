@@ -19,36 +19,42 @@
           <span class="stat-icon">🍞</span>
           <span class="stat-name">饱食度</span>
           <div class="stat-bar"><div class="fill food" :style="{ width: store.data.主角.饱食度 + '%' }"></div></div>
+          <span class="stat-val">{{ store.data.主角.饱食度 }}</span>
         </div>
 
         <div class="stat-row">
           <span class="stat-icon">🧠</span>
           <span class="stat-name">精神值</span>
           <div class="stat-bar"><div class="fill spirit" :style="{ width: store.data.主角.精神值 + '%' }"></div></div>
+          <span class="stat-val">{{ store.data.主角.精神值 }}</span>
         </div>
 
         <div class="stat-row">
           <span class="stat-icon">💕</span>
           <span class="stat-name">心情值</span>
           <div class="stat-bar"><div class="fill mood" :style="{ width: store.data.主角.心情值 + '%' }"></div></div>
+          <span class="stat-val">{{ store.data.主角.心情值 }}</span>
         </div>
 
         <div class="stat-row">
           <span class="stat-icon">🔞</span>
           <span class="stat-name">色情值</span>
           <div class="stat-bar"><div class="fill erotica" :style="{ width: store.data.主角.整体色情值 + '%' }"></div></div>
+          <span class="stat-val">{{ store.data.主角.整体色情值 }}</span>
         </div>
 
         <div class="stat-row">
           <span class="stat-icon">💋</span>
           <span class="stat-name">性欲值</span>
           <div class="stat-bar"><div class="fill libido" :style="{ width: store.data.主角.性欲值 + '%' }"></div></div>
+          <span class="stat-val">{{ store.data.主角.性欲值 }}</span>
         </div>
 
         <div class="stat-row">
           <span class="stat-icon">⚡</span>
           <span class="stat-name">快感值</span>
           <div class="stat-bar"><div class="fill pleasure" :style="{ width: store.data.主角.快感值 + '%' }"></div></div>
+          <span class="stat-val">{{ store.data.主角.快感值 }}</span>
         </div>
       </div>
     </div>
@@ -64,7 +70,8 @@ const datePart = computed(() => (store.data.世界.时间 || '').split(' ')[0] |
 const timePart = computed(() => (store.data.世界.时间 || '').split(' ').slice(1).join(' ') || '');
 const locationLabel = computed(() => {
   const loc = store.data.世界.地点 || '';
-  return loc.replace(/_/g, ' ');
+  const parts = loc.split('_');
+  return parts.length > 1 ? parts.slice(1).join(' ') : parts[0].replace(/_/g, ' ');
 });
 </script>
 
