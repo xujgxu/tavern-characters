@@ -1,11 +1,8 @@
 <template>
   <div class="status-card">
     <div class="time-section">
-      <span class="time-label">现在时间</span>
       <span class="time-value">{{ store.data.世界.时间 }}</span>
     </div>
-
-    <div class="divider"></div>
 
     <div class="stats-section">
       <div class="stat-item">
@@ -67,29 +64,23 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
 <style lang="scss" scoped>
 .status-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 380px;
   margin: 0 auto;
   font-family: var(--font-mono);
-  color: var(--c-ink);
+  color: var(--c-text);
   font-size: 11px;
   line-height: 1.45;
-  border: 2px solid var(--c-border);
-  background: linear-gradient(180deg, #fffef9 0%, var(--c-paper) 100%);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .time-section {
+  padding: 12px 16px 8px;
   display: flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 10px 14px 8px;
-}
-
-.time-label {
-  font-weight: bold;
-  color: var(--c-border);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-size: 0.7rem;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .time-value {
@@ -98,20 +89,8 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
   letter-spacing: 0.5px;
 }
 
-.divider {
-  height: 1px;
-  margin: 0 14px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--c-border) 0,
-    var(--c-border) 4px,
-    transparent 4px,
-    transparent 8px
-  );
-}
-
 .stats-section {
-  padding: 10px 14px 12px;
+  padding: 6px 16px 14px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -130,8 +109,8 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
 }
 
 .stat-icon {
-  font-size: 0.9rem;
-  width: 18px;
+  font-size: 0.85rem;
+  width: 16px;
   text-align: center;
 }
 
@@ -139,6 +118,7 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
   font-weight: bold;
   font-size: 0.75rem;
   min-width: 36px;
+  color: var(--c-text-dim);
 }
 
 .stat-num {
@@ -149,41 +129,42 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
 }
 
 .stat-tag {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: bold;
   padding: 1px 5px;
-  border-radius: 2px;
+  border-radius: 3px;
   border: 1px solid;
   letter-spacing: 0.5px;
 
   &.high {
     color: var(--c-food-high);
     border-color: var(--c-food-high);
-    background: rgba(91, 154, 104, 0.06);
+    background: rgba(78, 203, 113, 0.08);
   }
 
   &.mid {
     color: var(--c-food-mid);
     border-color: var(--c-food-mid);
-    background: rgba(212, 168, 67, 0.06);
+    background: rgba(212, 168, 67, 0.08);
   }
 
   &.low {
     color: var(--c-food-low);
     border-color: var(--c-food-low);
-    background: rgba(196, 92, 74, 0.06);
+    background: rgba(224, 85, 69, 0.08);
   }
 }
 
 .stat-bar {
-  height: 6px;
-  border: 1px solid var(--c-border);
-  background: rgba(200, 192, 176, 0.15);
+  height: 4px;
+  border-radius: 2px;
+  background: var(--c-bg);
   overflow: hidden;
 }
 
 .stat-bar-inner {
   height: 100%;
+  border-radius: 2px;
   transition: width 0.35s ease;
 
   &.high { background: var(--c-food-high); }
@@ -192,10 +173,9 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
 }
 
 .stat-hint {
-  font-size: 0.65rem;
-  color: #a09888;
-  font-style: italic;
-  padding-left: 24px;
+  font-size: 0.6rem;
+  color: var(--c-text-dim);
+  padding-left: 22px;
 }
 
 @media (max-width: 400px) {

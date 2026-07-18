@@ -5,20 +5,20 @@
 }
 
 :root {
-  /* 主体 */
-  --c-ink: #2b2b2b;
-  --c-paper: #faf8f3;
-  --c-border: #c8c0b0;
+  --c-bg: #1a1a1a;
+  --c-surface: #242424;
+  --c-border: #333333;
+  --c-text: #cccccc;
+  --c-text-dim: #777777;
+  --c-accent: #888888;
 
-  /* 饱食度色阶 */
-  --c-food-high: #5b9a68;
+  --c-food-high: #4ecb71;
   --c-food-mid: #d4a843;
-  --c-food-low: #c45c4a;
+  --c-food-low: #e05545;
 
-  /* 精神值色阶 */
-  --c-spirit-high: #4a8fa8;
+  --c-spirit-high: #5badd4;
   --c-spirit-mid: #8b9d83;
-  --c-spirit-low: #a06b7a;
+  --c-spirit-low: #b87a8a;
 
   --font-mono: 'Courier New', 'Microsoft YaHei', monospace;
 }
