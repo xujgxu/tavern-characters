@@ -119,7 +119,7 @@
                 <div class="task-row" v-if="t.可选挑战"><span class="task-label">挑战</span><span class="task-val task-desc">{{ t.可选挑战 }}</span></div>
               </div>
             </div>
-            <button class="confirm-btn" :disabled="selectedTask === -1" @click="acceptTask">确认接取</button>
+            <button class="confirm-btn" :disabled="selectedTask === -1" @click="clickParentSend">确认接取</button>
           </div>
 
           <div class="task-card" v-else-if="store.data.APP.当前任务">
@@ -142,7 +142,70 @@
         </div>
       </div>
 
-      <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app'">
+      <div class="tab-content contacts-layout" v-if="activeTab === 'contacts'">
+        <div class="contact-list">
+          <div class="contact-item" v-for="(info, name) in store.data.联系人" :key="name" :class="{ active: selectedContact === name }" @click="selectedContact = name">
+            <div class="contact-name">{{ name }}</div>
+            <div class="contact-affection">❤️{{ info.好感度 }}</div>
+          </div>
+          <div class="empty-state" v-if="!store.data.联系人 || Object.keys(store.data.联系人).length === 0"><span>暂无联系人</span></div>
+        </div>
+        <div class="chat-window">
+          <div class="chat-header" v-if="selectedContact">{{ selectedContact }}</div>
+          <div class="chat-messages">
+            <div class="chat-placeholder" v-if="!selectedContact">选择一个联系人以查看消息</div>
+            <template v-else>
+              <div class="msg-bubble" v-for="(m, i) in (store.data.联系人[selectedContact]?.消息 || [])" :key="i" :class="{ mine: m.发送方 === '主角' }"><div class="msg-text">{{ m.内容 }}</div></div>
+              <div class="chat-placeholder" v-if="!(store.data.联系人[selectedContact]?.消息 || []).length">暂无消息记录</div>
+            </template>
+          </div>
+          <div class="chat-input-bar">
+            <textarea class="chat-textarea" v-model="contactMsg" placeholder="输入消息…" rows="1" :disabled="!selectedContact"></textarea>
+            <button class="chat-send-btn" :disabled="!selectedContact" @click="clickParentSend">发送</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content cloth-layout" v-if="activeTab === 'clothes'">
+        <div class="cloth-panel">
+          <div class="cloth-panel-title">当前穿着</div>
+          <div class="cloth-card" v-for="(c, i) in store.data.服装?.穿着 || []" :key="'w'+i">
+            <div class="cloth-name">{{ c.名称 }}</div>
+            <div class="cloth-tags">
+              <span class="cloth-tag tag-pos" v-for="t in c.部位标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-style" v-for="t in c.风格标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-color" v-for="t in c.颜色图案标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-erotica">色情值 {{ c.色情值 || 0 }}</span>
+            </div>
+            <div class="cloth-desc" v-if="showDetail.has('w'+i)">{{ c.描述 }}</div>
+            <div class="cloth-actions">
+              <button class="cloth-btn" @click="toggleDetail('w'+i)">详细</button>
+              <button class="cloth-btn cloth-btn-remove" @click="removeCloth(i)">脱下</button>
+            </div>
+          </div>
+          <div class="empty-state" v-if="!(store.data.服装?.穿着 || []).length">暂未穿着任何衣物</div>
+        </div>
+        <div class="cloth-panel">
+          <div class="cloth-panel-title">可更换</div>
+          <div class="cloth-card" v-for="(c, i) in store.data.服装?.可更换 || []" :key="'c'+i">
+            <div class="cloth-name">{{ c.名称 }}</div>
+            <div class="cloth-tags">
+              <span class="cloth-tag tag-pos" v-for="t in c.部位标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-style" v-for="t in c.风格标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-color" v-for="t in c.颜色图案标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-erotica">色情值 {{ c.色情值 || 0 }}</span>
+            </div>
+            <div class="cloth-desc" v-if="showDetail.has('c'+i)">{{ c.描述 }}</div>
+            <div class="cloth-actions">
+              <button class="cloth-btn" @click="toggleDetail('c'+i)">详细</button>
+              <button class="cloth-btn cloth-btn-wear" @click="wearCloth(i)">穿上</button>
+            </div>
+          </div>
+          <div class="empty-state" v-if="!(store.data.服装?.可更换 || []).length">衣柜为空</div>
+        </div>
+      </div>
+
+      <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app' && activeTab !== 'contacts' && activeTab !== 'clothes'">
         <div class="placeholder-text">{{ activeTabName }} — 待开发</div>
       </div>
     </div>
@@ -165,18 +228,63 @@ const tabs = [
 
 const activeTab = ref('basic');
 const selectedTask = ref(-1);
+const selectedContact = ref('');
+const contactMsg = ref('');
 
-function acceptTask() {
+function composeAndSend() {
+  const parts: string[] = [];
   const t = store.data.APP.待选任务?.[selectedTask.value];
-  if (!t) return;
-  const msg = `我选择接取任务「${t.名称}」`;
+  if (t) parts.push(`[APP]我选择接取任务「${t.名称}」`);
   const ta = (window.parent.document as Document).querySelector('#send_textarea') as HTMLTextAreaElement;
-  if (ta) {
-    ta.value = msg;
-    ta.dispatchEvent(new Event('input', { bubbles: true }));
-    const btn = window.parent.document.querySelector('#send_but') as HTMLElement;
-    if (btn) btn.click();
-  }
+  if (ta && ta.value.trim()) parts.push(ta.value.trim());
+  if (selectedContact.value && contactMsg.value.trim()) parts.push(`[向${selectedContact.value}发送消息]${contactMsg.value.trim()}`);
+  if (parts.length === 0) return;
+  if (ta) { ta.value = parts.join('\n\n'); ta.dispatchEvent(new Event('input', { bubbles: true })); }
+  selectedTask.value = -1;
+  contactMsg.value = '';
+}
+
+function clickParentSend() {
+  const btn = window.parent.document.querySelector('#send_but') as HTMLElement;
+  if (btn) btn.click();
+}
+
+onMounted(() => {
+  const sendBtn = window.parent.document.querySelector('#send_but') as HTMLElement | null;
+  if (sendBtn) sendBtn.addEventListener('click', composeAndSend, true);
+  const ta = window.parent.document.querySelector('#send_textarea') as HTMLTextAreaElement | null;
+  if (ta) ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { composeAndSend(); } }, true);
+});
+
+const showDetail = ref(new Set<string>());
+
+function toggleDetail(key: string) {
+  if (showDetail.value.has(key)) showDetail.value.delete(key);
+  else showDetail.value.add(key);
+}
+
+function calcOverall(clothes: any[]) {
+  if (!clothes.length) return 0;
+  const sum = clothes.reduce((s: number, c: any) => s + (c.色情值 || 0), 0);
+  return Math.round(sum / clothes.length);
+}
+
+function wearCloth(idx: number) {
+  const wardrobe = store.data.服装.可更换 || [];
+  const worn = store.data.服装.穿着 || [];
+  if (idx < 0 || idx >= wardrobe.length) return;
+  const [item] = wardrobe.splice(idx, 1);
+  worn.push(item);
+  store.data.服装.整体色情值 = calcOverall(worn);
+}
+
+function removeCloth(idx: number) {
+  const wardrobe = store.data.服装.可更换 || [];
+  const worn = store.data.服装.穿着 || [];
+  if (idx < 0 || idx >= worn.length) return;
+  const [item] = worn.splice(idx, 1);
+  wardrobe.push(item);
+  store.data.服装.整体色情值 = calcOverall(worn);
 }
 
 const levelNames: Record<number, string> = {
@@ -460,6 +568,40 @@ const locationLabel = computed(() => {
 }
 
 .fill.exp { background: linear-gradient(90deg, #c44a6a, #e8a850); }
+
+.contacts-layout { display: flex; height: 400px; }
+.contact-list { width: 25%; border-right: 1px solid var(--c-border); overflow-y: auto; display: flex; flex-direction: column; padding: 4px 0; }
+.contact-item { padding: 10px 10px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; &:hover { background: rgba(255,255,255,0.03); } &.active { background: rgba(196,74,74,0.1); } }
+.contact-name { font-size: 0.75rem; font-weight: bold; color: var(--c-text); margin-bottom: 2px; }
+.contact-affection { font-size: 0.6rem; color: var(--c-text-dim); }
+.chat-window { flex: 1; display: flex; flex-direction: column; background: rgba(0,0,0,0.15); }
+.chat-header { padding: 12px 16px; font-size: 0.8rem; font-weight: bold; color: var(--c-text); border-bottom: 1px solid var(--c-border); text-align: center; }
+.chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; }
+.chat-placeholder { font-size: 0.7rem; color: var(--c-text-dim); text-align: center; padding-top: 60px; }
+.chat-input-bar { padding: 10px 14px; border-top: 1px solid var(--c-border); display: flex; gap: 8px; align-items: flex-end; }
+.chat-textarea { flex: 1; background: var(--c-bg); border: 1px solid var(--c-border); border-radius: 6px; color: var(--c-text); font-family: var(--font-mono); font-size: 0.7rem; padding: 8px 10px; resize: none; outline: none; &:focus { border-color: var(--c-accent); } &:disabled { opacity: 0.4; } }
+.chat-send-btn { padding: 8px 16px; background: var(--c-accent); border: none; border-radius: 6px; color: #fff; font-family: var(--font-mono); font-size: 0.7rem; font-weight: bold; cursor: pointer; white-space: nowrap; &:disabled { opacity: 0.35; cursor: default; } &:not(:disabled):hover { opacity: 0.85; } }
+.msg-bubble { max-width: 75%; margin-bottom: 8px; padding: 6px 10px; border-radius: 8px; font-size: 0.7rem; line-height: 1.4; background: rgba(255,255,255,0.06); color: var(--c-text); align-self: flex-start; &.mine { background: rgba(196,74,74,0.2); align-self: flex-end; text-align: right; } }
+
+.cloth-layout { display: flex; min-height: 400px; }
+.cloth-panel { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; &:first-child { border-right: 1px solid var(--c-border); } }
+.cloth-panel-title { font-size: 0.85rem; font-weight: bold; color: var(--c-accent); margin-bottom: 4px; }
+.cloth-card { background: rgba(255,255,255,0.03); border: 1px solid var(--c-border); border-radius: 6px; padding: 10px 12px; }
+.cloth-name { font-size: 0.9rem; font-weight: bold; color: var(--c-text); margin-bottom: 6px; }
+.cloth-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.cloth-tag { display: inline-block; font-size: 0.7rem; font-weight: bold; padding: 3px 8px; border-radius: 4px;
+  &.tag-pos   { color: #5badd4; background: rgba(91,173,212,0.15); }
+  &.tag-style { color: #c47ab4; background: rgba(196,122,180,0.15); }
+  &.tag-color { color: #e8a850; background: rgba(232,168,80,0.15); }
+  &.tag-erotica { color: #e05555; background: rgba(224,85,85,0.15); }
+}
+.cloth-desc { font-size: 0.75rem; color: var(--c-text-dim); line-height: 1.5; margin-top: 6px; }
+.cloth-actions { display: flex; gap: 6px; margin-top: 8px; }
+.cloth-btn { padding: 4px 10px; border: 1px solid var(--c-border); border-radius: 4px; background: rgba(255,255,255,0.04); color: var(--c-text-dim); font-family: var(--font-mono); font-size: 0.65rem; cursor: pointer; transition: all 0.15s; &:hover { background: rgba(255,255,255,0.08); color: var(--c-text); } }
+.cloth-btn-wear { border-color: var(--c-food-high); color: var(--c-food-high); &:hover { background: rgba(78,203,113,0.1); } }
+.cloth-btn-remove { border-color: var(--c-food-low); color: var(--c-food-low); &:hover { background: rgba(224,85,69,0.1); } }
+
+.contacts-theme { background: rgb(255,204,191); border-color: rgba(0,0,0,0.1); color: #4a2020; .wave-bg { display: none; } .tab-btn { color: rgba(74,32,32,0.5); &:hover { color: rgba(74,32,32,0.8); } &.active { color: var(--c-accent); background: rgba(0,0,0,0.04); } } .chat-header { color: #4a2020; border-color: rgba(0,0,0,0.08); } .contact-name { color: #fff; } .contact-affection { color: rgba(255,255,255,0.7); } .chat-textarea { background: rgba(255,255,255,0.6); color: #4a2020; border-color: rgba(0,0,0,0.08); } .chat-messages { background: rgba(0,0,0,0.02); } .chat-input-bar { border-color: rgba(0,0,0,0.08); } .msg-bubble { background: rgba(255,255,255,0.5); color: #4a2020; &.mine { background: rgba(255,255,255,0.75); } } .contact-item { border-color: rgba(255,255,255,0.15); &:hover { background: rgba(255,255,255,0.1); } &.active { background: rgba(255,255,255,0.18); } } .contact-list { background: rgb(240,128,128); border-color: rgba(255,255,255,0.2); } }
 
 @media (max-width: 400px) {
   .status-card { max-width: 100%; }
