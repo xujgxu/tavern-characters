@@ -167,9 +167,10 @@
       </div>
 
       <div class="tab-content cloth-layout" v-if="activeTab === 'clothes'">
-        <div class="cloth-panel">
-          <div class="cloth-panel-title">当前穿着</div>
-          <div class="cloth-card" v-for="(c, i) in store.data.服装?.穿着 || []" :key="'w'+i">
+        <div class="cloth-panels">
+          <div class="cloth-panel">
+            <div class="cloth-panel-title">当前穿着</div>
+            <div class="cloth-card" v-for="(c, i) in store.data.服装?.穿着 || []" :key="'w'+i" :class="{ 'pending-wear': pendingMap.get(c.名称) === 'wear', 'pending-remove': pendingMap.get(c.名称) === 'remove' }">
             <div class="cloth-name">{{ c.名称 }}</div>
             <div class="cloth-tags">
               <span class="cloth-tag tag-pos" v-for="t in c.部位标签" :key="t">{{ t }}</span>
@@ -187,7 +188,7 @@
         </div>
         <div class="cloth-panel">
           <div class="cloth-panel-title">可更换</div>
-          <div class="cloth-card" v-for="(c, i) in store.data.服装?.可更换 || []" :key="'c'+i">
+          <div class="cloth-card" v-for="(c, i) in store.data.服装?.可更换 || []" :key="'c'+i" :class="{ 'pending-wear': pendingMap.get(c.名称) === 'wear', 'pending-remove': pendingMap.get(c.名称) === 'remove' }">
             <div class="cloth-name">{{ c.名称 }}</div>
             <div class="cloth-tags">
               <span class="cloth-tag tag-pos" v-for="t in c.部位标签" :key="t">{{ t }}</span>
@@ -202,6 +203,21 @@
             </div>
           </div>
           <div class="empty-state" v-if="!(store.data.服装?.可更换 || []).length">衣柜为空</div>
+        </div>
+        </div>
+        <div class="nudity-warn" v-if="nudityWarnings.length">
+          ⚠️ {{ nudityWarnings.join(' / ') }}
+        </div>
+        <div class="cloth-stats-row">
+          <div class="cloth-erotica-display">
+            当前色情值：{{ store.data.服装?.整体色情值 || 0 }}
+          </div>
+          <div class="style-tag-counts" v-if="styleTagEntries.length">
+            <span class="cloth-tag tag-style" v-for="([k, v]) in styleTagEntries" :key="k">{{ k }}*{{ v }}</span>
+          </div>
+        </div>
+        <div class="cloth-confirm">
+          <button class="confirm-btn" :disabled="pendingMap.size === 0" @click="confirmOutfit">确认换装（{{ pendingMap.size }}件）</button>
         </div>
       </div>
 
@@ -250,6 +266,22 @@ function clickParentSend() {
 }
 
 onMounted(() => {
+  const snap = sessionStorage.getItem('cloth_snapshot');
+  if (snap) {
+    const { worn: wNames, wardrobe: cNames } = JSON.parse(snap);
+    const allWorn = store.data.服装.穿着 || [];
+    const allWardrobe = store.data.服装.可更换 || [];
+    for (const name of wNames) {
+      const idx = allWardrobe.findIndex(c => c.名称 === name);
+      if (idx >= 0) { const [item] = allWardrobe.splice(idx, 1); allWorn.push(item); }
+    }
+    for (const name of cNames) {
+      const idx = allWorn.findIndex(c => c.名称 === name);
+      if (idx >= 0) { const [item] = allWorn.splice(idx, 1); allWardrobe.push(item); }
+    }
+    store.data.服装.整体色情值 = calcOverall(allWorn);
+    sessionStorage.removeItem('cloth_snapshot');
+  }
   const sendBtn = window.parent.document.querySelector('#send_but') as HTMLElement | null;
   if (sendBtn) sendBtn.addEventListener('click', composeAndSend, true);
   const ta = window.parent.document.querySelector('#send_textarea') as HTMLTextAreaElement | null;
@@ -257,35 +289,137 @@ onMounted(() => {
 });
 
 const showDetail = ref(new Set<string>());
+const pendingMap = ref(new Map<string, 'wear' | 'remove'>());
 
 function toggleDetail(key: string) {
   if (showDetail.value.has(key)) showDetail.value.delete(key);
   else showDetail.value.add(key);
 }
 
-function calcOverall(clothes: any[]) {
-  if (!clothes.length) return 0;
-  const sum = clothes.reduce((s: number, c: any) => s + (c.色情值 || 0), 0);
-  return Math.round(sum / clothes.length);
+function calcOverall(worn: any[], wardrobe: any[], isFull: boolean = false) {
+  const items = [...worn];
+  const tags = (c: any) => c.部位标签 || [];
+  const hasTop = items.some(c => tags(c).some(t => ['内衬','内衣','外套'].includes(t)));
+  const hasBottom = items.some(c => tags(c).some(t => ['内裤','下装'].includes(t)));
+  if (!hasTop) items.push({ 色情值: 90, 风格标签: [] });
+  if (!hasBottom) items.push({ 色情值: 90, 风格标签: [] });
+  if (items.length === 0) return 0;
+  const avg = items.reduce((s: number, c: any) => s + (c.色情值 || 0), 0) / items.length;
+
+  if (isFull && worn.length >= 2) {
+    let same = 0, diff = 0;
+    const realItems = worn.slice();
+    const styleSets = realItems.map(c => new Set(c.风格标签 || []));
+    for (let i = 0; i < styleSets.length; i++) {
+      for (let j = i + 1; j < styleSets.length; j++) {
+        let hasCommon = false;
+        for (const t of styleSets[i]) { if (styleSets[j].has(t)) { hasCommon = true; break; } }
+        if (hasCommon) same++; else diff++;
+      }
+    }
+    if (same >= 10) return Math.round(avg * 1.30);
+    if (same >= 6) return Math.round(avg * 1.20);
+    if (same >= 3) return Math.round(avg * 1.20);
+    if (diff >= 10) return Math.round(avg * 0.70);
+    if (diff >= 6) return Math.round(avg * 0.80);
+    if (diff >= 3) return Math.round(avg * 0.80);
+  }
+  return Math.round(avg);
 }
 
 function wearCloth(idx: number) {
   const wardrobe = store.data.服装.可更换 || [];
   const worn = store.data.服装.穿着 || [];
   if (idx < 0 || idx >= wardrobe.length) return;
+  const name = wardrobe[idx].名称;
+  const tags = wardrobe[idx].部位标签 || [];
+  const conflict = worn.find(c => (c.部位标签 || []).some(t => tags.includes(t)));
+  if (conflict && !pendingMap.value.has(name)) {
+    (window.parent as any).toastr?.warning(`相同部位已经有一件「${conflict.名称}」啦，先脱下再穿吧～`);
+    return;
+  }
+  if (pendingMap.value.has(name)) {
+    pendingMap.value.delete(name);
+    sessionRemove(name);
+    const [item] = wardrobe.splice(idx, 1);
+    worn.push(item);
+    store.data.服装.整体色情值 = calcOverall(worn);
+    return;
+  }
+  sessionBackup();
   const [item] = wardrobe.splice(idx, 1);
   worn.push(item);
   store.data.服装.整体色情值 = calcOverall(worn);
+  pendingMap.value.set(name, 'wear');
 }
 
 function removeCloth(idx: number) {
   const wardrobe = store.data.服装.可更换 || [];
   const worn = store.data.服装.穿着 || [];
   if (idx < 0 || idx >= worn.length) return;
+  const name = worn[idx].名称;
+  if (pendingMap.value.has(name)) {
+    pendingMap.value.delete(name);
+    sessionRemove(name);
+    const [item] = worn.splice(idx, 1);
+    wardrobe.push(item);
+    store.data.服装.整体色情值 = calcOverall(worn);
+    return;
+  }
+  sessionBackup();
   const [item] = worn.splice(idx, 1);
   wardrobe.push(item);
   store.data.服装.整体色情值 = calcOverall(worn);
+  pendingMap.value.set(name, 'remove');
 }
+
+function confirmOutfit() {
+  if (pendingMap.value.size === 0) return;
+  const msg = '[换装]' + [...pendingMap.value.keys()].join('、');
+  pendingMap.value.clear();
+  sessionStorage.removeItem('cloth_snapshot');
+  const ta = (window.parent.document as Document).querySelector('#send_textarea') as HTMLTextAreaElement;
+  if (ta) { ta.value = msg; ta.dispatchEvent(new Event('input', { bubbles: true })); }
+}
+
+function sessionBackup() {
+  if (sessionStorage.getItem('cloth_snapshot')) return;
+  const w = store.data.服装.穿着 || [];
+  const c = store.data.服装.可更换 || [];
+  sessionStorage.setItem('cloth_snapshot', JSON.stringify({ worn: w.map(x => x.名称), wardrobe: c.map(x => x.名称) }));
+}
+
+function sessionRemove(name: string) {
+  const s = sessionStorage.getItem('cloth_snapshot');
+  if (!s) return;
+  const snap = JSON.parse(s);
+  snap.worn = snap.worn.filter((n: string) => n !== name);
+  snap.wardrobe = snap.wardrobe.filter((n: string) => n !== name);
+  if (snap.worn.length === 0 && snap.wardrobe.length === 0) { sessionStorage.removeItem('cloth_snapshot'); return; }
+  sessionStorage.setItem('cloth_snapshot', JSON.stringify(snap));
+}
+
+const nudityWarnings = computed(() => {
+  const worn: any[] = store.data.服装?.穿着 || [];
+  const tags = (c: any) => c.部位标签 || [];
+  const hasTop = worn.some(c => tags(c).some(t => ['内衬','内衣','外套'].includes(t)));
+  const hasBottom = worn.some(c => tags(c).some(t => ['内裤','下装'].includes(t)));
+  const w: string[] = [];
+  if (!hasTop) w.push('上身裸露');
+  if (!hasBottom) w.push('下身裸露');
+  return w;
+});
+
+const styleTagEntries = computed(() => {
+  const worn: any[] = store.data.服装?.穿着 || [];
+  const counts: Record<string, number> = {};
+  for (const c of worn) {
+    for (const t of (c.风格标签 || [])) {
+      counts[t] = (counts[t] || 0) + 1;
+    }
+  }
+  return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+});
 
 const levelNames: Record<number, string> = {
   1: '青涩新人', 2: '初级外围', 3: '资深玩物', 4: '知名母狗', 5: '公共便器'
@@ -367,19 +501,10 @@ const locationLabel = computed(() => {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse at 20% 80%, rgba(180, 40, 40, 0.25) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(200, 60, 60, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(140, 20, 20, 0.3) 0%, transparent 70%),
+    radial-gradient(ellipse at 20% 80%, rgba(30, 60, 140, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(40, 80, 160, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(15, 40, 100, 0.25) 0%, transparent 70%),
     linear-gradient(180deg, var(--c-bg-deep) 0%, var(--c-bg-mid) 50%, var(--c-bg-deep) 100%);
-  background-size: 200% 200%;
-  animation: waveFlow 8s ease-in-out infinite;
-}
-
-@keyframes waveFlow {
-  0%, 100% { background-position: 0% 0%; }
-  25% { background-position: 100% 30%; }
-  50% { background-position: 50% 100%; }
-  75% { background-position: 0% 70%; }
 }
 
 .card-content {
@@ -583,23 +708,32 @@ const locationLabel = computed(() => {
 .chat-send-btn { padding: 8px 16px; background: var(--c-accent); border: none; border-radius: 6px; color: #fff; font-family: var(--font-mono); font-size: 0.7rem; font-weight: bold; cursor: pointer; white-space: nowrap; &:disabled { opacity: 0.35; cursor: default; } &:not(:disabled):hover { opacity: 0.85; } }
 .msg-bubble { max-width: 75%; margin-bottom: 8px; padding: 6px 10px; border-radius: 8px; font-size: 0.7rem; line-height: 1.4; background: rgba(255,255,255,0.06); color: var(--c-text); align-self: flex-start; &.mine { background: rgba(196,74,74,0.2); align-self: flex-end; text-align: right; } }
 
-.cloth-layout { display: flex; min-height: 400px; }
+.cloth-layout { display: flex; flex-direction: column; min-height: 400px; }
+.cloth-panels { display: flex; flex: 1; }
 .cloth-panel { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; &:first-child { border-right: 1px solid var(--c-border); } }
 .cloth-panel-title { font-size: 0.85rem; font-weight: bold; color: var(--c-accent); margin-bottom: 4px; }
-.cloth-card { background: rgba(255,255,255,0.03); border: 1px solid var(--c-border); border-radius: 6px; padding: 10px 12px; }
+.cloth-card { background: rgba(255,255,255,0.03); border: 1px solid var(--c-border); border-radius: 6px; padding: 10px 12px; transition: border-color 0.2s, background 0.2s;
+  &.pending-wear { border-color: #5cc8c8; background: rgba(92,200,200,0.08); }
+  &.pending-remove { border-color: #5cc8c8; background: rgba(92,200,200,0.08); }
+}
 .cloth-name { font-size: 0.9rem; font-weight: bold; color: var(--c-text); margin-bottom: 6px; }
 .cloth-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
 .cloth-tag { display: inline-block; font-size: 0.7rem; font-weight: bold; padding: 3px 8px; border-radius: 4px;
   &.tag-pos   { color: #5badd4; background: rgba(91,173,212,0.15); }
-  &.tag-style { color: #c47ab4; background: rgba(196,122,180,0.15); }
+  &.tag-style { color: #6bc480; background: rgba(107,196,128,0.15); }
   &.tag-color { color: #e8a850; background: rgba(232,168,80,0.15); }
-  &.tag-erotica { color: #e05555; background: rgba(224,85,85,0.15); }
+  &.tag-erotica { color: #e88090; background: rgba(232,128,144,0.15); }
 }
 .cloth-desc { font-size: 0.75rem; color: var(--c-text-dim); line-height: 1.5; margin-top: 6px; }
 .cloth-actions { display: flex; gap: 6px; margin-top: 8px; }
-.cloth-btn { padding: 4px 10px; border: 1px solid var(--c-border); border-radius: 4px; background: rgba(255,255,255,0.04); color: var(--c-text-dim); font-family: var(--font-mono); font-size: 0.65rem; cursor: pointer; transition: all 0.15s; &:hover { background: rgba(255,255,255,0.08); color: var(--c-text); } }
-.cloth-btn-wear { border-color: var(--c-food-high); color: var(--c-food-high); &:hover { background: rgba(78,203,113,0.1); } }
-.cloth-btn-remove { border-color: var(--c-food-low); color: var(--c-food-low); &:hover { background: rgba(224,85,69,0.1); } }
+.cloth-btn { font-size: 0.7rem; font-weight: bold; padding: 3px 8px; border-radius: 4px; border: none; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); cursor: pointer; transition: all 0.15s; &:hover { background: rgba(255,255,255,0.2); color: #fff; } }
+.cloth-btn-wear { background: rgba(92,200,200,0.15); color: #5cc8c8; &:hover { background: rgba(92,200,200,0.25); } }
+.cloth-btn-remove { background: rgba(92,200,200,0.15); color: #5cc8c8; &:hover { background: rgba(92,200,200,0.25); } }
+.cloth-confirm { padding: 0 14px 14px 14px; }
+.nudity-warn { margin: 8px 14px 0; padding: 8px 10px; font-size: 0.75rem; border-radius: 6px; background: rgba(232,168,80,0.12); color: #e8a850; text-align: center; }
+.cloth-stats-row { display: flex; gap: 6px; margin: 6px 14px 0; }
+.cloth-erotica-display { flex: 1; padding: 8px 10px; font-size: 0.85rem; font-weight: bold; border-radius: 6px; background: rgba(224,85,85,0.1); color: #e05555; }
+.style-tag-counts { flex: 1; padding: 8px 10px; border-radius: 6px; background: rgba(107,196,128,0.08); display: flex; flex-wrap: wrap; gap: 4px; align-content: flex-start; }
 
 .contacts-theme { background: rgb(255,204,191); border-color: rgba(0,0,0,0.1); color: #4a2020; .wave-bg { display: none; } .tab-btn { color: rgba(74,32,32,0.5); &:hover { color: rgba(74,32,32,0.8); } &.active { color: var(--c-accent); background: rgba(0,0,0,0.04); } } .chat-header { color: #4a2020; border-color: rgba(0,0,0,0.08); } .contact-name { color: #fff; } .contact-affection { color: rgba(255,255,255,0.7); } .chat-textarea { background: rgba(255,255,255,0.6); color: #4a2020; border-color: rgba(0,0,0,0.08); } .chat-messages { background: rgba(0,0,0,0.02); } .chat-input-bar { border-color: rgba(0,0,0,0.08); } .msg-bubble { background: rgba(255,255,255,0.5); color: #4a2020; &.mine { background: rgba(255,255,255,0.75); } } .contact-item { border-color: rgba(255,255,255,0.15); &:hover { background: rgba(255,255,255,0.1); } &.active { background: rgba(255,255,255,0.18); } } .contact-list { background: rgb(240,128,128); border-color: rgba(255,255,255,0.2); } }
 
