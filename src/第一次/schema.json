@@ -166,6 +166,28 @@
           }
         }
       }
+    },
+    "联系人": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "好感度": {
+            "type": "number"
+          },
+          "身份": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "好感度",
+          "身份"
+        ]
+      }
     }
   },
   "required": [

@@ -40,5 +40,10 @@ export const Schema = z.object({
       可选挑战: z.string(),
     })).prefault([]),
   }),
+
+  联系人: z.record(z.string(), z.object({
+    好感度: z.coerce.number().transform(v => _.clamp(v, 0, 100)),
+    身份: z.string(),
+  })).prefault({}),
 });
 export type Schema = z.output<typeof Schema>;
