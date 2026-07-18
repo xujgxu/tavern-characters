@@ -18,43 +18,55 @@
         <div class="stat-row">
           <span class="stat-icon">🍞</span>
           <span class="stat-name">饱食度</span>
-          <div class="stat-bar"><div class="fill food" :style="{ width: store.data.主角.饱食度 + '%' }"></div></div>
-          <span class="stat-val">{{ store.data.主角.饱食度 }}</span>
+          <div class="stat-bar-wrap">
+            <div class="stat-bar"><div class="fill food" :style="{ width: store.data.主角.饱食度 + '%' }"></div></div>
+            <span class="bar-val">{{ store.data.主角.饱食度 }}</span>
+          </div>
         </div>
 
         <div class="stat-row">
           <span class="stat-icon">🧠</span>
           <span class="stat-name">精神值</span>
-          <div class="stat-bar"><div class="fill spirit" :style="{ width: store.data.主角.精神值 + '%' }"></div></div>
-          <span class="stat-val">{{ store.data.主角.精神值 }}</span>
+          <div class="stat-bar-wrap">
+            <div class="stat-bar"><div class="fill spirit" :style="{ width: store.data.主角.精神值 + '%' }"></div></div>
+            <span class="bar-val">{{ store.data.主角.精神值 }}</span>
+          </div>
         </div>
 
         <div class="stat-row">
           <span class="stat-icon">💕</span>
           <span class="stat-name">心情值</span>
-          <div class="stat-bar"><div class="fill mood" :style="{ width: store.data.主角.心情值 + '%' }"></div></div>
-          <span class="stat-val">{{ store.data.主角.心情值 }}</span>
+          <div class="stat-bar-wrap">
+            <div class="stat-bar"><div class="fill mood" :style="{ width: store.data.主角.心情值 + '%' }"></div></div>
+            <span class="bar-val">{{ store.data.主角.心情值 }}</span>
+          </div>
         </div>
 
         <div class="stat-row">
           <span class="stat-icon">🔞</span>
           <span class="stat-name">色情值</span>
-          <div class="stat-bar"><div class="fill erotica" :style="{ width: store.data.主角.整体色情值 + '%' }"></div></div>
-          <span class="stat-val">{{ store.data.主角.整体色情值 }}</span>
+          <div class="stat-bar-wrap">
+            <div class="stat-bar"><div class="fill erotica" :style="{ width: store.data.主角.整体色情值 + '%' }"></div></div>
+            <span class="bar-val">{{ store.data.主角.整体色情值 }}</span>
+          </div>
         </div>
 
         <div class="stat-row">
           <span class="stat-icon">💋</span>
           <span class="stat-name">性欲值</span>
-          <div class="stat-bar"><div class="fill libido" :style="{ width: store.data.主角.性欲值 + '%' }"></div></div>
-          <span class="stat-val">{{ store.data.主角.性欲值 }}</span>
+          <div class="stat-bar-wrap">
+            <div class="stat-bar"><div class="fill libido" :style="{ width: store.data.主角.性欲值 + '%' }"></div></div>
+            <span class="bar-val">{{ store.data.主角.性欲值 }}</span>
+          </div>
         </div>
 
         <div class="stat-row">
           <span class="stat-icon">⚡</span>
           <span class="stat-name">快感值</span>
-          <div class="stat-bar"><div class="fill pleasure" :style="{ width: store.data.主角.快感值 + '%' }"></div></div>
-          <span class="stat-val">{{ store.data.主角.快感值 }}</span>
+          <div class="stat-bar-wrap">
+            <div class="stat-bar"><div class="fill pleasure" :style="{ width: store.data.主角.快感值 + '%' }"></div></div>
+            <span class="bar-val">{{ store.data.主角.快感值 }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -161,12 +173,29 @@ const locationLabel = computed(() => {
   text-align: right;
 }
 
-.stat-bar {
+.stat-bar-wrap {
   flex: 1;
+  position: relative;
+  height: 17px;
+  display: flex;
+  align-items: center;
+}
+
+.stat-bar {
+  width: 100%;
   height: 5px;
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.06);
   overflow: hidden;
+}
+
+.bar-val {
+  position: absolute;
+  right: 0;
+  top: -2px;
+  font-size: 0.55rem;
+  font-weight: bold;
+  color: var(--c-text-dim);
 }
 
 .fill {
