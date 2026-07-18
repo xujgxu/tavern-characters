@@ -7,14 +7,10 @@
       "properties": {
         "时间": {
           "type": "string"
-        },
-        "地点": {
-          "type": "string"
         }
       },
       "required": [
-        "时间",
-        "地点"
+        "时间"
       ]
     },
     "主角": {
@@ -25,228 +21,16 @@
         },
         "精神值": {
           "type": "number"
-        },
-        "心情值": {
-          "type": "number"
-        },
-        "金钱": {
-          "type": "number"
-        },
-        "性欲值": {
-          "type": "number"
-        },
-        "快感值": {
-          "type": "number"
         }
       },
       "required": [
         "饱食度",
-        "精神值",
-        "心情值",
-        "金钱",
-        "性欲值",
-        "快感值"
+        "精神值"
       ]
-    },
-    "APP": {
-      "type": "object",
-      "properties": {
-        "等级": {
-          "type": "number"
-        },
-        "经验值": {
-          "type": "number"
-        },
-        "已完成任务数": {
-          "type": "number"
-        },
-        "当前任务": {
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "类型": {
-                  "type": "string"
-                },
-                "等级": {
-                  "type": "number"
-                },
-                "色情维度": {
-                  "type": "number"
-                },
-                "社会维度": {
-                  "type": "number"
-                },
-                "内容": {
-                  "type": "string"
-                },
-                "报酬": {
-                  "type": "number"
-                },
-                "可选挑战": {
-                  "type": "string"
-                },
-                "状态": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "类型",
-                "等级",
-                "色情维度",
-                "社会维度",
-                "内容",
-                "报酬",
-                "可选挑战",
-                "状态"
-              ]
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "required": [
-        "等级",
-        "经验值",
-        "已完成任务数",
-        "当前任务"
-      ]
-    },
-    "学业": {
-      "type": "object",
-      "properties": {
-        "宏观经济学上": {
-          "type": "number"
-        },
-        "微观经济学上": {
-          "type": "number"
-        },
-        "金融管理上": {
-          "type": "number"
-        },
-        "宏观经济学下": {
-          "type": "number"
-        },
-        "微观经济学下": {
-          "type": "number"
-        },
-        "金融管理下": {
-          "type": "number"
-        },
-        "志愿者时长": {
-          "type": "number"
-        },
-        "实习时长": {
-          "type": "number"
-        },
-        "论文进度": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "宏观经济学上",
-        "微观经济学上",
-        "金融管理上",
-        "宏观经济学下",
-        "微观经济学下",
-        "金融管理下",
-        "志愿者时长",
-        "实习时长",
-        "论文进度"
-      ]
-    },
-    "服装": {
-      "type": "object",
-      "properties": {
-        "穿着": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "名称": {
-                "type": "string"
-              },
-              "部位标签": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "风格标签": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "颜色图案标签": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "状态标签": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "色情值": {
-                "type": "number"
-              },
-              "描述": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "名称",
-              "部位标签",
-              "风格标签",
-              "颜色图案标签",
-              "状态标签",
-              "色情值",
-              "描述"
-            ]
-          }
-        },
-        "整体色情值": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "穿着",
-        "整体色情值"
-      ]
-    },
-    "联系人": {
-      "type": "object",
-      "propertyNames": {
-        "type": "string"
-      },
-      "additionalProperties": {
-        "type": "object",
-        "properties": {
-          "好感度": {
-            "type": "number"
-          },
-          "身份": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "好感度",
-          "身份"
-        ]
-      }
     }
   },
   "required": [
     "世界",
-    "主角",
-    "APP",
-    "学业",
-    "服装",
-    "联系人"
+    "主角"
   ]
 }
