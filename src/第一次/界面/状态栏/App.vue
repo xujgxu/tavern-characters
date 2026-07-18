@@ -4,6 +4,10 @@
     <div class="card-content">
       <div class="time-section">
         <span class="time-value">{{ store.data.世界.时间 }}</span>
+        <div class="compact-row">
+          <span class="compact-item">💰{{ store.data.主角.金钱 }}</span>
+          <span class="compact-item" :class="eroticaColor">🔞{{ store.data.主角.整体色情值 }}</span>
+        </div>
       </div>
 
       <div class="stats-section">
@@ -17,7 +21,6 @@
           <div class="stat-bar">
             <div class="stat-bar-inner" :class="satietyStatus.color" :style="{ width: store.data.主角.饱食度 + '%' }"></div>
           </div>
-          <div class="stat-hint">{{ satietyStatus.hint }}</div>
         </div>
 
         <div class="stat-item">
@@ -30,7 +33,41 @@
           <div class="stat-bar">
             <div class="stat-bar-inner" :class="mentalStatus.color" :style="{ width: store.data.主角.精神值 + '%' }"></div>
           </div>
-          <div class="stat-hint">{{ mentalStatus.hint }}</div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-header">
+            <span class="stat-icon">💕</span>
+            <span class="stat-name">心情值</span>
+            <span class="stat-num">{{ store.data.主角.心情值 }}</span>
+            <span class="stat-tag" :class="moodStatus.color">{{ moodStatus.label }}</span>
+          </div>
+          <div class="stat-bar">
+            <div class="stat-bar-inner" :class="moodStatus.color" :style="{ width: store.data.主角.心情值 + '%' }"></div>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-header">
+            <span class="stat-icon">💋</span>
+            <span class="stat-name">性欲值</span>
+            <span class="stat-num">{{ store.data.主角.性欲值 }}</span>
+            <span class="stat-tag" :class="libidoStatus.color">{{ libidoStatus.label }}</span>
+          </div>
+          <div class="stat-bar">
+            <div class="stat-bar-inner" :class="libidoStatus.color" :style="{ width: store.data.主角.性欲值 + '%' }"></div>
+          </div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-header">
+            <span class="stat-icon">⚡</span>
+            <span class="stat-name">快感值</span>
+            <span class="stat-num">{{ store.data.主角.快感值 }}</span>
+          </div>
+          <div class="stat-bar">
+            <div class="stat-bar-inner pleasure" :style="{ width: store.data.主角.快感值 + '%' }"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -42,26 +79,48 @@ import { useDataStore } from './store';
 
 const store = useDataStore();
 
-type StatusInfo = { label: string; color: string; hint: string };
+type StatusInfo = { label: string; color: string };
 
 function foodStatus(val: number): StatusInfo {
-  if (val <= 10) return { label: '空腹', color: 'low', hint: '再不吃东西就要晕倒了…' };
-  if (val <= 30) return { label: '饥饿', color: 'low', hint: '肚子在叫，该吃饭了' };
-  if (val <= 60) return { label: '微饿', color: 'mid', hint: '还能撑一阵子' };
-  if (val <= 85) return { label: '正常', color: 'high', hint: '刚刚好，不饿也不撑' };
-  return { label: '饱腹', color: 'high', hint: '吃得很满足～' };
+  if (val <= 10) return { label: '空腹', color: 'low' };
+  if (val <= 30) return { label: '饥饿', color: 'low' };
+  if (val <= 60) return { label: '微饿', color: 'mid' };
+  if (val <= 85) return { label: '正常', color: 'high' };
+  return { label: '饱腹', color: 'high' };
 }
 
 function spiritStatus(val: number): StatusInfo {
-  if (val <= 10) return { label: '崩溃', color: 'low', hint: '什么都不想做了…' };
-  if (val <= 30) return { label: '低迷', color: 'low', hint: '提不起劲，能翘课就翘了' };
-  if (val <= 60) return { label: '疲惫', color: 'mid', hint: '有点累，但还能应付' };
-  if (val <= 85) return { label: '正常', color: 'high', hint: '状态不错，可以专注做事' };
-  return { label: '充沛', color: 'high', hint: '元气满满，干劲十足！' };
+  if (val <= 10) return { label: '崩溃', color: 'low' };
+  if (val <= 30) return { label: '低迷', color: 'low' };
+  if (val <= 60) return { label: '疲惫', color: 'mid' };
+  if (val <= 85) return { label: '正常', color: 'high' };
+  return { label: '充沛', color: 'high' };
+}
+
+function moodStatusFn(val: number): StatusInfo {
+  if (val <= 10) return { label: '崩溃', color: 'low' };
+  if (val <= 40) return { label: '烦躁', color: 'mid' };
+  return { label: '健康', color: 'high' };
+}
+
+function libidoStatusFn(val: number): StatusInfo {
+  if (val <= 49) return { label: '餍足', color: 'high' };
+  if (val <= 79) return { label: '唤醒', color: 'mid' };
+  if (val <= 99) return { label: '发情', color: 'low' };
+  return { label: '失控', color: 'low' };
 }
 
 const satietyStatus = computed(() => foodStatus(store.data.主角.饱食度));
 const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
+const moodStatus = computed(() => moodStatusFn(store.data.主角.心情值));
+const libidoStatus = computed(() => libidoStatusFn(store.data.主角.性欲值));
+const eroticaColor = computed(() => {
+  const v = store.data.主角.整体色情值;
+  if (v <= 20) return 'low';
+  if (v <= 50) return 'mid';
+  if (v <= 70) return 'mid';
+  return 'low';
+});
 </script>
 
 <style lang="scss" scoped>
@@ -93,18 +152,10 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
 }
 
 @keyframes waveFlow {
-  0%, 100% {
-    background-position: 0% 0%;
-  }
-  25% {
-    background-position: 100% 30%;
-  }
-  50% {
-    background-position: 50% 100%;
-  }
-  75% {
-    background-position: 0% 70%;
-  }
+  0%, 100% { background-position: 0% 0%; }
+  25% { background-position: 100% 30%; }
+  50% { background-position: 50% 100%; }
+  75% { background-position: 0% 70%; }
 }
 
 .card-content {
@@ -113,7 +164,7 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
 }
 
 .time-section {
-  padding: 12px 16px 8px;
+  padding: 12px 16px 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -125,17 +176,32 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
   letter-spacing: 0.5px;
 }
 
+.compact-row {
+  display: flex;
+  gap: 10px;
+}
+
+.compact-item {
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: var(--c-text-dim);
+
+  &.low  { color: var(--c-food-low); }
+  &.mid  { color: var(--c-food-mid); }
+  &.high { color: var(--c-food-high); }
+}
+
 .stats-section {
-  padding: 6px 16px 14px;
+  padding: 4px 16px 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .stat-header {
@@ -144,25 +210,9 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
   gap: 6px;
 }
 
-.stat-icon {
-  font-size: 0.85rem;
-  width: 16px;
-  text-align: center;
-}
-
-.stat-name {
-  font-weight: bold;
-  font-size: 0.75rem;
-  min-width: 36px;
-  color: var(--c-text-dim);
-}
-
-.stat-num {
-  font-weight: bold;
-  font-size: 0.75rem;
-  min-width: 24px;
-  text-align: right;
-}
+.stat-icon  { font-size: 0.8rem; width: 16px; text-align: center; }
+.stat-name  { font-weight: bold; font-size: 0.7rem; min-width: 36px; color: var(--c-text-dim); }
+.stat-num   { font-weight: bold; font-size: 0.7rem; min-width: 24px; text-align: right; }
 
 .stat-tag {
   font-size: 0.6rem;
@@ -172,27 +222,13 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
   border: 1px solid;
   letter-spacing: 0.5px;
 
-  &.high {
-    color: var(--c-food-high);
-    border-color: var(--c-food-high);
-    background: rgba(78, 203, 113, 0.08);
-  }
-
-  &.mid {
-    color: var(--c-food-mid);
-    border-color: var(--c-food-mid);
-    background: rgba(212, 168, 67, 0.08);
-  }
-
-  &.low {
-    color: var(--c-food-low);
-    border-color: var(--c-food-low);
-    background: rgba(224, 85, 69, 0.08);
-  }
+  &.high { color: var(--c-food-high); border-color: var(--c-food-high); background: rgba(78, 203, 113, 0.08); }
+  &.mid  { color: var(--c-food-mid); border-color: var(--c-food-mid); background: rgba(212, 168, 67, 0.08); }
+  &.low  { color: var(--c-food-low); border-color: var(--c-food-low); background: rgba(224, 85, 69, 0.08); }
 }
 
 .stat-bar {
-  height: 4px;
+  height: 3px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.06);
   overflow: hidden;
@@ -208,19 +244,12 @@ const mentalStatus = computed(() => spiritStatus(store.data.主角.精神值));
   &.low  { background: var(--c-food-low); }
 }
 
-.stat-hint {
-  font-size: 0.6rem;
-  color: var(--c-text-dim);
-  padding-left: 22px;
+.stat-bar-inner.pleasure {
+  background: linear-gradient(90deg, #d47a7a, #e05545);
 }
 
 @media (max-width: 400px) {
-  .status-card {
-    max-width: 100%;
-  }
-
-  .stat-header {
-    flex-wrap: wrap;
-  }
+  .status-card { max-width: 100%; }
+  .stat-header { flex-wrap: wrap; }
 }
 </style>

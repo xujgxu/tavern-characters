@@ -16,3 +16,27 @@
       range: 0~100
       check:
         - 参考「精神值机制」更新
+    金钱:
+      type: number
+      check:
+        - 参考「金钱机制」更新
+    心情值:
+      type: number
+      range: 0~100
+      check:
+        - 参考「心情值机制」更新
+    性欲值:
+      type: number
+      range: 0~100
+      check:
+        - 参考「性欲值与快感值」更新
+    快感值:
+      type: number
+      range: 0~100
+      check:
+        - 参考「性欲值与快感值」更新
+    整体色情值:
+      type: number
+      range: 0~100
+      check:
+        - 参考「服装机制」更新
