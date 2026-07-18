@@ -27,29 +27,29 @@
           "type": "number"
         },
         "金钱": {
+          "default": 0,
           "type": "number"
         },
         "心情值": {
+          "default": 0,
           "type": "number"
         },
         "性欲值": {
+          "default": 0,
           "type": "number"
         },
         "快感值": {
+          "default": 0,
           "type": "number"
         },
         "整体色情值": {
+          "default": 0,
           "type": "number"
         }
       },
       "required": [
         "饱食度",
-        "精神值",
-        "金钱",
-        "心情值",
-        "性欲值",
-        "快感值",
-        "整体色情值"
+        "精神值"
       ]
     }
   },
