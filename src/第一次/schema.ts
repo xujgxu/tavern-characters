@@ -44,6 +44,11 @@ export const Schema = z.object({
   联系人: z.record(z.string(), z.object({
     好感度: z.coerce.number().transform(v => _.clamp(v, 0, 100)),
     身份: z.string(),
+    消息: z.array(z.object({
+      发送方: z.string(),
+      内容: z.string(),
+      时间: z.string(),
+    })).prefault([]),
   })).prefault({}),
 });
 export type Schema = z.output<typeof Schema>;

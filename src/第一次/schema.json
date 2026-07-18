@@ -181,6 +181,29 @@
           },
           "身份": {
             "type": "string"
+          },
+          "消息": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "发送方": {
+                  "type": "string"
+                },
+                "内容": {
+                  "type": "string"
+                },
+                "时间": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "发送方",
+                "内容",
+                "时间"
+              ]
+            }
           }
         },
         "required": [

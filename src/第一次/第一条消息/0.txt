@@ -94,6 +94,7 @@ APP:
   陈屿:
     好感度: 50
     身份: 海平大学游泳队教练
+    消息: []
 ```
 </initvar>
 </UpdateVariable>
