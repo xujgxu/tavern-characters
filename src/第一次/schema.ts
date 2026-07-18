@@ -41,6 +41,28 @@ export const Schema = z.object({
     })).prefault([]),
   }),
 
+  服装: z.object({
+    穿着: z.array(z.object({
+      名称: z.string(),
+      部位标签: z.array(z.string()),
+      风格标签: z.array(z.string()),
+      颜色图案标签: z.array(z.string()),
+      状态标签: z.array(z.string()),
+      色情值: z.coerce.number().transform(v => _.clamp(v, 0, 100)),
+      描述: z.string(),
+    })).prefault([]),
+    整体色情值: z.coerce.number().prefault(0).transform(v => _.clamp(v, 0, 100)),
+    可更换: z.array(z.object({
+      名称: z.string(),
+      部位标签: z.array(z.string()),
+      风格标签: z.array(z.string()),
+      颜色图案标签: z.array(z.string()),
+      状态标签: z.array(z.string()),
+      色情值: z.coerce.number().transform(v => _.clamp(v, 0, 100)),
+      描述: z.string(),
+    })).prefault([]),
+  }),
+
   联系人: z.record(z.string(), z.object({
     好感度: z.coerce.number().transform(v => _.clamp(v, 0, 100)),
     身份: z.string(),

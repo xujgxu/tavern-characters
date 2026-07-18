@@ -167,6 +167,117 @@
         }
       }
     },
+    "服装": {
+      "type": "object",
+      "properties": {
+        "穿着": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "名称": {
+                "type": "string"
+              },
+              "部位标签": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "风格标签": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "颜色图案标签": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "状态标签": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "色情值": {
+                "type": "number"
+              },
+              "描述": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "名称",
+              "部位标签",
+              "风格标签",
+              "颜色图案标签",
+              "状态标签",
+              "色情值",
+              "描述"
+            ]
+          }
+        },
+        "整体色情值": {
+          "default": 0,
+          "type": "number"
+        },
+        "可更换": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "名称": {
+                "type": "string"
+              },
+              "部位标签": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "风格标签": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "颜色图案标签": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "状态标签": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "色情值": {
+                "type": "number"
+              },
+              "描述": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "名称",
+              "部位标签",
+              "风格标签",
+              "颜色图案标签",
+              "状态标签",
+              "色情值",
+              "描述"
+            ]
+          }
+        }
+      }
+    },
     "联系人": {
       "default": {},
       "type": "object",
@@ -216,6 +327,7 @@
   "required": [
     "世界",
     "主角",
-    "APP"
+    "APP",
+    "服装"
   ]
 }
