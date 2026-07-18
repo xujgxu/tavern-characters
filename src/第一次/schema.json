@@ -9,12 +9,12 @@
           "type": "string"
         },
         "地点": {
+          "default": "",
           "type": "string"
         }
       },
       "required": [
-        "时间",
-        "地点"
+        "时间"
       ]
     },
     "主角": {

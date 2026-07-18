@@ -1,7 +1,7 @@
 export const Schema = z.object({
   世界: z.object({
     时间: z.string(),
-    地点: z.string(),
+    地点: z.string().prefault(''),
   }),
   主角: z.object({
     饱食度: z.coerce.number().transform(v => _.clamp(v, 0, 100)),
