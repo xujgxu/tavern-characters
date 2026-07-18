@@ -18,6 +18,7 @@ export const Schema = z.object({
     经验值: z.coerce.number().prefault(0),
     已完成任务数: z.coerce.number().prefault(0),
     当前任务: z.object({
+      名称: z.string(),
       类型: z.string(),
       等级: z.coerce.number(),
       色情维度: z.coerce.number(),
@@ -28,6 +29,7 @@ export const Schema = z.object({
       状态: z.string(),
     }).nullable().prefault(null),
     待选任务: z.array(z.object({
+      名称: z.string(),
       类型: z.string(),
       等级: z.coerce.number(),
       色情维度: z.coerce.number(),

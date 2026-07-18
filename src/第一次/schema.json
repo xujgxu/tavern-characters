@@ -73,6 +73,9 @@
             {
               "type": "object",
               "properties": {
+                "名称": {
+                  "type": "string"
+                },
                 "类型": {
                   "type": "string"
                 },
@@ -99,6 +102,7 @@
                 }
               },
               "required": [
+                "名称",
                 "类型",
                 "等级",
                 "色情维度",
@@ -120,6 +124,9 @@
           "items": {
             "type": "object",
             "properties": {
+              "名称": {
+                "type": "string"
+              },
               "类型": {
                 "type": "string"
               },
@@ -143,6 +150,7 @@
               }
             },
             "required": [
+              "名称",
               "类型",
               "等级",
               "色情维度",
