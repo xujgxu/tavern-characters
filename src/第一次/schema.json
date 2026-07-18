@@ -7,10 +7,14 @@
       "properties": {
         "时间": {
           "type": "string"
+        },
+        "地点": {
+          "type": "string"
         }
       },
       "required": [
-        "时间"
+        "时间",
+        "地点"
       ]
     },
     "主角": {
