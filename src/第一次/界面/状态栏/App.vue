@@ -2,72 +2,145 @@
   <div class="status-card">
     <div class="wave-bg"></div>
     <div class="card-content">
-      <div class="info-section">
-        <div class="info-row">日期：{{ datePart }}</div>
-        <div class="info-row">时间：{{ timePart }}</div>
-        <div class="info-row">地点：{{ locationLabel }}</div>
+      <div class="tab-nav">
+        <button v-for="t in tabs" :key="t.id" class="tab-btn" :class="{ active: activeTab === t.id }" @click="activeTab = t.id">{{ t.label }}</button>
       </div>
 
-      <div class="stats-section">
-        <div class="stat-row">
-          <span class="stat-icon">💰</span>
-          <span class="stat-name">金钱</span>
-          <span class="stat-val">{{ store.data.主角.金钱 }}</span>
-        </div>
+      <div class="tab-content" v-if="activeTab === 'basic'">
+        <div class="stats-section">
+          <div class="stat-row">
+            <span class="stat-icon">📅</span>
+            <span class="stat-name">日　期</span>
+            <span class="stat-val">{{ datePart }}</span>
+          </div>
 
-        <div class="stat-row">
-          <span class="stat-icon">🍞</span>
-          <span class="stat-name">饱食度</span>
-          <div class="stat-bar-wrap">
-            <div class="stat-bar"><div class="fill food" :style="{ width: store.data.主角.饱食度 + '%' }"></div></div>
-            <span class="bar-val">{{ store.data.主角.饱食度 }}</span>
+          <div class="stat-row">
+            <span class="stat-icon">🕐</span>
+            <span class="stat-name">时　间</span>
+            <span class="stat-val">{{ timePart }}</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-icon">📍</span>
+            <span class="stat-name">地　点</span>
+            <span class="stat-val">{{ locationLabel }}</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-icon">💰</span>
+            <span class="stat-name">金　钱</span>
+            <span class="stat-val">{{ store.data.主角.金钱 }}</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-icon">🍞</span>
+            <span class="stat-name">饱食度</span>
+            <div class="stat-bar-wrap">
+              <div class="stat-bar"><div class="fill food" :style="{ width: store.data.主角.饱食度 + '%' }"></div></div>
+              <span class="bar-val">{{ store.data.主角.饱食度 }}</span>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-icon">🧠</span>
+            <span class="stat-name">精神值</span>
+            <div class="stat-bar-wrap">
+              <div class="stat-bar"><div class="fill spirit" :style="{ width: store.data.主角.精神值 + '%' }"></div></div>
+              <span class="bar-val">{{ store.data.主角.精神值 }}</span>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-icon">💕</span>
+            <span class="stat-name">心情值</span>
+            <div class="stat-bar-wrap">
+              <div class="stat-bar"><div class="fill mood" :style="{ width: store.data.主角.心情值 + '%' }"></div></div>
+              <span class="bar-val">{{ store.data.主角.心情值 }}</span>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-icon">🔞</span>
+            <span class="stat-name">色情值</span>
+            <div class="stat-bar-wrap">
+              <div class="stat-bar"><div class="fill erotica" :style="{ width: store.data.主角.整体色情值 + '%' }"></div></div>
+              <span class="bar-val">{{ store.data.主角.整体色情值 }}</span>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-icon">💋</span>
+            <span class="stat-name">性欲值</span>
+            <div class="stat-bar-wrap">
+              <div class="stat-bar"><div class="fill libido" :style="{ width: store.data.主角.性欲值 + '%' }"></div></div>
+              <span class="bar-val">{{ store.data.主角.性欲值 }}</span>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-icon">⚡</span>
+            <span class="stat-name">快感值</span>
+            <div class="stat-bar-wrap">
+              <div class="stat-bar"><div class="fill pleasure" :style="{ width: store.data.主角.快感值 + '%' }"></div></div>
+              <span class="bar-val">{{ store.data.主角.快感值 }}</span>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="stat-row">
-          <span class="stat-icon">🧠</span>
-          <span class="stat-name">精神值</span>
-          <div class="stat-bar-wrap">
-            <div class="stat-bar"><div class="fill spirit" :style="{ width: store.data.主角.精神值 + '%' }"></div></div>
-            <span class="bar-val">{{ store.data.主角.精神值 }}</span>
+      <div class="tab-content" v-if="activeTab === 'app'">
+        <div class="stats-section">
+          <div class="stat-row">
+            <span class="stat-icon">📱</span>
+            <span class="stat-name">等　级</span>
+            <span class="stat-val">{{ levelLabel }}</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-icon">⭐</span>
+            <span class="stat-name">经　验</span>
+            <div class="stat-bar-wrap">
+              <div class="stat-bar"><div class="fill exp" :style="{ width: expPercent + '%' }"></div></div>
+            </div>
+            <span class="stat-val exp-val">{{ expDisplay }}</span>
+          </div>
+
+          <div v-if="store.data.APP.待选任务 && store.data.APP.待选任务.length === 3 && !store.data.APP.当前任务">
+            <div class="task-header">📋 可选任务（三选一）</div>
+            <div class="task-card" v-for="(t, i) in store.data.APP.待选任务" :key="i">
+              <div class="task-info">
+                <div class="task-row"><span class="task-label">类型</span><span class="task-val">[{{ t.类型 }}] Lv.{{ t.等级 }}</span></div>
+                <div class="task-row"><span class="task-label">色情</span><span class="task-val">{{ t.色情维度 }} 级</span></div>
+                <div class="task-row"><span class="task-label">社会</span><span class="task-val">{{ t.社会维度 }} 级</span></div>
+                <div class="task-row"><span class="task-label">内容</span><span class="task-val task-desc">{{ t.内容 }}</span></div>
+                <div class="task-row"><span class="task-label">报酬</span><span class="task-val">{{ t.报酬 }} 元</span></div>
+                <div class="task-row" v-if="t.可选挑战"><span class="task-label">挑战</span><span class="task-val task-desc">{{ t.可选挑战 }}</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="task-card" v-else-if="store.data.APP.当前任务">
+            <div class="task-header">📋 当前任务</div>
+            <div class="task-info">
+              <div class="task-row"><span class="task-label">类型</span><span class="task-val">{{ store.data.APP.当前任务.类型 }}</span></div>
+              <div class="task-row"><span class="task-label">色情</span><span class="task-val">{{ store.data.APP.当前任务.色情维度 }} 级</span></div>
+              <div class="task-row"><span class="task-label">社会</span><span class="task-val">{{ store.data.APP.当前任务.社会维度 }} 级</span></div>
+              <div class="task-row"><span class="task-label">内容</span><span class="task-val task-desc">{{ store.data.APP.当前任务.内容 }}</span></div>
+              <div class="task-row"><span class="task-label">报酬</span><span class="task-val">{{ store.data.APP.当前任务.报酬 }} 元</span></div>
+              <div class="task-row" v-if="store.data.APP.当前任务.可选挑战">
+                <span class="task-label">挑战</span><span class="task-val task-desc">{{ store.data.APP.当前任务.可选挑战 }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="empty-state" v-else-if="!store.data.APP.当前任务">
+            <span>等待任务日（周四/周日）…</span>
           </div>
         </div>
+      </div>
 
-        <div class="stat-row">
-          <span class="stat-icon">💕</span>
-          <span class="stat-name">心情值</span>
-          <div class="stat-bar-wrap">
-            <div class="stat-bar"><div class="fill mood" :style="{ width: store.data.主角.心情值 + '%' }"></div></div>
-            <span class="bar-val">{{ store.data.主角.心情值 }}</span>
-          </div>
-        </div>
-
-        <div class="stat-row">
-          <span class="stat-icon">🔞</span>
-          <span class="stat-name">色情值</span>
-          <div class="stat-bar-wrap">
-            <div class="stat-bar"><div class="fill erotica" :style="{ width: store.data.主角.整体色情值 + '%' }"></div></div>
-            <span class="bar-val">{{ store.data.主角.整体色情值 }}</span>
-          </div>
-        </div>
-
-        <div class="stat-row">
-          <span class="stat-icon">💋</span>
-          <span class="stat-name">性欲值</span>
-          <div class="stat-bar-wrap">
-            <div class="stat-bar"><div class="fill libido" :style="{ width: store.data.主角.性欲值 + '%' }"></div></div>
-            <span class="bar-val">{{ store.data.主角.性欲值 }}</span>
-          </div>
-        </div>
-
-        <div class="stat-row">
-          <span class="stat-icon">⚡</span>
-          <span class="stat-name">快感值</span>
-          <div class="stat-bar-wrap">
-            <div class="stat-bar"><div class="fill pleasure" :style="{ width: store.data.主角.快感值 + '%' }"></div></div>
-            <span class="bar-val">{{ store.data.主角.快感值 }}</span>
-          </div>
-        </div>
+      <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app'">
+        <div class="placeholder-text">{{ activeTabName }} — 待开发</div>
       </div>
     </div>
   </div>
@@ -78,12 +151,64 @@ import { useDataStore } from './store';
 
 const store = useDataStore();
 
-const datePart = computed(() => (store.data.世界.时间 || '').split(' ')[0] || '');
+const tabs = [
+  { id: 'basic',   label: '基础' },
+  { id: 'app',     label: '牝多多' },
+  { id: 'contacts',label: '联系人' },
+  { id: 'clothes', label: '衣柜' },
+  { id: 'schedule',label: '日程' },
+  { id: 'map',     label: '地图' },
+];
+
+const activeTab = ref('basic');
+
+const levelNames: Record<number, string> = {
+  1: '青涩新人', 2: '初级外围', 3: '资深玩物', 4: '知名母狗', 5: '公共便器'
+};
+const levelExpMin: Record<number, number> = { 1: 0, 2: 150, 3: 1000, 4: 4000, 5: 15000 };
+const levelExpNext: Record<number, number> = { 1: 150, 2: 1000, 3: 4000, 4: 15000, 5: 15000 };
+
+const levelLabel = computed(() => {
+  const lv = store.data.APP.等级 || 1;
+  return `Lv.${lv} ${levelNames[lv] || ''}`;
+});
+
+const expPercent = computed(() => {
+  const lv = store.data.APP.等级 || 1;
+  const cur = store.data.APP.经验值 || 0;
+  const min = levelExpMin[lv] || 0;
+  const next = levelExpNext[lv] || 15000;
+  if (lv >= 5) return 100;
+  return Math.round(((cur - min) / (next - min)) * 100);
+});
+
+const expDisplay = computed(() => {
+  const lv = store.data.APP.等级 || 1;
+  const cur = store.data.APP.经验值 || 0;
+  if (lv >= 5) return `${cur}`;
+  const next = levelExpNext[lv] || 15000;
+  return `${cur} / ${next}`;
+});
+
+const activeTabName = computed(() => {
+  const t = tabs.find(t => t.id === activeTab.value);
+  return t ? t.label : '';
+});
+
+const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+const datePart = computed(() => {
+  const raw = (store.data.世界.时间 || '').split(' ')[0] || '';
+  if (!raw) return '';
+  const d = new Date(raw);
+  if (isNaN(d.getTime())) return raw;
+  return raw + ' 周' + weekDays[d.getDay()];
+});
 const timePart = computed(() => (store.data.世界.时间 || '').split(' ').slice(1).join(' ') || '');
 const locationLabel = computed(() => {
   const loc = store.data.世界.地点 || '';
   const parts = loc.split('_');
-  return parts.length > 1 ? parts.slice(1).join(' ') : parts[0].replace(/_/g, ' ');
+  const detail = parts.length > 1 ? parts.slice(1).join('_') : parts[0];
+  return detail.replace(/_/g, ' ');
 });
 </script>
 
@@ -91,12 +216,12 @@ const locationLabel = computed(() => {
 .status-card {
   position: relative;
   width: 100%;
-  max-width: 380px;
+  max-width: 800px;
   margin: 0 auto;
   font-family: var(--font-mono);
   color: var(--c-text);
-  font-size: 11px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.5;
   border: 1px solid var(--c-border);
   border-radius: 10px;
   overflow: hidden;
@@ -127,63 +252,67 @@ const locationLabel = computed(() => {
   z-index: 1;
 }
 
-.info-section {
-  padding: 14px 16px 4px;
+.tab-nav {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  padding: 0;
+  gap: 0;
 }
 
-.info-row {
-  font-size: 0.8rem;
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--c-text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
   font-weight: bold;
-  color: var(--c-text);
+  padding: 10px 0;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+
+  &:hover { color: var(--c-text); }
+  &.active {
+    color: var(--c-accent);
+    border-bottom-color: var(--c-accent);
+  }
+}
+
+.tab-content {
+  min-height: 400px;
 }
 
 .stats-section {
-  padding: 10px 16px 14px;
+  padding: 12px 24px 24px;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 14px;
 }
 
 .stat-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
-.stat-icon {
-  font-size: 0.85rem;
-  width: 18px;
-  text-align: center;
-}
+.stat-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+.stat-name { font-weight: bold; font-size: 0.9rem; min-width: 60px; color: var(--c-text-dim); }
+.stat-val  { font-weight: bold; font-size: 0.9rem; color: var(--c-text); }
 
-.stat-name {
-  font-weight: bold;
-  font-size: 0.7rem;
-  min-width: 40px;
-  color: var(--c-text-dim);
-}
-
-.stat-val {
-  font-weight: bold;
-  font-size: 0.75rem;
-  min-width: 48px;
-  text-align: right;
-}
+.exp-val { font-size: 0.7rem; min-width: 56px; text-align: right; }
 
 .stat-bar-wrap {
   flex: 1;
   position: relative;
-  height: 17px;
+  height: 22px;
   display: flex;
   align-items: center;
 }
 
 .stat-bar {
   width: 100%;
-  height: 5px;
+  height: 6px;
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.06);
   overflow: hidden;
@@ -192,8 +321,8 @@ const locationLabel = computed(() => {
 .bar-val {
   position: absolute;
   right: 0;
-  top: -2px;
-  font-size: 0.55rem;
+  top: -1px;
+  font-size: 0.75rem;
   font-weight: bold;
   color: var(--c-text-dim);
 }
@@ -210,6 +339,70 @@ const locationLabel = computed(() => {
 .fill.erotica  { background: #c44a6a; }
 .fill.libido   { background: #e05555; }
 .fill.pleasure { background: linear-gradient(90deg, #e8a850, #e05555); }
+
+.placeholder {
+  padding: 30px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-text {
+  font-size: 0.7rem;
+  color: var(--c-text-dim);
+}
+
+.task-card {
+  margin-top: 4px;
+  border: 1px solid var(--c-border);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+
+.task-header {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--c-accent);
+  margin-bottom: 10px;
+}
+
+.task-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.task-row {
+  display: flex;
+  gap: 10px;
+  font-size: 0.75rem;
+}
+
+.task-label {
+  color: var(--c-text-dim);
+  min-width: 36px;
+}
+
+.task-val {
+  color: var(--c-text);
+  flex: 1;
+}
+
+.task-desc {
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.empty-state {
+  padding: 40px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--c-text-dim);
+}
+
+.fill.exp { background: linear-gradient(90deg, #c44a6a, #e8a850); }
 
 @media (max-width: 400px) {
   .status-card { max-width: 100%; }
