@@ -817,7 +817,7 @@ const locationLabel = computed(() => {
 .filter-tag.tag-style { color: #6bc480; background: rgba(107,196,128,0.12); }
 .filter-all { color: var(--c-text-dim); opacity: 0.6; background: rgba(255,255,255,0.05); &:hover { opacity: 1; color: #e87373; } }
 .cloth-panels { display: flex; flex: 1; }
-.cloth-panel { flex: 1; padding: 10px 12px; display: flex; flex-direction: column; height: 620px; &:first-child { border-right: 1px solid var(--c-border); } }
+.cloth-panel { flex: 1; padding: 10px 12px; display: flex; flex-direction: column; height: 660px; &:first-child { border-right: 1px solid var(--c-border); } }
 .cloth-list { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
 .cloth-panel-title { font-size: 0.85rem; font-weight: bold; color: var(--c-accent); margin-bottom: 4px; }
 .page-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
