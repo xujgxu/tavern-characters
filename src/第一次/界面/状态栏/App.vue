@@ -170,36 +170,46 @@
         <div class="cloth-panels">
           <div class="cloth-panel">
             <div class="cloth-panel-title">当前穿着</div>
-            <div class="cloth-card" v-for="(c, i) in store.data.服装?.穿着 || []" :key="'w'+i" :class="{ 'pending-wear': pendingMap.get(c.名称) === 'wear', 'pending-remove': pendingMap.get(c.名称) === 'remove' }">
-            <div class="cloth-name">{{ c.名称 }}</div>
-            <div class="cloth-tags">
-              <span class="cloth-tag tag-pos" v-for="t in c.部位标签" :key="t">{{ t }}</span>
-              <span class="cloth-tag tag-style" v-for="t in c.风格标签" :key="t">{{ t }}</span>
-              <span class="cloth-tag tag-color" v-for="t in c.颜色图案标签" :key="t">{{ t }}</span>
-              <span class="cloth-tag tag-erotica">色情值 {{ c.色情值 || 0 }}</span>
+            <div class="page-nav" v-if="totalWornPages > 1">
+              <button class="page-btn" :disabled="wornPage === 0" @click="wornPage = Math.max(0, wornPage - 1)">◀ 上一页</button>
+              <span class="page-info">{{ wornPage + 1 }} / {{ totalWornPages }}</span>
+              <button class="page-btn" :disabled="wornPage >= totalWornPages - 1" @click="wornPage = Math.min(totalWornPages - 1, wornPage + 1)">下一页 ▶</button>
             </div>
-            <div class="cloth-desc" v-if="showDetail.has('w'+i)">{{ c.描述 }}</div>
+            <div class="cloth-card" v-for="entry in paginatedWorn" :key="'w'+entry.origIdx" :class="{ 'pending-wear': pendingMap.get(entry.item.名称) === 'wear', 'pending-remove': pendingMap.get(entry.item.名称) === 'remove' }">
+            <div class="cloth-name">{{ entry.item.名称 }}</div>
+            <div class="cloth-tags">
+              <span class="cloth-tag tag-pos" v-for="t in entry.item.部位标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-style" v-for="t in entry.item.风格标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-color" v-for="t in entry.item.颜色图案标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-erotica">色情值 {{ entry.item.色情值 || 0 }}</span>
+            </div>
+            <div class="cloth-desc" v-if="showDetail.has('w'+entry.origIdx)">{{ entry.item.描述 }}</div>
             <div class="cloth-actions">
-              <button class="cloth-btn" @click="toggleDetail('w'+i)">详细</button>
-              <button class="cloth-btn cloth-btn-remove" @click="removeCloth(i)">脱下</button>
+              <button class="cloth-btn" @click="toggleDetail('w'+entry.origIdx)">详细</button>
+              <button class="cloth-btn cloth-btn-remove" @click="removeCloth(entry.origIdx)">脱下</button>
             </div>
           </div>
           <div class="empty-state" v-if="!(store.data.服装?.穿着 || []).length">暂未穿着任何衣物</div>
         </div>
         <div class="cloth-panel">
           <div class="cloth-panel-title">可更换</div>
-          <div class="cloth-card" v-for="(c, i) in store.data.服装?.可更换 || []" :key="'c'+i" :class="{ 'pending-wear': pendingMap.get(c.名称) === 'wear', 'pending-remove': pendingMap.get(c.名称) === 'remove' }">
-            <div class="cloth-name">{{ c.名称 }}</div>
-            <div class="cloth-tags">
-              <span class="cloth-tag tag-pos" v-for="t in c.部位标签" :key="t">{{ t }}</span>
-              <span class="cloth-tag tag-style" v-for="t in c.风格标签" :key="t">{{ t }}</span>
-              <span class="cloth-tag tag-color" v-for="t in c.颜色图案标签" :key="t">{{ t }}</span>
-              <span class="cloth-tag tag-erotica">色情值 {{ c.色情值 || 0 }}</span>
+            <div class="page-nav" v-if="totalWardrobePages > 1">
+              <button class="page-btn" :disabled="wardrobePage === 0" @click="wardrobePage = Math.max(0, wardrobePage - 1)">◀ 上一页</button>
+              <span class="page-info">{{ wardrobePage + 1 }} / {{ totalWardrobePages }}</span>
+              <button class="page-btn" :disabled="wardrobePage >= totalWardrobePages - 1" @click="wardrobePage = Math.min(totalWardrobePages - 1, wardrobePage + 1)">下一页 ▶</button>
             </div>
-            <div class="cloth-desc" v-if="showDetail.has('c'+i)">{{ c.描述 }}</div>
+          <div class="cloth-card" v-for="entry in paginatedWardrobe" :key="'c'+entry.origIdx" :class="{ 'pending-wear': pendingMap.get(entry.item.名称) === 'wear', 'pending-remove': pendingMap.get(entry.item.名称) === 'remove' }">
+            <div class="cloth-name">{{ entry.item.名称 }}</div>
+            <div class="cloth-tags">
+              <span class="cloth-tag tag-pos" v-for="t in entry.item.部位标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-style" v-for="t in entry.item.风格标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-color" v-for="t in entry.item.颜色图案标签" :key="t">{{ t }}</span>
+              <span class="cloth-tag tag-erotica">色情值 {{ entry.item.色情值 || 0 }}</span>
+            </div>
+            <div class="cloth-desc" v-if="showDetail.has('c'+entry.origIdx)">{{ entry.item.描述 }}</div>
             <div class="cloth-actions">
-              <button class="cloth-btn" @click="toggleDetail('c'+i)">详细</button>
-              <button class="cloth-btn cloth-btn-wear" @click="wearCloth(i)">穿上</button>
+              <button class="cloth-btn" @click="toggleDetail('c'+entry.origIdx)">详细</button>
+              <button class="cloth-btn cloth-btn-wear" @click="wearCloth(entry.origIdx)">穿上</button>
             </div>
           </div>
           <div class="empty-state" v-if="!(store.data.服装?.可更换 || []).length">衣柜为空</div>
@@ -290,6 +300,28 @@ onMounted(() => {
 
 const showDetail = ref(new Set<string>());
 const pendingMap = ref(new Map<string, 'wear' | 'remove'>());
+
+const PAGE_SIZE = 6;
+const wornPage = ref(0);
+const wardrobePage = ref(0);
+
+const paginatedWorn = computed(() => {
+  const arr = store.data.服装?.穿着 || [];
+  const start = wornPage.value * PAGE_SIZE;
+  return arr.slice(start, start + PAGE_SIZE).map((item, i) => ({ item, origIdx: start + i }));
+});
+
+const paginatedWardrobe = computed(() => {
+  const arr = store.data.服装?.可更换 || [];
+  const start = wardrobePage.value * PAGE_SIZE;
+  return arr.slice(start, start + PAGE_SIZE).map((item, i) => ({ item, origIdx: start + i }));
+});
+
+const totalWornPages = computed(() => Math.max(1, Math.ceil((store.data.服装?.穿着 || []).length / PAGE_SIZE)));
+const totalWardrobePages = computed(() => Math.max(1, Math.ceil((store.data.服装?.可更换 || []).length / PAGE_SIZE)));
+
+watch(totalWornPages, (pages) => { if (wornPage.value >= pages) wornPage.value = Math.max(0, pages - 1); });
+watch(totalWardrobePages, (pages) => { if (wardrobePage.value >= pages) wardrobePage.value = Math.max(0, pages - 1); });
 
 function toggleDetail(key: string) {
   if (showDetail.value.has(key)) showDetail.value.delete(key);
@@ -712,6 +744,9 @@ const locationLabel = computed(() => {
 .cloth-panels { display: flex; flex: 1; }
 .cloth-panel { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; &:first-child { border-right: 1px solid var(--c-border); } }
 .cloth-panel-title { font-size: 0.85rem; font-weight: bold; color: var(--c-accent); margin-bottom: 4px; }
+.page-nav { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px; }
+.page-btn { font-size: 0.65rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--c-border); background: rgba(255,255,255,0.05); color: var(--c-text-dim); cursor: pointer; transition: all 0.15s; &:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: #fff; } &:disabled { opacity: 0.3; cursor: default; } }
+.page-info { font-size: 0.65rem; color: var(--c-text-dim); }
 .cloth-card { background: rgba(255,255,255,0.03); border: 1px solid var(--c-border); border-radius: 6px; padding: 10px 12px; transition: border-color 0.2s, background 0.2s;
   &.pending-wear { border-color: #73c873; background: rgba(115,200,115,0.08); }
   &.pending-remove { border-color: #e87373; background: rgba(232,115,115,0.08); }
