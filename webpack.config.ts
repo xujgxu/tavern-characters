@@ -554,11 +554,9 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
         'vue-router': 'VueRouter',
         yaml: 'YAML',
         zod: 'z',
-        pinia: ['Pinia', 'createPinia', 'defineStore', 'storeToRefs'],
       };
       if (request in global) {
-        const g = global[request as keyof typeof global];
-        return callback(null, Array.isArray(g) ? g : 'var ' + g);
+        return callback(null, 'var ' + global[request as keyof typeof global]);
       }
       const cdn = {
         sass: 'https://jspm.dev/sass',
