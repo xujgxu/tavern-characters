@@ -808,7 +808,7 @@ const locationLabel = computed(() => {
 .chat-send-btn { padding: 8px 16px; background: var(--c-accent); border: none; border-radius: 6px; color: #fff; font-family: var(--font-mono); font-size: 0.7rem; font-weight: bold; cursor: pointer; white-space: nowrap; &:disabled { opacity: 0.35; cursor: default; } &:not(:disabled):hover { opacity: 0.85; } }
 .msg-bubble { max-width: 75%; margin-bottom: 8px; padding: 6px 10px; border-radius: 8px; font-size: 0.7rem; line-height: 1.4; background: rgba(255,255,255,0.06); color: var(--c-text); align-self: flex-start; &.mine { background: rgba(196,74,74,0.2); align-self: flex-end; text-align: right; } }
 
-.cloth-layout { display: flex; flex-direction: column; min-height: 400px; }
+.cloth-layout { display: flex; flex-direction: column; height: 580px; }
 .cloth-filter-bar { display: flex; flex-direction: column; gap: 4px; padding: 8px 14px 4px; border-bottom: 1px solid var(--c-border); }
 .filter-group { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .filter-label { font-size: 0.65rem; color: var(--c-text-dim); font-weight: bold; margin-right: 2px; white-space: nowrap; }
