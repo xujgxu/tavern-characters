@@ -186,6 +186,7 @@
               <span class="page-info">{{ wornPage + 1 }} / {{ totalWornPages }}</span>
               <button class="page-btn" :disabled="wornPage >= totalWornPages - 1" @click="wornPage = Math.min(totalWornPages - 1, wornPage + 1)">下一页 ▶</button>
             </div>
+            <div class="cloth-list">
             <div class="cloth-card" v-for="entry in paginatedWorn" :key="'w'+entry.origIdx" :class="{ 'pending-wear': pendingMap.get(entry.item.名称) === 'wear', 'pending-remove': pendingMap.get(entry.item.名称) === 'remove' }">
             <div class="cloth-name">{{ entry.item.名称 }}</div>
             <div class="cloth-tags">
@@ -202,6 +203,7 @@
           </div>
           <div class="empty-state" v-if="!(store.data.服装?.穿着 || []).length">暂未穿着任何衣物</div>
           <div class="empty-state" v-else-if="filteredWorn.length === 0">没有符合筛选的服装</div>
+          </div>
         </div>
         <div class="cloth-panel">
           <div class="cloth-panel-title">可更换</div>
@@ -210,6 +212,7 @@
               <span class="page-info">{{ wardrobePage + 1 }} / {{ totalWardrobePages }}</span>
               <button class="page-btn" :disabled="wardrobePage >= totalWardrobePages - 1" @click="wardrobePage = Math.min(totalWardrobePages - 1, wardrobePage + 1)">下一页 ▶</button>
             </div>
+            <div class="cloth-list">
           <div class="cloth-card" v-for="entry in paginatedWardrobe" :key="'c'+entry.origIdx" :class="{ 'pending-wear': pendingMap.get(entry.item.名称) === 'wear', 'pending-remove': pendingMap.get(entry.item.名称) === 'remove' }">
             <div class="cloth-name">{{ entry.item.名称 }}</div>
             <div class="cloth-tags">
@@ -226,6 +229,7 @@
           </div>
           <div class="empty-state" v-if="!(store.data.服装?.可更换 || []).length">衣柜为空</div>
           <div class="empty-state" v-else-if="filteredWardrobe.length === 0">没有符合筛选的服装</div>
+          </div>
         </div>
         </div>
         <div class="nudity-warn" v-if="nudityWarnings.length">
@@ -813,7 +817,8 @@ const locationLabel = computed(() => {
 .filter-tag.tag-style { color: #6bc480; background: rgba(107,196,128,0.12); }
 .filter-all { color: var(--c-text-dim); opacity: 0.6; background: rgba(255,255,255,0.05); &:hover { opacity: 1; color: #e87373; } }
 .cloth-panels { display: flex; flex: 1; }
-.cloth-panel { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; &:first-child { border-right: 1px solid var(--c-border); } }
+.cloth-panel { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; height: 460px; &:first-child { border-right: 1px solid var(--c-border); } }
+.cloth-list { flex: 1; overflow-y: auto; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
 .cloth-panel-title { font-size: 0.85rem; font-weight: bold; color: var(--c-accent); margin-bottom: 4px; }
 .page-nav { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px; }
 .page-btn { font-size: 0.65rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--c-border); background: rgba(255,255,255,0.05); color: var(--c-text-dim); cursor: pointer; transition: all 0.15s; &:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: #fff; } &:disabled { opacity: 0.3; cursor: default; } }
