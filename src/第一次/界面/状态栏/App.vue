@@ -818,7 +818,7 @@ const locationLabel = computed(() => {
 .filter-all { color: var(--c-text-dim); opacity: 0.6; background: rgba(255,255,255,0.05); &:hover { opacity: 1; color: #e87373; } }
 .cloth-panels { display: flex; flex: 1; }
 .cloth-panel { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; height: 560px; &:first-child { border-right: 1px solid var(--c-border); } }
-.cloth-list { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.cloth-list { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
 .cloth-panel-title { font-size: 0.85rem; font-weight: bold; color: var(--c-accent); margin-bottom: 4px; }
 .page-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
 .page-btn { font-size: 0.65rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--c-border); background: rgba(255,255,255,0.05); color: var(--c-text-dim); cursor: pointer; transition: all 0.15s; &:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: #fff; } &:disabled { opacity: 0.3; cursor: default; } }
