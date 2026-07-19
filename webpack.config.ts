@@ -438,6 +438,20 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
         { apply: watch_tavern_helper },
         { apply: schema_dump },
         { apply: tavern_sync },
+        {
+          apply(compiler: webpack.Compiler) {
+            compiler.hooks.emit.tap('strip_head', (compilation) => {
+              for (const name of Object.keys(compilation.assets)) {
+                if (name.endsWith('.html') && entry.html !== undefined) {
+                  let src = compilation.assets[name].source().toString();
+                  src = src.replace(/<head[^>]*>/, '').replace(/<\/head>/, '');
+                  src = src.replace(/<body[^>]*>/, '').replace(/<\/body>/, '');
+                  compilation.assets[name] = new webpack.sources.RawSource(src);
+                }
+              }
+            });
+          }
+        },
         new VueLoaderPlugin(),
         unpluginAutoImport({
           dts: true,
