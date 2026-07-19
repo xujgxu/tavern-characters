@@ -190,7 +190,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
 
   return (_env, argv) => ({
     experiments: {
-      outputModule: true,
+      outputModule: entry.html === undefined,
     },
     devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
     watchOptions: {
@@ -220,9 +220,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       asyncChunks: true,
       clean: true,
       publicPath: '',
-      library: {
-        type: 'module',
-      },
+      ...((entry.html === undefined) ? { library: { type: 'module' } } : {}),
     },
     module: {
       rules: [
@@ -424,7 +422,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
           new HtmlWebpackPlugin({
             template: path.join(import.meta.dirname, entry.html),
             filename: path.parse(entry.html).base,
-            scriptLoading: 'module',
+            scriptLoading: 'defer',
             cache: false,
           }),
           new HtmlInlineScriptWebpackPlugin(),
