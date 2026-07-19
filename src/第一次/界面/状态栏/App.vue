@@ -248,7 +248,13 @@
         </div>
       </div>
 
-      <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app' && activeTab !== 'contacts' && activeTab !== 'clothes'">
+      <div class="tab-content map-layout" v-else-if="activeTab === 'map'">
+        <div class="map-wrapper">
+          地图 — 待开发
+        </div>
+      </div>
+
+      <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app' && activeTab !== 'contacts' && activeTab !== 'clothes' && activeTab !== 'map'">
         <div class="placeholder-text">{{ activeTabName }} — 待开发</div>
       </div>
     </div>
@@ -700,6 +706,8 @@ const locationLabel = computed(() => {
 .fill.libido   { background: #e05555; }
 .fill.pleasure { background: linear-gradient(90deg, #e8a850, #e05555); }
 
+.map-layout { min-height: 400px; background: #fff; border-radius: 0 0 10px 10px; }
+.map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
   display: flex;
