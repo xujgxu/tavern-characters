@@ -674,7 +674,7 @@
             ```
             <body>
             <script>
-            $('body').load('https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@f3dc087/dist/第一次/界面/状态栏/index.html?_='+Date.now())
+            $('body').load('https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@af8e24f/dist/第一次/界面/状态栏/index.html?_='+Date.now())
             </script>
             </body>
             ```
@@ -712,7 +712,7 @@
                 script_name: '[界面]状态栏',
                 enabled: true,
                 find_regex: '<StatusPlaceHolderImpl/>',
-                replace_string: '<body>\n<script>\n$(\'body\').load(\'https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@f3dc087/dist/第一次/界面/状态栏/index.html?_=\'+Date.now())\n</script>\n</body>',
+                replace_string: '<body>\n<script>\n$(\'body\').load(\'https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@af8e24f/dist/第一次/界面/状态栏/index.html?_=\'+Date.now())\n</script>\n</body>',
                 trim_strings: [],
                 source: { user_input: true, ai_output: true, slash_command: false, world_info: false, reasoning: false },
                 destination: { display: true, prompt: false },
