@@ -167,6 +167,17 @@
       </div>
 
       <div class="tab-content cloth-layout" v-if="activeTab === 'clothes'">
+        <div class="cloth-filter-bar" v-if="allPosTags.length || allStyleTags.length">
+          <div class="filter-group" v-if="allPosTags.length">
+            <span class="filter-label">部位：</span>
+            <span class="filter-tag tag-pos" :class="{ active: posFilters.has(t) }" v-for="t in allPosTags" :key="t" @click="togglePosFilter(t)">{{ t }}</span>
+            <span class="filter-tag filter-all" v-if="posFilters.size || styleFilters.size" @click="clearAllFilters">✕ 清除筛选</span>
+          </div>
+          <div class="filter-group" v-if="allStyleTags.length">
+            <span class="filter-label">风格：</span>
+            <span class="filter-tag tag-style" :class="{ active: styleFilters.has(t) }" v-for="t in allStyleTags" :key="t" @click="toggleStyleFilter(t)">{{ t }}</span>
+          </div>
+        </div>
         <div class="cloth-panels">
           <div class="cloth-panel">
             <div class="cloth-panel-title">当前穿着</div>
@@ -190,6 +201,7 @@
             </div>
           </div>
           <div class="empty-state" v-if="!(store.data.服装?.穿着 || []).length">暂未穿着任何衣物</div>
+          <div class="empty-state" v-else-if="filteredWorn.length === 0">没有符合筛选的服装</div>
         </div>
         <div class="cloth-panel">
           <div class="cloth-panel-title">可更换</div>
@@ -213,6 +225,7 @@
             </div>
           </div>
           <div class="empty-state" v-if="!(store.data.服装?.可更换 || []).length">衣柜为空</div>
+          <div class="empty-state" v-else-if="filteredWardrobe.length === 0">没有符合筛选的服装</div>
         </div>
         </div>
         <div class="nudity-warn" v-if="nudityWarnings.length">
@@ -305,20 +318,71 @@ const PAGE_SIZE = 6;
 const wornPage = ref(0);
 const wardrobePage = ref(0);
 
+const posFilters = ref(new Set<string>());
+const styleFilters = ref(new Set<string>());
+
+function togglePosFilter(tag: string) {
+  if (posFilters.value.has(tag)) posFilters.value.delete(tag);
+  else posFilters.value.add(tag);
+  wornPage.value = 0; wardrobePage.value = 0;
+}
+
+function toggleStyleFilter(tag: string) {
+  if (styleFilters.value.has(tag)) styleFilters.value.delete(tag);
+  else styleFilters.value.add(tag);
+  wornPage.value = 0; wardrobePage.value = 0;
+}
+
+function clearAllFilters() {
+  posFilters.value.clear();
+  styleFilters.value.clear();
+  wornPage.value = 0; wardrobePage.value = 0;
+}
+
+function matchesFilters(item: any) {
+  const pos = item.部位标签 || [];
+  const style = item.风格标签 || [];
+  if (posFilters.value.size > 0 && !pos.some((t: string) => posFilters.value.has(t))) return false;
+  if (styleFilters.value.size > 0 && !style.some((t: string) => styleFilters.value.has(t))) return false;
+  return true;
+}
+
+const allPosTags = computed(() => {
+  const tags = new Set<string>();
+  for (const c of [...(store.data.服装?.穿着 || []), ...(store.data.服装?.可更换 || [])]) {
+    for (const t of (c.部位标签 || [])) tags.add(t);
+  }
+  return [...tags].sort();
+});
+
+const allStyleTags = computed(() => {
+  const tags = new Set<string>();
+  for (const c of [...(store.data.服装?.穿着 || []), ...(store.data.服装?.可更换 || [])]) {
+    for (const t of (c.风格标签 || [])) tags.add(t);
+  }
+  return [...tags].sort();
+});
+
+const filteredWorn = computed(() => {
+  return (store.data.服装?.穿着 || []).map((item, i) => ({ item, origIdx: i })).filter(e => matchesFilters(e.item));
+});
+
+const filteredWardrobe = computed(() => {
+  return (store.data.服装?.可更换 || []).map((item, i) => ({ item, origIdx: i })).filter(e => matchesFilters(e.item));
+});
+
 const paginatedWorn = computed(() => {
-  const arr = store.data.服装?.穿着 || [];
   const start = wornPage.value * PAGE_SIZE;
-  return arr.slice(start, start + PAGE_SIZE).map((item, i) => ({ item, origIdx: start + i }));
+  return filteredWorn.value.slice(start, start + PAGE_SIZE);
 });
 
 const paginatedWardrobe = computed(() => {
-  const arr = store.data.服装?.可更换 || [];
   const start = wardrobePage.value * PAGE_SIZE;
-  return arr.slice(start, start + PAGE_SIZE).map((item, i) => ({ item, origIdx: start + i }));
+  return filteredWardrobe.value.slice(start, start + PAGE_SIZE);
 });
 
-const totalWornPages = computed(() => Math.max(1, Math.ceil((store.data.服装?.穿着 || []).length / PAGE_SIZE)));
-const totalWardrobePages = computed(() => Math.max(1, Math.ceil((store.data.服装?.可更换 || []).length / PAGE_SIZE)));
+const totalWornPages = computed(() => Math.max(1, Math.ceil(filteredWorn.value.length / PAGE_SIZE)));
+const totalWardrobePages = computed(() => Math.max(1, Math.ceil(filteredWardrobe.value.length / PAGE_SIZE)));
 
 watch(totalWornPages, (pages) => { if (wornPage.value >= pages) wornPage.value = Math.max(0, pages - 1); });
 watch(totalWardrobePages, (pages) => { if (wardrobePage.value >= pages) wardrobePage.value = Math.max(0, pages - 1); });
@@ -741,6 +805,13 @@ const locationLabel = computed(() => {
 .msg-bubble { max-width: 75%; margin-bottom: 8px; padding: 6px 10px; border-radius: 8px; font-size: 0.7rem; line-height: 1.4; background: rgba(255,255,255,0.06); color: var(--c-text); align-self: flex-start; &.mine { background: rgba(196,74,74,0.2); align-self: flex-end; text-align: right; } }
 
 .cloth-layout { display: flex; flex-direction: column; min-height: 400px; }
+.cloth-filter-bar { display: flex; flex-direction: column; gap: 4px; padding: 8px 14px 4px; border-bottom: 1px solid var(--c-border); }
+.filter-group { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.filter-label { font-size: 0.65rem; color: var(--c-text-dim); font-weight: bold; margin-right: 2px; white-space: nowrap; }
+.filter-tag { font-size: 0.62rem; font-weight: bold; padding: 2px 7px; border-radius: 4px; cursor: pointer; transition: all 0.15s; opacity: 0.45; border: 1px solid transparent; white-space: nowrap; &:hover { opacity: 0.8; } &.active { opacity: 1; border-color: currentColor; } }
+.filter-tag.tag-pos { color: #5badd4; background: rgba(91,173,212,0.12); }
+.filter-tag.tag-style { color: #6bc480; background: rgba(107,196,128,0.12); }
+.filter-all { color: var(--c-text-dim); opacity: 0.6; background: rgba(255,255,255,0.05); &:hover { opacity: 1; color: #e87373; } }
 .cloth-panels { display: flex; flex: 1; }
 .cloth-panel { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; &:first-child { border-right: 1px solid var(--c-border); } }
 .cloth-panel-title { font-size: 0.85rem; font-weight: bold; color: var(--c-accent); margin-bottom: 4px; }
