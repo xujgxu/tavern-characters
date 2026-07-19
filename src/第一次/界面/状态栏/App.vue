@@ -713,8 +713,8 @@ const locationLabel = computed(() => {
 .cloth-panel { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; &:first-child { border-right: 1px solid var(--c-border); } }
 .cloth-panel-title { font-size: 0.85rem; font-weight: bold; color: var(--c-accent); margin-bottom: 4px; }
 .cloth-card { background: rgba(255,255,255,0.03); border: 1px solid var(--c-border); border-radius: 6px; padding: 10px 12px; transition: border-color 0.2s, background 0.2s;
-  &.pending-wear { border-color: #5cc8c8; background: rgba(92,200,200,0.08); }
-  &.pending-remove { border-color: #5cc8c8; background: rgba(92,200,200,0.08); }
+  &.pending-wear { border-color: #73c873; background: rgba(115,200,115,0.08); }
+  &.pending-remove { border-color: #e87373; background: rgba(232,115,115,0.08); }
 }
 .cloth-name { font-size: 0.9rem; font-weight: bold; color: var(--c-text); margin-bottom: 6px; }
 .cloth-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
@@ -727,8 +727,8 @@ const locationLabel = computed(() => {
 .cloth-desc { font-size: 0.75rem; color: var(--c-text-dim); line-height: 1.5; margin-top: 6px; }
 .cloth-actions { display: flex; gap: 6px; margin-top: 8px; }
 .cloth-btn { font-size: 0.7rem; font-weight: bold; padding: 3px 8px; border-radius: 4px; border: none; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); cursor: pointer; transition: all 0.15s; &:hover { background: rgba(255,255,255,0.2); color: #fff; } }
-.cloth-btn-wear { background: rgba(92,200,200,0.15); color: #5cc8c8; &:hover { background: rgba(92,200,200,0.25); } }
-.cloth-btn-remove { background: rgba(92,200,200,0.15); color: #5cc8c8; &:hover { background: rgba(92,200,200,0.25); } }
+.cloth-btn-wear { background: rgba(115,200,115,0.15); color: #73c873; &:hover { background: rgba(115,200,115,0.25); } }
+.cloth-btn-remove { background: rgba(232,115,115,0.15); color: #e87373; &:hover { background: rgba(232,115,115,0.25); } }
 .cloth-confirm { padding: 0 14px 14px 14px; }
 .nudity-warn { margin: 8px 14px 0; padding: 8px 10px; font-size: 0.75rem; border-radius: 6px; background: rgba(232,168,80,0.12); color: #e8a850; text-align: center; }
 .cloth-stats-row { display: flex; gap: 6px; margin: 6px 14px 0; }
