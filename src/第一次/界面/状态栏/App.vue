@@ -808,7 +808,7 @@ const locationLabel = computed(() => {
 .chat-send-btn { padding: 8px 16px; background: var(--c-accent); border: none; border-radius: 6px; color: #fff; font-family: var(--font-mono); font-size: 0.7rem; font-weight: bold; cursor: pointer; white-space: nowrap; &:disabled { opacity: 0.35; cursor: default; } &:not(:disabled):hover { opacity: 0.85; } }
 .msg-bubble { max-width: 75%; margin-bottom: 8px; padding: 6px 10px; border-radius: 8px; font-size: 0.7rem; line-height: 1.4; background: rgba(255,255,255,0.06); color: var(--c-text); align-self: flex-start; &.mine { background: rgba(196,74,74,0.2); align-self: flex-end; text-align: right; } }
 
-.cloth-layout { display: flex; flex-direction: column; height: 580px; }
+.cloth-layout { display: flex; flex-direction: column; min-height: 460px; }
 .cloth-filter-bar { display: flex; flex-direction: column; gap: 4px; padding: 8px 14px 4px; border-bottom: 1px solid var(--c-border); }
 .filter-group { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .filter-label { font-size: 0.65rem; color: var(--c-text-dim); font-weight: bold; margin-right: 2px; white-space: nowrap; }
@@ -818,7 +818,9 @@ const locationLabel = computed(() => {
 .filter-all { color: var(--c-text-dim); opacity: 0.6; background: rgba(255,255,255,0.05); &:hover { opacity: 1; color: #e87373; } }
 .cloth-panels { display: flex; flex: 1; }
 .cloth-panel { flex: 1; padding: 10px 12px; display: flex; flex-direction: column; height: 460px; &:first-child { border-right: 1px solid var(--c-border); } }
-.cloth-list { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
+.cloth-list { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
+.cloth-list::-webkit-scrollbar { display: none; }
+.cloth-list { scrollbar-width: none; }
 .cloth-panel-title { font-size: 0.85rem; font-weight: bold; color: var(--c-accent); margin-bottom: 4px; }
 .page-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
 .page-btn { font-size: 0.65rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--c-border); background: rgba(255,255,255,0.05); color: var(--c-text-dim); cursor: pointer; transition: all 0.15s; &:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: #fff; } &:disabled { opacity: 0.3; cursor: default; } }
