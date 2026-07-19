@@ -817,27 +817,27 @@ const locationLabel = computed(() => {
 .filter-tag.tag-style { color: #6bc480; background: rgba(107,196,128,0.12); }
 .filter-all { color: var(--c-text-dim); opacity: 0.6; background: rgba(255,255,255,0.05); &:hover { opacity: 1; color: #e87373; } }
 .cloth-panels { display: flex; flex: 1; }
-.cloth-panel { flex: 1; padding: 12px 14px; display: flex; flex-direction: column; height: 560px; &:first-child { border-right: 1px solid var(--c-border); } }
-.cloth-list { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+.cloth-panel { flex: 1; padding: 10px 12px; display: flex; flex-direction: column; height: 460px; &:first-child { border-right: 1px solid var(--c-border); } }
+.cloth-list { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
 .cloth-panel-title { font-size: 0.85rem; font-weight: bold; color: var(--c-accent); margin-bottom: 4px; }
 .page-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
 .page-btn { font-size: 0.65rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--c-border); background: rgba(255,255,255,0.05); color: var(--c-text-dim); cursor: pointer; transition: all 0.15s; &:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: #fff; } &:disabled { opacity: 0.3; cursor: default; } }
 .page-info { font-size: 0.65rem; color: var(--c-text-dim); }
-.cloth-card { background: rgba(255,255,255,0.03); border: 1px solid var(--c-border); border-radius: 6px; padding: 10px 12px; transition: border-color 0.2s, background 0.2s;
+.cloth-card { background: rgba(255,255,255,0.03); border: 1px solid var(--c-border); border-radius: 6px; padding: 8px 10px; transition: border-color 0.2s, background 0.2s;
   &.pending-wear { border-color: #73c873; background: rgba(115,200,115,0.08); }
   &.pending-remove { border-color: #e87373; background: rgba(232,115,115,0.08); }
 }
-.cloth-name { font-size: 0.9rem; font-weight: bold; color: var(--c-text); margin-bottom: 6px; }
-.cloth-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
-.cloth-tag { display: inline-block; font-size: 0.7rem; font-weight: bold; padding: 3px 8px; border-radius: 4px;
+.cloth-name { font-size: 0.8rem; font-weight: bold; color: var(--c-text); margin-bottom: 4px; }
+.cloth-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+.cloth-tag { display: inline-block; font-size: 0.62rem; font-weight: bold; padding: 2px 6px; border-radius: 4px;
   &.tag-pos   { color: #5badd4; background: rgba(91,173,212,0.15); }
   &.tag-style { color: #6bc480; background: rgba(107,196,128,0.15); }
   &.tag-color { color: #e8a850; background: rgba(232,168,80,0.15); }
   &.tag-erotica { color: #e88090; background: rgba(232,128,144,0.15); }
 }
-.cloth-desc { font-size: 0.75rem; color: var(--c-text-dim); line-height: 1.5; margin-top: 6px; }
-.cloth-actions { display: flex; gap: 6px; margin-top: 8px; }
-.cloth-btn { font-size: 0.7rem; font-weight: bold; padding: 3px 8px; border-radius: 4px; border: none; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); cursor: pointer; transition: all 0.15s; &:hover { background: rgba(255,255,255,0.2); color: #fff; } }
+.cloth-desc { font-size: 0.7rem; color: var(--c-text-dim); line-height: 1.4; margin-top: 4px; }
+.cloth-actions { display: flex; gap: 4px; margin-top: 6px; }
+.cloth-btn { font-size: 0.62rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; border: none; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); cursor: pointer; transition: all 0.15s; &:hover { background: rgba(255,255,255,0.2); color: #fff; } }
 .cloth-btn-wear { background: rgba(115,200,115,0.15); color: #73c873; &:hover { background: rgba(115,200,115,0.25); } }
 .cloth-btn-remove { background: rgba(232,115,115,0.15); color: #e87373; &:hover { background: rgba(232,115,115,0.25); } }
 .cloth-confirm { padding: 0 14px 14px 14px; }
