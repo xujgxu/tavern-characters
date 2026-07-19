@@ -674,7 +674,7 @@
             ```
             <body>
             <script>
-            $('body').load('https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@2a1aef9/dist/第一次/界面/状态栏/index.html?_='+Date.now())
+            $('body').load('https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@49a8052/dist/第一次/界面/状态栏/index.html?_='+Date.now())
             </script>
             </body>
             ```
@@ -700,3 +700,4 @@
           类型: 脚本
           内容: |-
             import 'https://testingcf.jsdelivr.net/gh/xujgxu/tavern-characters/dist/第一次/脚本/变量结构/index.js';
+
