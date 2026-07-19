@@ -558,6 +558,9 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       if (request in global) {
         return callback(null, 'var ' + global[request as keyof typeof global]);
       }
+      if (request === 'pinia') {
+        return callback();
+      }
       const cdn = {
         sass: 'https://jspm.dev/sass',
       };
