@@ -674,7 +674,7 @@
             ```
             <body>
             <script>
-            $('body').load('https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@master/dist/第一次/界面/状态栏/index.html?_='+Date.now())
+            $('body').load('https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@df41aab/dist/第一次/界面/状态栏/index.html?_='+Date.now())
             </script>
             </body>
             ```
