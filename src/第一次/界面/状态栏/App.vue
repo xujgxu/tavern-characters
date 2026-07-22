@@ -856,7 +856,7 @@ const locationLabel = computed(() => {
 .map-dot:hover { background: #000; transform: scale(1.5); }
 .map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; pointer-events: none; }
 .map-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
-.map-lines line { stroke: #888; stroke-width: 2; }
+.map-lines line { stroke: #444; stroke-width: 2; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
