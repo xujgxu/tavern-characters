@@ -260,6 +260,10 @@
               <div class="map-diag map-diag-2"></div>
             </div>
             <div class="map-circle-inner"></div>
+            <svg class="map-lines">
+              <line v-for="(e, i) in mapEdges" :key="i"
+                :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
+            </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
               :style="{ left: l.x + 'px', top: l.y + 'px' }"
               :title="l.name">
@@ -327,6 +331,59 @@ const locations = [
   { name: '海平洲际大酒店', x: 352, y: 494 },
   { name: '海平人民医院', x: 488, y: 427 },
 ];
+
+const roadAdjacency: Record<string, string[]> = {
+  '海平大学': ['海平职业技术学院','海平中学','文轩书店','极乐世界娱乐城'],
+  '海平职业技术学院': ['海平大学','海平中学','海平中心世纪公园','维纳斯情侣酒店'],
+  '海平中学': ['海平职业技术学院','文轩书店','海平大学','绿洲景苑小区'],
+  '文轩书店': ['海平中学','海平大学','绿洲景苑小区'],
+  '星海综合购物中心': ['夜色成人用品店','海滨梦幻游乐园','水云间洗浴中心','海平湾公共海滩'],
+  '夜色成人用品店': ['星海综合购物中心','维纳斯情侣酒店','海平人民医院'],
+  '维纳斯情侣酒店': ['夜色成人用品店','极乐世界娱乐城','海平职业技术学院'],
+  '水云间洗浴中心': ['远洋环球物流仓储中心','星海综合购物中心','海平人民医院','海滨梦幻游乐园'],
+  '极乐世界娱乐城': ['维纳斯情侣酒店','海平大学','海平湾公共海滩'],
+  '海滨梦幻游乐园': ['星海综合购物中心','水云间洗浴中心'],
+  '海平湾公共海滩': ['星海综合购物中心','极乐世界娱乐城'],
+  '远洋环球物流仓储中心': ['远大电子装配厂','工友平价大排档','水云间洗浴中心','南区综合枢纽建设工地','蓝领劳务大市场'],
+  '远大电子装配厂': ['远洋环球物流仓储中心','南区综合枢纽建设工地'],
+  '海平轻纺制造厂': ['蓝领劳务大市场','工友平价大排档'],
+  '南区综合枢纽建设工地': ['远洋环球物流仓储中心','工友平价大排档','远大电子装配厂'],
+  '蓝领劳务大市场': ['工友平价大排档','海平轻纺制造厂','海平洲际大酒店','远洋环球物流仓储中心'],
+  '工友平价大排档': ['蓝领劳务大市场','南区综合枢纽建设工地','海平轻纺制造厂','远洋环球物流仓储中心'],
+  '万家综合超市': ['绿洲景苑小区','海平市大型体育中心','CBD跨国金融中心','西山半山别墅区'],
+  '海平市大型体育中心': ['万家综合超市','绿洲景苑小区','西山半山别墅区'],
+  '绿洲景苑小区': ['海平市大型体育中心','万家综合超市','海平中学','文轩书店','市政府大楼'],
+  '西山半山别墅区': ['万家综合超市','海平市大型体育中心'],
+  '市政府大楼': ['海平中心世纪公园','海平洲际大酒店','海平人民医院','绿洲景苑小区','CBD跨国金融中心'],
+  '海平中心世纪公园': ['市政府大楼','海平职业技术学院','海平人民医院'],
+  'CBD跨国金融中心': ['市政府大楼','海平洲际大酒店','万家综合超市'],
+  '海平洲际大酒店': ['蓝领劳务大市场','市政府大楼','CBD跨国金融中心','海平人民医院'],
+  '海平人民医院': ['市政府大楼','夜色成人用品店','海平洲际大酒店','海平中心世纪公园','水云间洗浴中心'],
+};
+
+const locMap = computed(() => {
+  const m: Record<string, { x: number; y: number }> = {};
+  for (const l of locations) m[l.name] = l;
+  return m;
+});
+
+const mapEdges = computed(() => {
+  const edges: { x1: number; y1: number; x2: number; y2: number }[] = [];
+  const seen = new Set<string>();
+  for (const [a, neighbors] of Object.entries(roadAdjacency)) {
+    const p = locMap.value[a];
+    if (!p) continue;
+    for (const b of neighbors) {
+      const q = locMap.value[b];
+      if (!q) continue;
+      const key = [a, b].sort().join('|');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      edges.push({ x1: p.x, y1: p.y, x2: q.x, y2: q.y });
+    }
+  }
+  return edges;
+});
 
 function onMapDragStart(e: MouseEvent) {
   mapDragging.value = true;
@@ -795,9 +852,11 @@ const locationLabel = computed(() => {
 .map-diag { position: absolute; left: 50%; top: 50%; width: 1132px; height: 2px; background: #aaa; transform-origin: center; z-index: 1; }
 .map-diag-1 { transform: translate(-50%, -50%) rotate(45deg); }
 .map-diag-2 { transform: translate(-50%, -50%) rotate(-45deg); }
-.map-dot { position: absolute; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px; border-radius: 50%; background: #c44; border: 1px solid #a33; z-index: 3; cursor: pointer; }
-.map-dot:hover { background: #f66; transform: scale(1.5); }
-.map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; background: rgba(255,255,255,0.8); padding: 1px 4px; border-radius: 2px; pointer-events: none; }
+.map-dot { position: absolute; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px; border-radius: 50%; background: #444; border: 1px solid #222; z-index: 3; cursor: pointer; }
+.map-dot:hover { background: #000; transform: scale(1.5); }
+.map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; pointer-events: none; }
+.map-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+.map-lines line { stroke: #999; stroke-width: 1; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
