@@ -357,6 +357,12 @@ const metroSegments = computed(() => {
           segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', routes: [ri] });
           segs.push({ x1: x1+4*dx, y1: y1+4*dy, x2: x1+5*dx, y2: y1+5*dy, color: '#4a4', routes: [ri] });
           segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', routes: [ri] });
+        } else if (hasBus) {
+          const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
+          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', routes: [ri] });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#d44', routes: [ri] });
+          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', routes: [ri] });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#d44', routes: [ri] });
         } else if (hasRoad) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', routes: [ri] });
