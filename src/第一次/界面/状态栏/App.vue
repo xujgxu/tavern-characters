@@ -268,6 +268,14 @@
                 @mouseenter="hoveredRoute = s.routes[0]"
                 @mouseleave="hoveredRoute = -1" />
             </svg>
+            <svg class="map-metro-lines">
+              <line v-for="(s, i) in metroSegments" :key="'m'+i"
+                :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
+                :stroke="s.color"
+                :class="{ 'metro-hover': s.routes.includes(hoveredRoute) && hoveredRoute >= 0 }"
+                @mouseenter="hoveredRoute = s.routes[0]"
+                @mouseleave="hoveredRoute = -1" />
+            </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
               :style="{ left: l.x + 'px', top: l.y + 'px' }"
               :title="l.name">
@@ -304,6 +312,65 @@ const selectedContact = ref('');
 const contactMsg = ref('');
 
 const hoveredRoute = ref(-1);
+
+const metroRoutes: string[][] = [
+  ['海平大学','极乐世界娱乐城','海平湾公共海滩','海滨梦幻游乐园','水云间洗浴中心','远大电子装配厂','工友平价大排档','海平轻纺制造厂','西山半山别墅区','海平市大型体育中心','文轩书店','海平大学'],
+  ['海平大学','海平中心世纪公园','海平洲际大酒店','蓝领劳务大市场','南区综合枢纽建设工地'],
+  ['西山半山别墅区','万家综合超市','CBD跨国金融中心','海平人民医院','星海综合购物中心','海平湾公共海滩'],
+];
+
+const busEdgeSet = computed(() => {
+  const s = new Set<string>();
+  for (const route of busRoutes) {
+    for (let i = 0; i < route.length - 1; i++) {
+      s.add([route[i], route[i+1]].sort().join('|'));
+    }
+  }
+  return s;
+});
+
+const metroSegments = computed(() => {
+  const segs: { x1: number; y1: number; x2: number; y2: number; color: string; routes: number[] }[] = [];
+  const seen = new Map<string, number>();
+  for (let ri = 0; ri < metroRoutes.length; ri++) {
+    const route = metroRoutes[ri];
+    for (let i = 0; i < route.length - 1; i++) {
+      const a = route[i], b = route[i + 1];
+      if (!locMap.value[a] || !locMap.value[b]) continue;
+      const key = [a, b].sort().join('|');
+      const x1 = locMap.value[a].x, y1 = locMap.value[a].y;
+      const x2 = locMap.value[b].x, y2 = locMap.value[b].y;
+      if (seen.has(key)) {
+        const idx = seen.get(key)!;
+        const first = segs[idx];
+        if (first.routes) first.routes.push(ri);
+        else for (let s = idx; s < segs.length && segs[s].x1 === segs[idx].x1; s++) segs[s].routes.push(ri);
+      } else {
+        const hasBus = busEdgeSet.value.has(key);
+        const hasRoad = roadEdgeSet.value.has(key);
+        seen.set(key, segs.length);
+        if (hasBus && hasRoad) {
+          const dx = (x2 - x1) / 6, dy = (y2 - y1) / 6;
+          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', routes: [ri] });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#4a4', routes: [ri] });
+          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#444', routes: [ri] });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', routes: [ri] });
+          segs.push({ x1: x1+4*dx, y1: y1+4*dy, x2: x1+5*dx, y2: y1+5*dy, color: '#4a4', routes: [ri] });
+          segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', routes: [ri] });
+        } else if (hasRoad) {
+          const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
+          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', routes: [ri] });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', routes: [ri] });
+          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', routes: [ri] });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', routes: [ri] });
+        } else {
+          segs.push({ x1, y1, x2, y2, color: '#4a4', routes: [ri] });
+        }
+      }
+    }
+  }
+  return segs;
+});
 
 const locations = [
   { name: '海平大学', x: 474, y: 101 },
@@ -886,12 +953,15 @@ const locationLabel = computed(() => {
 .map-dot { position: absolute; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px; border-radius: 50%; background: #444; border: 1px solid #222; z-index: 3; cursor: pointer; }
 .map-dot:hover { background: #000; transform: scale(1.5); }
 .map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; pointer-events: none; }
-.map-road-lines, .map-bus-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.map-road-lines, .map-bus-lines, .map-metro-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .map-road-lines { z-index: 2; }
 .map-road-lines line { stroke: #444; stroke-width: 2; }
 .map-bus-lines { z-index: 3; pointer-events: auto; }
 .map-bus-lines line { stroke-width: 2; pointer-events: stroke; }
 .map-bus-lines line.bus-hover { stroke: #d44 !important; stroke-width: 4; }
+.map-metro-lines { z-index: 4; pointer-events: auto; }
+.map-metro-lines line { stroke-width: 2; pointer-events: stroke; }
+.map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 4; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
