@@ -397,10 +397,6 @@ const metroSegments = computed(() => {
   }
   return segs;
 });
-    }
-  }
-  return segs;
-});
 
 const locations = [
   { name: '海平大学', x: 474, y: 101 },
