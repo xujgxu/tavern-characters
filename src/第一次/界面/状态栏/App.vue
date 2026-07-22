@@ -265,15 +265,15 @@
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
                 :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0 }"
-                @mouseenter="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0], hoveredMetroRoute = -1)"
-                @mouseleave="hoveredBusRoute = -1; hoveredMetroRoute = -1" />
+                @mouseenter.prevent="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0], hoveredMetroRoute = -1)"
+                @mouseleave="hoveredBusRoute = -1" />
             </svg>
             <svg class="map-metro-lines" :class="{ 'map-on-top': hoveredMetroRoute >= 0, 'map-on-bottom': hoveredBusRoute >= 0 }">
               <line v-for="(s, i) in metroSegments" :key="'m'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
                 :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0, 'metro-hover': s.metroRoutes.includes(hoveredMetroRoute) && hoveredMetroRoute >= 0 }"
-                @mouseenter="onMetroSegEnter(s)"
+                @mouseenter.prevent="onMetroSegEnter(s)"
                 @mouseleave="hoveredBusRoute = -1; hoveredMetroRoute = -1" />
             </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
@@ -989,10 +989,10 @@ const locationLabel = computed(() => {
 .map-road-lines, .map-bus-lines, .map-metro-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .map-road-lines { z-index: 2; }
 .map-road-lines line { stroke: #444; stroke-width: 2; }
-.map-bus-lines { z-index: 3; pointer-events: auto; }
+.map-bus-lines { z-index: 3; }
 .map-bus-lines line { stroke-width: 2; pointer-events: stroke; }
 .map-bus-lines line.bus-hover, .map-metro-lines line.bus-hover { stroke: #d44 !important; stroke-width: 4; }
-.map-metro-lines { z-index: 4; pointer-events: auto; }
+.map-metro-lines { z-index: 4; }
 .map-metro-lines line { stroke-width: 2; pointer-events: stroke; }
 .map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 4; }
 .map-on-top { z-index: 5 !important; }
