@@ -260,16 +260,16 @@
               <line v-for="(e, i) in mapEdges" :key="'r'+i"
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
             </svg>
-            <svg class="map-bus-lines" :class="{ 'map-on-top': hoveredBusRoute >= 0, 'map-on-bottom': hoveredMetroRoute >= 0 }">
-              <line v-for="(s, i) in sortedBusSegments" :key="'b'+i"
+            <svg class="map-bus-lines">
+              <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
                 :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0 }"
                 @mouseenter.prevent="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0], hoveredMetroRoute = -1)"
                 @mouseleave="hoveredBusRoute = -1" />
             </svg>
-            <svg class="map-metro-lines" :class="{ 'map-on-top': hoveredMetroRoute >= 0, 'map-on-bottom': hoveredBusRoute >= 0 }">
-              <line v-for="(s, i) in sortedMetroSegments" :key="'m'+i"
+            <svg class="map-metro-lines">
+              <line v-for="(s, i) in metroSegments" :key="'m'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
                 :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0, 'metro-hover': s.metroRoutes.includes(hoveredMetroRoute) && hoveredMetroRoute >= 0 }"
@@ -523,19 +523,6 @@ const busSegments = computed(() => {
       }
     }
   }
-  return segs;
-});
-
-const sortedBusSegments = computed(() => {
-  const segs = busSegments.value.slice();
-  if (hoveredBusRoute.value >= 0) segs.sort((a, b) => (a.busRoutes.includes(hoveredBusRoute.value) ? 1 : 0) - (b.busRoutes.includes(hoveredBusRoute.value) ? 1 : 0));
-  return segs;
-});
-
-const sortedMetroSegments = computed(() => {
-  const segs = metroSegments.value.slice();
-  if (hoveredMetroRoute.value >= 0) segs.sort((a, b) => (a.metroRoutes.includes(hoveredMetroRoute.value) ? 1 : 0) - (b.metroRoutes.includes(hoveredMetroRoute.value) ? 1 : 0));
-  if (hoveredBusRoute.value >= 0) segs.sort((a, b) => (a.busRoutes.includes(hoveredBusRoute.value) ? 1 : 0) - (b.busRoutes.includes(hoveredBusRoute.value) ? 1 : 0));
   return segs;
 });
 
@@ -1008,8 +995,6 @@ const locationLabel = computed(() => {
 .map-metro-lines { z-index: 4; }
 .map-metro-lines line { stroke-width: 2; pointer-events: stroke; }
 .map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 4; }
-.map-on-top { z-index: 5 !important; }
-.map-on-bottom { z-index: 1 !important; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
