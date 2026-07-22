@@ -882,8 +882,8 @@ const locationLabel = computed(() => {
 .map-road-lines, .map-bus-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .map-road-lines { z-index: 2; }
 .map-road-lines line { stroke: #444; stroke-width: 2; }
-.map-bus-lines { z-index: 3; }
-.map-bus-lines line { stroke-width: 2; }
+.map-bus-lines { z-index: 3; pointer-events: auto; }
+.map-bus-lines line { stroke-width: 2; pointer-events: stroke; }
 .map-bus-lines line.bus-hover { stroke-width: 4; }
 .map-bus-lines line.bus-dim { opacity: 0.2; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
