@@ -751,9 +751,9 @@ const locationLabel = computed(() => {
   width: 300px; height: 300px; position: absolute; left: 250px; top: 250px;
   border-radius: 50%; background: #e8e8e8; z-index: 2;
 }
-.map-diag { position: absolute; left: 50%; top: 50%; width: 1132px; height: 2px; background: #ccc; transform-origin: 0 0; }
-.map-diag-1 { transform: rotate(45deg); }
-.map-diag-2 { transform: rotate(-45deg); }
+.map-diag { position: absolute; left: 50%; top: 50%; width: 1132px; height: 2px; background: #ccc; transform-origin: center; }
+.map-diag-1 { transform: translate(-50%, -50%) rotate(45deg); }
+.map-diag-2 { transform: translate(-50%, -50%) rotate(-45deg); }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
