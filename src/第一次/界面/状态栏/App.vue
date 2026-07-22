@@ -260,6 +260,11 @@
               <div class="map-diag map-diag-2"></div>
             </div>
             <div class="map-circle-inner"></div>
+            <div class="map-dot" v-for="l in locations" :key="l.name"
+              :style="{ left: l.x + 'px', top: l.y + 'px' }"
+              :title="l.name">
+              <span class="map-dot-label">{{ l.name }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -293,6 +298,35 @@ const contactMsg = ref('');
 const mapPos = ref({ x: 0, y: 0 });
 const mapDragging = ref(false);
 const mapDragStart = ref({ x: 0, y: 0 });
+
+const locations = [
+  { name: '海平大学', x: 474, y: 101 },
+  { name: '海平中学', x: 365, y: 165 },
+  { name: '海平职业技术学院', x: 507, y: 226 },
+  { name: '海平文轩书店', x: 231, y: 92 },
+  { name: '夜色成人用品店', x: 580, y: 356 },
+  { name: '海滨梦幻游乐园', x: 756, y: 477 },
+  { name: '维纳斯情侣酒店', x: 634, y: 263 },
+  { name: '星海综合购物中心', x: 673, y: 412 },
+  { name: '水云间洗浴中心', x: 638, y: 549 },
+  { name: '海平湾公共海滩', x: 760, y: 275 },
+  { name: '极乐世界娱乐城', x: 694, y: 174 },
+  { name: '工友平价大排档', x: 368, y: 708 },
+  { name: '蓝领劳务大市场', x: 307, y: 597 },
+  { name: '远洋环球物流仓储中心', x: 497, y: 603 },
+  { name: '海平轻纺制造厂', x: 261, y: 685 },
+  { name: '远大电子装配厂', x: 541, y: 709 },
+  { name: '南区综合枢纽建设工地', x: 466, y: 739 },
+  { name: '海平市大型体育中心', x: 88, y: 343 },
+  { name: '绿洲景苑小区', x: 239, y: 288 },
+  { name: '万家综合超市', x: 167, y: 405 },
+  { name: '西山半山别墅区', x: 18, y: 456 },
+  { name: '市政府大楼', x: 360, y: 356 },
+  { name: '海平中心世纪公园', x: 424, y: 324 },
+  { name: 'CBD跨国金融中心', x: 315, y: 414 },
+  { name: '海平洲际大酒店', x: 352, y: 494 },
+  { name: '海平人民医院', x: 488, y: 427 },
+];
 
 function onMapDragStart(e: MouseEvent) {
   mapDragging.value = true;
@@ -756,11 +790,14 @@ const locationLabel = computed(() => {
 }
 .map-circle-inner {
   width: 300px; height: 300px; position: absolute; left: 250px; top: 250px;
-  border-radius: 50%; border: 2px solid #aaa; background: #f5f5f5; z-index: 2;
+  border-radius: 50%; border: 2px solid #aaa; background: #fce8e8; z-index: 2;
 }
 .map-diag { position: absolute; left: 50%; top: 50%; width: 1132px; height: 2px; background: #aaa; transform-origin: center; z-index: 1; }
 .map-diag-1 { transform: translate(-50%, -50%) rotate(45deg); }
 .map-diag-2 { transform: translate(-50%, -50%) rotate(-45deg); }
+.map-dot { position: absolute; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px; border-radius: 50%; background: #c44; border: 1px solid #a33; z-index: 3; cursor: pointer; }
+.map-dot:hover { background: #f66; transform: scale(1.5); }
+.map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; background: rgba(255,255,255,0.8); padding: 1px 4px; border-radius: 2px; pointer-events: none; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
