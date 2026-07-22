@@ -742,16 +742,23 @@ const locationLabel = computed(() => {
 .map-layout { min-height: 600px; background: #fff; border-radius: 0 0 10px 10px; overflow: hidden; }
 .map-viewport { width: 100%; height: 600px; overflow: hidden; position: relative; cursor: grab; user-select: none; }
 .map-viewport:active { cursor: grabbing; }
-.map-canvas { width: 800px; height: 800px; position: absolute; top: 0; left: 0; background: #e8e8e8; }
+.map-canvas { width: 800px; height: 800px; position: absolute; top: 0; left: 0; background: #fff; }
 .map-circle-outer {
   width: 800px; height: 800px; position: absolute; left: 0; top: 0;
-  border-radius: 50%; background: #fff; overflow: hidden;
+  border-radius: 50%; border: 2px solid #aaa; overflow: hidden;
+  background: conic-gradient(
+    #e8d5f0 0deg   45deg,
+    #d5e6f0 45deg  135deg,
+    #d5f0e4 135deg 225deg,
+    #f0ead5 225deg 315deg,
+    #e8d5f0 315deg 360deg
+  );
 }
 .map-circle-inner {
   width: 300px; height: 300px; position: absolute; left: 250px; top: 250px;
-  border-radius: 50%; background: #e8e8e8; z-index: 2;
+  border-radius: 50%; border: 2px solid #aaa; background: #f5f5f5; z-index: 2;
 }
-.map-diag { position: absolute; left: 50%; top: 50%; width: 1132px; height: 2px; background: #ccc; transform-origin: center; }
+.map-diag { position: absolute; left: 50%; top: 50%; width: 1132px; height: 2px; background: #aaa; transform-origin: center; z-index: 1; }
 .map-diag-1 { transform: translate(-50%, -50%) rotate(45deg); }
 .map-diag-2 { transform: translate(-50%, -50%) rotate(-45deg); }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
