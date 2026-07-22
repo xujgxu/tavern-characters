@@ -265,8 +265,8 @@
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
                 :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0 }"
-                @mouseenter="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0])"
-                @mouseleave="hoveredBusRoute = -1" />
+                @mouseenter="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0], hoveredMetroRoute = -1)"
+                @mouseleave="hoveredBusRoute = -1; hoveredMetroRoute = -1" />
             </svg>
             <svg class="map-metro-lines" :class="{ 'map-on-top': hoveredMetroRoute >= 0, 'map-on-bottom': hoveredBusRoute >= 0 }">
               <line v-for="(s, i) in metroSegments" :key="'m'+i"
@@ -527,8 +527,13 @@ const busSegments = computed(() => {
 });
 
 function onMetroSegEnter(s: { busRoutes: number[]; metroRoutes: number[] }) {
-  if (s.busRoutes.length) hoveredBusRoute.value = s.busRoutes[0];
-  if (s.metroRoutes.length) hoveredMetroRoute.value = s.metroRoutes[0];
+  if (s.busRoutes.length) {
+    hoveredBusRoute.value = s.busRoutes[0];
+    hoveredMetroRoute.value = -1;
+  } else if (s.metroRoutes.length) {
+    hoveredMetroRoute.value = s.metroRoutes[0];
+    hoveredBusRoute.value = -1;
+  }
 }
 
 function composeAndSend() {
