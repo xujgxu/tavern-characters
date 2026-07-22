@@ -1,4 +1,4 @@
-﻿# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync@3708282/dist/schema/character.zh.json
+﻿# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync@2cf234d/dist/schema/character.zh.json
 头像: 头像
 版本: '1.0.0'
 作者: ''
@@ -674,7 +674,7 @@
             ```
             <body>
             <script>
-            $('body').load('https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@3708282/dist/第一次/界面/状态栏/index.html?_='+Date.now())
+            $('body').load('https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@2cf234d/dist/第一次/界面/状态栏/index.html?_='+Date.now())
             </script>
             </body>
             ```
@@ -699,7 +699,7 @@
           启用: true
           类型: 脚本
           内容: |-
-            import 'https://testingcf.jsdelivr.net/gh/xujgxu/tavern-characters@3708282/dist/第一次/脚本/变量结构/index.js';
+            import 'https://testingcf.jsdelivr.net/gh/xujgxu/tavern-characters@2cf234d/dist/第一次/脚本/变量结构/index.js';
 
         - 名称: 注入状态栏正则
           id: b50d0bed-ff40-4a25-9ada-14feb4283325
@@ -712,7 +712,7 @@
                 script_name: '[界面]状态栏',
                 enabled: true,
                 find_regex: '<StatusPlaceHolderImpl/>',
-                replace_string: '<body>\n<script>\n$(\'body\').load(\'https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@3708282/dist/第一次/界面/状态栏/index.html?_=\'+Date.now())\n</script>\n</body>',
+                replace_string: '<body>\n<script>\n$(\'body\').load(\'https://cdn.jsdelivr.net/gh/xujgxu/tavern-characters@2cf234d/dist/第一次/界面/状态栏/index.html?_=\'+Date.now())\n</script>\n</body>',
                 trim_strings: [],
                 source: { user_input: true, ai_output: true, slash_command: false, world_info: false, reasoning: false },
                 destination: { display: true, prompt: false },
