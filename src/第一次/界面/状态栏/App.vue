@@ -249,6 +249,14 @@
       </div>
 
       <div class="tab-content map-layout" v-else-if="activeTab === 'map'">
+        <div class="map-viewport"
+          @mousedown="onMapDragStart"
+          @mousemove="onMapDragMove"
+          @mouseup="onMapDragEnd"
+          @mouseleave="onMapDragEnd">
+          <div class="map-canvas" :style="{ left: mapPos.x + 'px', top: mapPos.y + 'px' }">
+          </div>
+        </div>
       </div>
 
       <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app' && activeTab !== 'contacts' && activeTab !== 'clothes' && activeTab !== 'map'">
@@ -276,6 +284,29 @@ const activeTab = ref('basic');
 const selectedTask = ref(-1);
 const selectedContact = ref('');
 const contactMsg = ref('');
+
+const mapPos = ref({ x: 0, y: 0 });
+const mapDragging = ref(false);
+const mapDragStart = ref({ x: 0, y: 0 });
+
+function onMapDragStart(e: MouseEvent) {
+  mapDragging.value = true;
+  mapDragStart.value = { x: e.clientX - mapPos.value.x, y: e.clientY - mapPos.value.y };
+}
+function onMapDragMove(e: MouseEvent) {
+  if (!mapDragging.value) return;
+  const viewW = 800, canvasW = 800;
+  const viewH = 600, canvasH = 800;
+  const newX = e.clientX - mapDragStart.value.x;
+  const newY = e.clientY - mapDragStart.value.y;
+  mapPos.value = {
+    x: Math.min(0, Math.max(viewW - canvasW, newX)),
+    y: Math.min(0, Math.max(viewH - canvasH, newY))
+  };
+}
+function onMapDragEnd() {
+  mapDragging.value = false;
+}
 
 function composeAndSend() {
   const parts: string[] = [];
@@ -703,7 +734,10 @@ const locationLabel = computed(() => {
 .fill.libido   { background: #e05555; }
 .fill.pleasure { background: linear-gradient(90deg, #e8a850, #e05555); }
 
-.map-layout { min-height: 600px; background: #fff; border-radius: 0 0 10px 10px; }
+.map-layout { min-height: 600px; background: #fff; border-radius: 0 0 10px 10px; overflow: hidden; }
+.map-viewport { width: 100%; height: 600px; overflow: hidden; position: relative; cursor: grab; user-select: none; }
+.map-viewport:active { cursor: grabbing; }
+.map-canvas { width: 800px; height: 800px; position: absolute; top: 0; left: 0; background: #e8e8e8; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
