@@ -260,11 +260,11 @@
               <div class="map-diag map-diag-2"></div>
             </div>
             <div class="map-circle-inner"></div>
-            <svg class="map-lines">
+            <svg class="map-road-lines">
               <line v-for="(e, i) in mapEdges" :key="'r'+i"
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
             </svg>
-            <svg class="map-lines map-bus-lines">
+            <svg class="map-bus-lines">
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color" />
@@ -901,8 +901,9 @@ const locationLabel = computed(() => {
 .map-dot { position: absolute; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px; border-radius: 50%; background: #444; border: 1px solid #222; z-index: 3; cursor: pointer; }
 .map-dot:hover { background: #000; transform: scale(1.5); }
 .map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; pointer-events: none; }
-.map-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
-.map-lines line { stroke: #444; stroke-width: 2; }
+.map-road-lines, .map-bus-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.map-road-lines { z-index: 2; }
+.map-road-lines line { stroke: #444; stroke-width: 2; }
 .map-bus-lines { z-index: 3; }
 .map-bus-lines line { stroke-width: 3; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
