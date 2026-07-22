@@ -847,7 +847,7 @@ const locationLabel = computed(() => {
 }
 .map-circle-inner {
   width: 300px; height: 300px; position: absolute; left: 250px; top: 250px;
-  border-radius: 50%; border: 2px solid #aaa; background: #fce8e8; z-index: 2;
+  border-radius: 50%; border: 2px solid #aaa; background: #fce8e8; z-index: 1;
 }
 .map-diag { position: absolute; left: 50%; top: 50%; width: 1132px; height: 2px; background: #aaa; transform-origin: center; z-index: 1; }
 .map-diag-1 { transform: translate(-50%, -50%) rotate(45deg); }
@@ -855,8 +855,8 @@ const locationLabel = computed(() => {
 .map-dot { position: absolute; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px; border-radius: 50%; background: #444; border: 1px solid #222; z-index: 3; cursor: pointer; }
 .map-dot:hover { background: #000; transform: scale(1.5); }
 .map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; pointer-events: none; }
-.map-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-.map-lines line { stroke: #999; stroke-width: 1; }
+.map-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.map-lines line { stroke: #888; stroke-width: 2; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
