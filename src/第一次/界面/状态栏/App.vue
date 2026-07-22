@@ -358,8 +358,7 @@ const metroSegments = computed(() => {
       if (seen.has(key)) {
         const idx = seen.get(key)!;
         for (let s = idx; s < segs.length && segs[s].x1 === segs[idx].x1 && segs[s].y1 === segs[idx].y1; s++) {
-          if (segs[s].color === '#d44') segs[s].busRoutes.push(ri);
-          else if (segs[s].color === '#4a4') segs[s].metroRoutes.push(ri);
+          segs[s].metroRoutes.push(ri);
         }
       } else {
         const hasBus = busEdgeSet.value.has(key);
@@ -370,10 +369,10 @@ const metroSegments = computed(() => {
           const dx = (x2 - x1) / 6, dy = (y2 - y1) / 6;
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
           segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
-          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#444', busRoutes: E(), metroRoutes: E() });
+          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#444', busRoutes: E(), metroRoutes: [ri] });
           segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
           segs.push({ x1: x1+4*dx, y1: y1+4*dy, x2: x1+5*dx, y2: y1+5*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
-          segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', busRoutes: E(), metroRoutes: E() });
+          segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', busRoutes: E(), metroRoutes: [ri] });
         } else if (hasBus) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
@@ -383,9 +382,9 @@ const metroSegments = computed(() => {
         } else if (hasRoad) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
-          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: E(), metroRoutes: E() });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: E(), metroRoutes: [ri] });
           segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: E(), metroRoutes: E() });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: E(), metroRoutes: [ri] });
         } else {
           segs.push({ x1, y1, x2, y2, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
         }
