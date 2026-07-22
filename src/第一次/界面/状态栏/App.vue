@@ -260,7 +260,7 @@
               <line v-for="(e, i) in mapEdges" :key="'r'+i"
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
             </svg>
-            <svg class="map-bus-lines">
+            <svg class="map-bus-lines" :style="{ zIndex: hoveredBusRoute >= 0 ? 5 : (hoveredMetroRoute >= 0 ? 1 : 3) }">
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
@@ -268,7 +268,7 @@
                 @mouseenter="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0])"
                 @mouseleave="hoveredBusRoute = -1" />
             </svg>
-            <svg class="map-metro-lines">
+            <svg class="map-metro-lines" :style="{ zIndex: hoveredMetroRoute >= 0 ? 5 : (hoveredBusRoute >= 0 ? 1 : 4) }">
               <line v-for="(s, i) in metroSegments" :key="'m'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
@@ -346,7 +346,7 @@ const busRouteMap = computed(() => {
 const metroSegments = computed(() => {
   const segs: { x1: number; y1: number; x2: number; y2: number; color: string; busRoutes: number[]; metroRoutes: number[] }[] = [];
   const seen = new Map<string, number>();
-  const emp: number[] = [];
+  const E = (): number[] => [];
   for (let ri = 0; ri < metroRoutes.length; ri++) {
     const route = metroRoutes[ri];
     for (let i = 0; i < route.length - 1; i++) {
@@ -357,40 +357,37 @@ const metroSegments = computed(() => {
       const x2 = locMap.value[b].x, y2 = locMap.value[b].y;
       if (seen.has(key)) {
         const idx = seen.get(key)!;
-        const first = segs[idx];
-        const n = first.color === '#d44' ? first.busRoutes : first.color === '#4a4' ? first.metroRoutes : emp;
-        n.push(ri);
-        for (let s = idx + 1; s < segs.length && segs[s].x1 === segs[idx].x1 && segs[s].y1 === segs[idx].y1; s++) {
-          const t = segs[s].color === '#d44' ? segs[s].busRoutes : segs[s].color === '#4a4' ? segs[s].metroRoutes : emp;
-          t.push(ri);
+        for (let s = idx; s < segs.length && segs[s].x1 === segs[idx].x1 && segs[s].y1 === segs[idx].y1; s++) {
+          if (segs[s].color === '#d44') segs[s].busRoutes.push(ri);
+          else if (segs[s].color === '#4a4') segs[s].metroRoutes.push(ri);
         }
       } else {
         const hasBus = busEdgeSet.value.has(key);
         const hasRoad = roadEdgeSet.value.has(key);
-        const busIdx = busRouteMap.value.get(key) || emp;
+        const busIdx = busRouteMap.value.get(key) || E();
         seen.set(key, segs.length);
         if (hasBus && hasRoad) {
           const dx = (x2 - x1) / 6, dy = (y2 - y1) / 6;
-          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: emp });
-          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
-          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#444', busRoutes: emp, metroRoutes: emp });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: emp });
-          segs.push({ x1: x1+4*dx, y1: y1+4*dy, x2: x1+5*dx, y2: y1+5*dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
-          segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', busRoutes: emp, metroRoutes: emp });
+          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
+          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#444', busRoutes: E(), metroRoutes: E() });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
+          segs.push({ x1: x1+4*dx, y1: y1+4*dy, x2: x1+5*dx, y2: y1+5*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
+          segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', busRoutes: E(), metroRoutes: E() });
         } else if (hasBus) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
-          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: emp });
-          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#d44', busRoutes: [...busIdx], metroRoutes: emp });
+          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
+          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
         } else if (hasRoad) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
-          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: emp, metroRoutes: emp });
-          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: emp, metroRoutes: emp });
+          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: E(), metroRoutes: E() });
+          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: E(), metroRoutes: E() });
         } else {
-          segs.push({ x1, y1, x2, y2, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
+          segs.push({ x1, y1, x2, y2, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
         }
       }
     }
