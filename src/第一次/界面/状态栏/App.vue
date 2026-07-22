@@ -273,7 +273,7 @@
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
                 :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0, 'metro-hover': s.metroRoutes.includes(hoveredMetroRoute) && hoveredMetroRoute >= 0 }"
-                @mouseenter="if (s.color === '#d44') hoveredBusRoute = s.busRoutes[0]; else if (s.color === '#4a4') hoveredMetroRoute = s.metroRoutes[0]"
+                @mouseenter="hoveredBusRoute = s.busRoutes[0] ?? -1; hoveredMetroRoute = s.metroRoutes[0] ?? -1"
                 @mouseleave="hoveredBusRoute = -1; hoveredMetroRoute = -1" />
             </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
