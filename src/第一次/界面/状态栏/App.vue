@@ -261,8 +261,13 @@
             </div>
             <div class="map-circle-inner"></div>
             <svg class="map-lines">
-              <line v-for="(e, i) in mapEdges" :key="i"
+              <line v-for="(e, i) in mapEdges" :key="'r'+i"
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
+            </svg>
+            <svg class="map-lines map-bus-lines">
+              <line v-for="(e, i) in busEdges" :key="'b'+i"
+                :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2"
+                :class="{ 'bus-shared': e.shared }" />
             </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
               :style="{ left: l.x + 'px', top: l.y + 'px' }"
@@ -380,6 +385,41 @@ const mapEdges = computed(() => {
       if (seen.has(key)) continue;
       seen.add(key);
       edges.push({ x1: p.x, y1: p.y, x2: q.x, y2: q.y });
+    }
+  }
+  return edges;
+});
+
+const busRoutes: string[][] = [
+  ['文轩书店','海平中学','海平职业技术学院','维纳斯情侣酒店','夜色成人用品店','星海综合购物中心','水云间洗浴中心','海滨梦幻游乐园','海平湾公共海滩','极乐世界娱乐城','海平大学','文轩书店'],
+  ['极乐世界娱乐城','海平湾公共海滩','海滨梦幻游乐园','水云间洗浴中心','远大电子装配厂','南区综合枢纽建设工地','工友平价大排档','海平轻纺制造厂','蓝领劳务大市场','远洋环球物流仓储中心','星海综合购物中心','夜色成人用品店','维纳斯情侣酒店','极乐世界娱乐城'],
+  ['远大电子装配厂','南区综合枢纽建设工地','工友平价大排档','海平轻纺制造厂','西山半山别墅区','海平市大型体育中心','绿洲景苑小区','万家综合超市','蓝领劳务大市场','远洋环球物流仓储中心','远大电子装配厂'],
+  ['西山半山别墅区','海平市大型体育中心','文轩书店','海平大学','海平职业技术学院','海平中学','绿洲景苑小区','万家综合超市','西山半山别墅区'],
+];
+
+const roadEdgeSet = computed(() => {
+  const s = new Set<string>();
+  for (const [a, neighbors] of Object.entries(roadAdjacency)) {
+    for (const b of neighbors) s.add([a, b].sort().join('|'));
+  }
+  return s;
+});
+
+const busEdges = computed(() => {
+  const edges: { x1: number; y1: number; x2: number; y2: number; shared: boolean }[] = [];
+  const seen = new Set<string>();
+  for (const route of busRoutes) {
+    for (let i = 0; i < route.length - 1; i++) {
+      const a = route[i], b = route[i + 1];
+      if (!locMap.value[a] || !locMap.value[b]) continue;
+      const key = [a, b].sort().join('|');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      edges.push({
+        x1: locMap.value[a].x, y1: locMap.value[a].y,
+        x2: locMap.value[b].x, y2: locMap.value[b].y,
+        shared: roadEdgeSet.value.has(key)
+      });
     }
   }
   return edges;
@@ -857,6 +897,9 @@ const locationLabel = computed(() => {
 .map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; pointer-events: none; }
 .map-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .map-lines line { stroke: #444; stroke-width: 2; }
+.map-bus-lines { z-index: 3; }
+.map-bus-lines line { stroke: #d44; stroke-width: 3; }
+.map-bus-lines line.bus-shared { stroke-dasharray: 8 6; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
