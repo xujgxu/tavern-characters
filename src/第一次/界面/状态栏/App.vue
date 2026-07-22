@@ -255,8 +255,11 @@
           @mouseup="onMapDragEnd"
           @mouseleave="onMapDragEnd">
           <div class="map-canvas" :style="{ left: mapPos.x + 'px', top: mapPos.y + 'px' }">
-            <div class="map-circle map-circle-outer"></div>
-            <div class="map-circle map-circle-inner"></div>
+            <div class="map-circle-outer">
+              <div class="map-diag map-diag-1"></div>
+              <div class="map-diag map-diag-2"></div>
+            </div>
+            <div class="map-circle-inner"></div>
           </div>
         </div>
       </div>
@@ -740,9 +743,17 @@ const locationLabel = computed(() => {
 .map-viewport { width: 100%; height: 600px; overflow: hidden; position: relative; cursor: grab; user-select: none; }
 .map-viewport:active { cursor: grabbing; }
 .map-canvas { width: 800px; height: 800px; position: absolute; top: 0; left: 0; background: #e8e8e8; }
-.map-circle { position: absolute; border-radius: 50%; border: 1px solid #999; background: rgba(255,255,255,0.5); }
-.map-circle-outer { width: 800px; height: 800px; left: 0; top: 0; }
-.map-circle-inner { width: 300px; height: 300px; left: 250px; top: 250px; }
+.map-circle-outer {
+  width: 800px; height: 800px; position: absolute; left: 0; top: 0;
+  border-radius: 50%; background: #fff; overflow: hidden;
+}
+.map-circle-inner {
+  width: 300px; height: 300px; position: absolute; left: 250px; top: 250px;
+  border-radius: 50%; background: #e8e8e8; z-index: 2;
+}
+.map-diag { position: absolute; left: 50%; top: 50%; width: 1132px; height: 2px; background: #ccc; transform-origin: 0 0; }
+.map-diag-1 { transform: rotate(45deg); }
+.map-diag-2 { transform: rotate(-45deg); }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
