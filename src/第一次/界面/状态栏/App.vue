@@ -345,7 +345,7 @@ const busRouteMap = computed(() => {
 
 const metroSegments = computed(() => {
   const segs: { x1: number; y1: number; x2: number; y2: number; color: string; busRoutes: number[]; metroRoutes: number[] }[] = [];
-  const seen = new Map<string, number>();
+  const seen = new Map<string, { start: number; count: number }>();
   const E = (): number[] => [];
   for (let ri = 0; ri < metroRoutes.length; ri++) {
     const route = metroRoutes[ri];
@@ -356,15 +356,15 @@ const metroSegments = computed(() => {
       const x1 = locMap.value[a].x, y1 = locMap.value[a].y;
       const x2 = locMap.value[b].x, y2 = locMap.value[b].y;
       if (seen.has(key)) {
-        const idx = seen.get(key)!;
-        for (let s = idx; s < segs.length && segs[s].x1 === segs[idx].x1 && segs[s].y1 === segs[idx].y1; s++) {
+        const info = seen.get(key)!;
+        for (let s = info.start; s < info.start + info.count; s++) {
           segs[s].metroRoutes.push(ri);
         }
       } else {
         const hasBus = busEdgeSet.value.has(key);
         const hasRoad = roadEdgeSet.value.has(key);
         const busIdx = busRouteMap.value.get(key) || E();
-        seen.set(key, segs.length);
+        const base = segs.length;
         if (hasBus && hasRoad) {
           const dx = (x2 - x1) / 6, dy = (y2 - y1) / 6;
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
@@ -373,20 +373,24 @@ const metroSegments = computed(() => {
           segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
           segs.push({ x1: x1+4*dx, y1: y1+4*dy, x2: x1+5*dx, y2: y1+5*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
           segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', busRoutes: E(), metroRoutes: [ri] });
+          seen.set(key, { start: base, count: 6 });
         } else if (hasBus) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
           segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
           segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
           segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
+          seen.set(key, { start: base, count: 4 });
         } else if (hasRoad) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
           segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: E(), metroRoutes: [ri] });
           segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
           segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: E(), metroRoutes: [ri] });
+          seen.set(key, { start: base, count: 4 });
         } else {
           segs.push({ x1, y1, x2, y2, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
+          seen.set(key, { start: base, count: 1 });
         }
       }
     }
