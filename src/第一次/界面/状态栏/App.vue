@@ -267,7 +267,10 @@
             <svg class="map-bus-lines">
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
-                :stroke="s.color" />
+                :stroke="s.color"
+                :class="{ 'bus-hover': hoveredRoute === s.route, 'bus-dim': hoveredRoute >= 0 && hoveredRoute !== s.route }"
+                @mouseenter="hoveredRoute = s.route"
+                @mouseleave="hoveredRoute = -1" />
             </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
               :style="{ left: l.x + 'px', top: l.y + 'px' }"
@@ -307,6 +310,7 @@ const contactMsg = ref('');
 const mapPos = ref({ x: 0, y: 0 });
 const mapDragging = ref(false);
 const mapDragStart = ref({ x: 0, y: 0 });
+const hoveredRoute = ref(-1);
 
 const locations = [
   { name: '海平大学', x: 474, y: 101 },
@@ -406,9 +410,10 @@ const roadEdgeSet = computed(() => {
 });
 
 const busSegments = computed(() => {
-  const segs: { x1: number; y1: number; x2: number; y2: number; color: string }[] = [];
+  const segs: { x1: number; y1: number; x2: number; y2: number; color: string; route: number }[] = [];
   const seen = new Set<string>();
-  for (const route of busRoutes) {
+  for (let ri = 0; ri < busRoutes.length; ri++) {
+    const route = busRoutes[ri];
     for (let i = 0; i < route.length - 1; i++) {
       const a = route[i], b = route[i + 1];
       if (!locMap.value[a] || !locMap.value[b]) continue;
@@ -419,12 +424,12 @@ const busSegments = computed(() => {
       const x2 = locMap.value[b].x, y2 = locMap.value[b].y;
       if (roadEdgeSet.value.has(key)) {
         const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44' });
-        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444' });
-        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44' });
-        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444' });
+        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', route: ri });
+        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', route: ri });
+        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', route: ri });
+        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', route: ri });
       } else {
-        segs.push({ x1, y1, x2, y2, color: '#d44' });
+        segs.push({ x1, y1, x2, y2, color: '#d44', route: ri });
       }
     }
   }
@@ -906,6 +911,8 @@ const locationLabel = computed(() => {
 .map-road-lines line { stroke: #444; stroke-width: 2; }
 .map-bus-lines { z-index: 3; }
 .map-bus-lines line { stroke-width: 2; }
+.map-bus-lines line.bus-hover { stroke-width: 4; }
+.map-bus-lines line.bus-dim { opacity: 0.2; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
