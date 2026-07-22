@@ -260,7 +260,7 @@
               <line v-for="(e, i) in mapEdges" :key="'r'+i"
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
             </svg>
-            <svg class="map-bus-lines" :style="{ zIndex: hoveredBusRoute >= 0 ? 5 : (hoveredMetroRoute >= 0 ? 1 : 3) }">
+            <svg class="map-bus-lines" :class="{ 'map-on-top': hoveredBusRoute >= 0, 'map-on-bottom': hoveredMetroRoute >= 0 }">
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
@@ -268,7 +268,7 @@
                 @mouseenter="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0])"
                 @mouseleave="hoveredBusRoute = -1" />
             </svg>
-            <svg class="map-metro-lines" :style="{ zIndex: hoveredMetroRoute >= 0 ? 5 : (hoveredBusRoute >= 0 ? 1 : 4) }">
+            <svg class="map-metro-lines" :class="{ 'map-on-top': hoveredMetroRoute >= 0, 'map-on-bottom': hoveredBusRoute >= 0 }">
               <line v-for="(s, i) in metroSegments" :key="'m'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
@@ -991,6 +991,8 @@ const locationLabel = computed(() => {
 .map-metro-lines { z-index: 4; pointer-events: auto; }
 .map-metro-lines line { stroke-width: 2; pointer-events: stroke; }
 .map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 4; }
+.map-on-top { z-index: 5 !important; }
+.map-on-bottom { z-index: 1 !important; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
