@@ -264,8 +264,8 @@
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
-                :class="{ 'bus-hover': hoveredRoute === s.route }"
-                @mouseenter="hoveredRoute = s.route"
+                :class="{ 'bus-hover': s.routes.includes(hoveredRoute) && hoveredRoute >= 0 }"
+                @mouseenter="hoveredRoute = s.routes[0]"
                 @mouseleave="hoveredRoute = -1" />
             </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
@@ -403,26 +403,33 @@ const roadEdgeSet = computed(() => {
 });
 
 const busSegments = computed(() => {
-  const segs: { x1: number; y1: number; x2: number; y2: number; color: string; route: number }[] = [];
-  const seen = new Set<string>();
+  const segs: { x1: number; y1: number; x2: number; y2: number; color: string; routes: number[] }[] = [];
+  const seen = new Map<string, number>(); // key → index in segs
   for (let ri = 0; ri < busRoutes.length; ri++) {
     const route = busRoutes[ri];
     for (let i = 0; i < route.length - 1; i++) {
       const a = route[i], b = route[i + 1];
       if (!locMap.value[a] || !locMap.value[b]) continue;
       const key = [a, b].sort().join('|');
-      if (seen.has(key)) continue;
-      seen.add(key);
       const x1 = locMap.value[a].x, y1 = locMap.value[a].y;
       const x2 = locMap.value[b].x, y2 = locMap.value[b].y;
-      if (roadEdgeSet.value.has(key)) {
+      if (seen.has(key)) {
+        const idx = seen.get(key)!;
+        if (!segs[idx * 4]) segs[idx].routes.push(ri); else {
+          // shared edge already rendered as 4 segments
+          for (let s = 0; s < 4; s++) segs[idx * 4 + s].routes.push(ri);
+        }
+      } else if (roadEdgeSet.value.has(key)) {
+        const base = segs.length;
+        seen.set(key, base / 4);
         const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', route: ri });
-        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', route: ri });
-        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', route: ri });
-        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', route: ri });
+        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', routes: [ri] });
+        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', routes: [ri] });
+        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', routes: [ri] });
+        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', routes: [ri] });
       } else {
-        segs.push({ x1, y1, x2, y2, color: '#d44', route: ri });
+        seen.set(key, segs.length);
+        segs.push({ x1, y1, x2, y2, color: '#d44', routes: [ri] });
       }
     }
   }
