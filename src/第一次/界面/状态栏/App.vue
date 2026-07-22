@@ -265,9 +265,9 @@
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
             </svg>
             <svg class="map-lines map-bus-lines">
-              <line v-for="(e, i) in busEdges" :key="'b'+i"
-                :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2"
-                :class="{ 'bus-shared': e.shared }" />
+              <line v-for="(s, i) in busSegments" :key="'b'+i"
+                :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
+                :stroke="s.color" />
             </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
               :style="{ left: l.x + 'px', top: l.y + 'px' }"
@@ -405,8 +405,8 @@ const roadEdgeSet = computed(() => {
   return s;
 });
 
-const busEdges = computed(() => {
-  const edges: { x1: number; y1: number; x2: number; y2: number; shared: boolean }[] = [];
+const busSegments = computed(() => {
+  const segs: { x1: number; y1: number; x2: number; y2: number; color: string }[] = [];
   const seen = new Set<string>();
   for (const route of busRoutes) {
     for (let i = 0; i < route.length - 1; i++) {
@@ -415,14 +415,20 @@ const busEdges = computed(() => {
       const key = [a, b].sort().join('|');
       if (seen.has(key)) continue;
       seen.add(key);
-      edges.push({
-        x1: locMap.value[a].x, y1: locMap.value[a].y,
-        x2: locMap.value[b].x, y2: locMap.value[b].y,
-        shared: roadEdgeSet.value.has(key)
-      });
+      const x1 = locMap.value[a].x, y1 = locMap.value[a].y;
+      const x2 = locMap.value[b].x, y2 = locMap.value[b].y;
+      if (roadEdgeSet.value.has(key)) {
+        const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
+        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44' });
+        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444' });
+        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44' });
+        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444' });
+      } else {
+        segs.push({ x1, y1, x2, y2, color: '#d44' });
+      }
     }
   }
-  return edges;
+  return segs;
 });
 
 function onMapDragStart(e: MouseEvent) {
@@ -898,8 +904,7 @@ const locationLabel = computed(() => {
 .map-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .map-lines line { stroke: #444; stroke-width: 2; }
 .map-bus-lines { z-index: 3; }
-.map-bus-lines line { stroke: #d44; stroke-width: 3; }
-.map-bus-lines line.bus-shared { stroke-dasharray: 8 6; }
+.map-bus-lines line { stroke-width: 3; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
