@@ -905,7 +905,7 @@ const locationLabel = computed(() => {
 .map-road-lines { z-index: 2; }
 .map-road-lines line { stroke: #444; stroke-width: 2; }
 .map-bus-lines { z-index: 3; }
-.map-bus-lines line { stroke-width: 3; }
+.map-bus-lines line { stroke-width: 2; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
