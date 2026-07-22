@@ -264,17 +264,17 @@
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
-                :class="{ 'bus-hover': s.routes.includes(hoveredRoute) && hoveredRoute >= 0 }"
-                @mouseenter="hoveredRoute = s.routes[0]"
-                @mouseleave="hoveredRoute = -1" />
+                :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0 }"
+                @mouseenter="hoveredBusRoute = s.busRoutes[0]"
+                @mouseleave="hoveredBusRoute = -1" />
             </svg>
             <svg class="map-metro-lines">
               <line v-for="(s, i) in metroSegments" :key="'m'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
-                :class="{ 'metro-hover': s.routes.includes(hoveredRoute) && hoveredRoute >= 0 }"
-                @mouseenter="hoveredRoute = s.routes[0]"
-                @mouseleave="hoveredRoute = -1" />
+                :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0, 'metro-hover': s.metroRoutes.includes(hoveredMetroRoute) && hoveredMetroRoute >= 0 }"
+                @mouseenter="if (s.color === '#d44') hoveredBusRoute = s.busRoutes[0]; else if (s.color === '#4a4') hoveredMetroRoute = s.metroRoutes[0]"
+                @mouseleave="hoveredBusRoute = -1; hoveredMetroRoute = -1" />
             </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
               :style="{ left: l.x + 'px', top: l.y + 'px' }"
@@ -311,7 +311,8 @@ const selectedTask = ref(-1);
 const selectedContact = ref('');
 const contactMsg = ref('');
 
-const hoveredRoute = ref(-1);
+const hoveredBusRoute = ref(-1);
+const hoveredMetroRoute = ref(-1);
 
 const metroRoutes: string[][] = [
   ['海平大学','极乐世界娱乐城','海平湾公共海滩','海滨梦幻游乐园','水云间洗浴中心','远大电子装配厂','工友平价大排档','海平轻纺制造厂','西山半山别墅区','海平市大型体育中心','文轩书店','海平大学'],
@@ -329,9 +330,23 @@ const busEdgeSet = computed(() => {
   return s;
 });
 
+const busRouteMap = computed(() => {
+  const m = new Map<string, number[]>();
+  for (let ri = 0; ri < busRoutes.length; ri++) {
+    const route = busRoutes[ri];
+    for (let i = 0; i < route.length - 1; i++) {
+      const key = [route[i], route[i+1]].sort().join('|');
+      if (!m.has(key)) m.set(key, []);
+      m.get(key)!.push(ri);
+    }
+  }
+  return m;
+});
+
 const metroSegments = computed(() => {
-  const segs: { x1: number; y1: number; x2: number; y2: number; color: string; routes: number[] }[] = [];
+  const segs: { x1: number; y1: number; x2: number; y2: number; color: string; busRoutes: number[]; metroRoutes: number[] }[] = [];
   const seen = new Map<string, number>();
+  const emp: number[] = [];
   for (let ri = 0; ri < metroRoutes.length; ri++) {
     const route = metroRoutes[ri];
     for (let i = 0; i < route.length - 1; i++) {
@@ -343,36 +358,45 @@ const metroSegments = computed(() => {
       if (seen.has(key)) {
         const idx = seen.get(key)!;
         const first = segs[idx];
-        if (first.routes) first.routes.push(ri);
-        else for (let s = idx; s < segs.length && segs[s].x1 === segs[idx].x1; s++) segs[s].routes.push(ri);
+        const n = first.color === '#d44' ? first.busRoutes : first.color === '#4a4' ? first.metroRoutes : emp;
+        n.push(ri);
+        for (let s = idx + 1; s < segs.length && segs[s].x1 === segs[idx].x1 && segs[s].y1 === segs[idx].y1; s++) {
+          const t = segs[s].color === '#d44' ? segs[s].busRoutes : segs[s].color === '#4a4' ? segs[s].metroRoutes : emp;
+          t.push(ri);
+        }
       } else {
         const hasBus = busEdgeSet.value.has(key);
         const hasRoad = roadEdgeSet.value.has(key);
+        const busIdx = busRouteMap.value.get(key) || emp;
         seen.set(key, segs.length);
         if (hasBus && hasRoad) {
           const dx = (x2 - x1) / 6, dy = (y2 - y1) / 6;
-          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', routes: [ri] });
-          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#4a4', routes: [ri] });
-          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#444', routes: [ri] });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', routes: [ri] });
-          segs.push({ x1: x1+4*dx, y1: y1+4*dy, x2: x1+5*dx, y2: y1+5*dy, color: '#4a4', routes: [ri] });
-          segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', routes: [ri] });
+          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: emp });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
+          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#444', busRoutes: emp, metroRoutes: emp });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: emp });
+          segs.push({ x1: x1+4*dx, y1: y1+4*dy, x2: x1+5*dx, y2: y1+5*dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
+          segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', busRoutes: emp, metroRoutes: emp });
         } else if (hasBus) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', routes: [ri] });
-          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#d44', routes: [ri] });
-          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', routes: [ri] });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#d44', routes: [ri] });
+          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: emp });
+          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#d44', busRoutes: [...busIdx], metroRoutes: emp });
         } else if (hasRoad) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', routes: [ri] });
-          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', routes: [ri] });
-          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', routes: [ri] });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', routes: [ri] });
+          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: emp, metroRoutes: emp });
+          segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: emp, metroRoutes: emp });
         } else {
-          segs.push({ x1, y1, x2, y2, color: '#4a4', routes: [ri] });
+          segs.push({ x1, y1, x2, y2, color: '#4a4', busRoutes: emp, metroRoutes: [ri] });
         }
       }
+    }
+  }
+  return segs;
+});
     }
   }
   return segs;
@@ -476,8 +500,8 @@ const roadEdgeSet = computed(() => {
 });
 
 const busSegments = computed(() => {
-  const segs: { x1: number; y1: number; x2: number; y2: number; color: string; routes: number[] }[] = [];
-  const seen = new Map<string, number>(); // key → index in segs
+  const segs: { x1: number; y1: number; x2: number; y2: number; color: string; busRoutes: number[]; metroRoutes: number[] }[] = [];
+  const seen = new Map<string, number>();
   for (let ri = 0; ri < busRoutes.length; ri++) {
     const route = busRoutes[ri];
     for (let i = 0; i < route.length - 1; i++) {
@@ -488,21 +512,22 @@ const busSegments = computed(() => {
       const x2 = locMap.value[b].x, y2 = locMap.value[b].y;
       if (seen.has(key)) {
         const idx = seen.get(key)!;
-        if (!segs[idx * 4]) segs[idx].routes.push(ri); else {
-          // shared edge already rendered as 4 segments
-          for (let s = 0; s < 4; s++) segs[idx * 4 + s].routes.push(ri);
+        if (roadEdgeSet.value.has(key)) {
+          for (let s = 0; s < 4; s++) segs[idx * 4 + s].busRoutes.push(ri);
+        } else {
+          segs[idx].busRoutes.push(ri);
         }
       } else if (roadEdgeSet.value.has(key)) {
         const base = segs.length;
         seen.set(key, base / 4);
         const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', routes: [ri] });
-        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', routes: [ri] });
-        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', routes: [ri] });
-        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', routes: [ri] });
+        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [ri], metroRoutes: [] });
+        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [ri], metroRoutes: [] });
+        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [ri], metroRoutes: [] });
+        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: [ri], metroRoutes: [] });
       } else {
         seen.set(key, segs.length);
-        segs.push({ x1, y1, x2, y2, color: '#d44', routes: [ri] });
+        segs.push({ x1, y1, x2, y2, color: '#d44', busRoutes: [ri], metroRoutes: [] });
       }
     }
   }
@@ -964,7 +989,7 @@ const locationLabel = computed(() => {
 .map-road-lines line { stroke: #444; stroke-width: 2; }
 .map-bus-lines { z-index: 3; pointer-events: auto; }
 .map-bus-lines line { stroke-width: 2; pointer-events: stroke; }
-.map-bus-lines line.bus-hover { stroke: #d44 !important; stroke-width: 4; }
+.map-bus-lines line.bus-hover, .map-metro-lines line.bus-hover { stroke: #d44 !important; stroke-width: 4; }
 .map-metro-lines { z-index: 4; pointer-events: auto; }
 .map-metro-lines line { stroke-width: 2; pointer-events: stroke; }
 .map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 4; }
