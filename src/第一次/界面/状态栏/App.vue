@@ -264,7 +264,7 @@
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
-                :class="{ 'bus-hover': hoveredRoute === s.route, 'bus-dim': hoveredRoute >= 0 && hoveredRoute !== s.route }"
+                :class="{ 'bus-hover': hoveredRoute === s.route }"
                 @mouseenter="hoveredRoute = s.route"
                 @mouseleave="hoveredRoute = -1" />
             </svg>
@@ -884,8 +884,7 @@ const locationLabel = computed(() => {
 .map-road-lines line { stroke: #444; stroke-width: 2; }
 .map-bus-lines { z-index: 3; pointer-events: auto; }
 .map-bus-lines line { stroke-width: 2; pointer-events: stroke; }
-.map-bus-lines line.bus-hover { stroke-width: 4; }
-.map-bus-lines line.bus-dim { opacity: 0.2; }
+.map-bus-lines line.bus-hover { stroke: #d44 !important; stroke-width: 4; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
