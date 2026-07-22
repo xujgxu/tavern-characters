@@ -249,9 +249,6 @@
       </div>
 
       <div class="tab-content map-layout" v-else-if="activeTab === 'map'">
-        <div class="map-wrapper">
-          地图 — 待开发
-        </div>
       </div>
 
       <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app' && activeTab !== 'contacts' && activeTab !== 'clothes' && activeTab !== 'map'">
