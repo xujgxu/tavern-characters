@@ -527,9 +527,26 @@ const roadEdgeSet = computed(() => {
 const busSegments = computed(() => {
   const segs: { x1: number; y1: number; x2: number; y2: number; color: string; busRoutes: number[]; metroRoutes: number[]; triggerRoute: number }[] = [];
   const seen = new Map<string, number>();
-  const triggerOverrides: Record<string, Record<number, number>> = {
-    '文轩书店|海平大学': { 3: 2, 0: 0 },
-  };
+  const edgeRoutes = new Map<string, number[]>();
+  const routeCentroidX = busRoutes.map(route => {
+    let sx = 0, n = 0;
+    for (const name of route) { const l = locMap.value[name]; if (l) { sx += l.x; n++; } }
+    return n ? sx / n : 0;
+  });
+  for (let ri = 0; ri < busRoutes.length; ri++) {
+    const route = busRoutes[ri];
+    for (let i = 0; i < route.length - 1; i++) {
+      const a = route[i], b = route[i + 1];
+      if (!locMap.value[a] || !locMap.value[b]) continue;
+      const key = [a, b].sort().join('|');
+      if (!edgeRoutes.has(key)) edgeRoutes.set(key, []);
+      const er = edgeRoutes.get(key)!;
+      if (!er.includes(ri)) er.push(ri);
+    }
+  }
+  for (const [key, routes] of edgeRoutes) {
+    routes.sort((ra, rb) => routeCentroidX[ra] - routeCentroidX[rb]);
+  }
   for (let ri = 0; ri < busRoutes.length; ri++) {
     const route = busRoutes[ri];
     for (let i = 0; i < route.length - 1; i++) {
@@ -538,30 +555,19 @@ const busSegments = computed(() => {
       const key = [a, b].sort().join('|');
       const x1 = locMap.value[a].x, y1 = locMap.value[a].y;
       const x2 = locMap.value[b].x, y2 = locMap.value[b].y;
-      if (seen.has(key)) {
-        const idx = seen.get(key)!;
-        if (roadEdgeSet.value.has(key)) {
-          for (let s = 0; s < 4; s++) segs[idx * 4 + s].busRoutes.push(ri);
-          const ov = triggerOverrides[key];
-          if (ov && ri in ov) segs[idx * 4 + ov[ri]].triggerRoute = ri;
-          else if (segs[idx * 4 + 2].triggerRoute < 0) segs[idx * 4 + 2].triggerRoute = ri;
-        } else {
-          segs[idx].busRoutes.push(ri);
-        }
-      } else if (roadEdgeSet.value.has(key)) {
+      if (seen.has(key)) continue;
+      const er = edgeRoutes.get(key)!;
+      if (roadEdgeSet.value.has(key)) {
         const base = segs.length;
         seen.set(key, base / 4);
         const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
-        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
-        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
-        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
-        const ov = triggerOverrides[key];
-        if (ov && ri in ov) segs[base + ov[ri]].triggerRoute = ri;
-        else segs[base].triggerRoute = ri;
+        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...er], metroRoutes: [], triggerRoute: er.length > 1 ? er[0] : er[0] ?? -1 });
+        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [...er], metroRoutes: [], triggerRoute: -1 });
+        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [...er], metroRoutes: [], triggerRoute: er.length > 1 ? er[1] : -1 });
+        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: [...er], metroRoutes: [], triggerRoute: -1 });
       } else {
         seen.set(key, segs.length);
-        segs.push({ x1, y1, x2, y2, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: ri });
+        segs.push({ x1, y1, x2, y2, color: '#d44', busRoutes: [...er], metroRoutes: [], triggerRoute: er[0] ?? -1 });
       }
     }
   }
