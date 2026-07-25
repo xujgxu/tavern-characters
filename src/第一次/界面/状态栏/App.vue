@@ -551,12 +551,30 @@ function labelStyle(l: { name: string; x: number; y: number }) {
     style.left = '10px';
     style.right = 'auto';
   }
-  if (l.name === '西山半山别墅区') style.top = '-2px';
-  if (l.name === '远大电子装配厂') style.top = '-10px';
-  if (l.name === '海平湾公共海滩') style.top = '4px';
-  if (l.name === '海滨梦幻游乐园') style.top = '-2px';
-  if (l.name === '极乐世界娱乐城') style.top = '2px';
-  if (l.name === '海平市大型体育中心') style.top = '4px';
+  const adj: Record<string, [number, number]> = {
+    '工友平价大排档': [-50, 20],
+    '南区综合枢纽建设工地': [-70, 20],
+    '远大电子装配厂': [0, 6],
+    '远洋环球物流仓储中心': [0, 6],
+    '水云间洗浴中心': [0, 4],
+    '海平中学': [3, 2],
+    '文轩书店': [-25, -5],
+    '万家综合超市': [3, -2],
+    'CBD跨国金融中心': [-100, -5],
+    '海平洲际大酒店': [0, 7],
+    '海平人民医院': [-45, 13],
+    '蓝领劳务大市场': [0, -3],
+  };
+  const a = adj[l.name];
+  if (a) {
+    if (nearRight) {
+      style.right = (10 - a[0]) + 'px';
+      style.top = (-6 + a[1]) + 'px';
+    } else {
+      style.left = (10 + a[0]) + 'px';
+      style.top = (-6 + a[1]) + 'px';
+    }
+  }
   return style;
 }
 
