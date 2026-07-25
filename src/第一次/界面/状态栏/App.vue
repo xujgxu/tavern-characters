@@ -260,7 +260,7 @@
               <line v-for="(e, i) in mapEdges" :key="'r'+i"
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
             </svg>
-            <svg class="map-bus-lines">
+            <svg class="map-bus-lines" :style="{ zIndex: hoveredBusRoute >= 0 ? 5 : (hoveredMetroRoute >= 0 ? 1 : 3) }">
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
@@ -268,7 +268,7 @@
                 @mouseenter.prevent="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0], hoveredMetroRoute = -1)"
                 @mouseleave="hoveredBusRoute = -1" />
             </svg>
-            <svg class="map-metro-lines">
+            <svg class="map-metro-lines" :style="{ zIndex: hoveredMetroRoute >= 0 ? 5 : (hoveredBusRoute >= 0 ? 1 : 4) }">
               <line v-for="(s, i) in metroSegments" :key="'m'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
@@ -367,10 +367,10 @@ const metroSegments = computed(() => {
         const base = segs.length;
         if (hasBus && hasRoad) {
           const dx = (x2 - x1) / 6, dy = (y2 - y1) / 6;
-          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
+          segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri] });
           segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
           segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#444', busRoutes: E(), metroRoutes: [ri] });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri] });
           segs.push({ x1: x1+4*dx, y1: y1+4*dy, x2: x1+5*dx, y2: y1+5*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
           segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', busRoutes: E(), metroRoutes: [ri] });
           seen.set(key, { start: base, count: 6 });
