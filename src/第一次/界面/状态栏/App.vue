@@ -404,7 +404,7 @@ const metroSegments = computed(() => {
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri], triggerRoute: busIdx[0] });
           segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#4a4', busRoutes: [...busIdx], metroRoutes: [ri] });
           segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#444', busRoutes: [...busIdx], metroRoutes: [ri] });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri], triggerRoute: busIdx.length > 1 ? busIdx[1] : undefined });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2: x1+4*dx, y2: y1+4*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri], triggerRoute: busIdx[1] ?? busIdx[0] });
           segs.push({ x1: x1+4*dx, y1: y1+4*dy, x2: x1+5*dx, y2: y1+5*dy, color: '#4a4', busRoutes: [...busIdx], metroRoutes: [ri] });
           segs.push({ x1: x1+5*dx, y1: y1+5*dy, x2, y2, color: '#444', busRoutes: [...busIdx], metroRoutes: [ri] });
           seen.set(key, { start: base, count: 6 });
@@ -413,7 +413,7 @@ const metroSegments = computed(() => {
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: [...busIdx], metroRoutes: [ri] });
           segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri], triggerRoute: busIdx[0] });
           segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: [...busIdx], metroRoutes: [ri] });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri], triggerRoute: busIdx.length > 1 ? busIdx[1] : undefined });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri], triggerRoute: busIdx[1] ?? busIdx[0] });
           seen.set(key, { start: base, count: 4 });
         } else if (hasRoad) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
@@ -604,13 +604,13 @@ const busSegments = computed(() => {
         const base = segs.length;
         seen.set(key, base / 4);
         const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...er], metroRoutes: [], triggerRoute: er.length > 1 ? er[0] : er[0] ?? -1 });
+        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...er], metroRoutes: [], triggerRoute: er[0] });
         segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [...er], metroRoutes: [], triggerRoute: -1 });
-        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [...er], metroRoutes: [], triggerRoute: er.length > 1 ? er[1] : -1 });
+        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [...er], metroRoutes: [], triggerRoute: er[1] ?? er[0] });
         segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: [...er], metroRoutes: [], triggerRoute: -1 });
       } else {
         seen.set(key, segs.length);
-        segs.push({ x1, y1, x2, y2, color: '#d44', busRoutes: [...er], metroRoutes: [], triggerRoute: er[0] ?? -1 });
+        segs.push({ x1, y1, x2, y2, color: '#d44', busRoutes: [...er], metroRoutes: [], triggerRoute: er[0] });
       }
     }
   }
