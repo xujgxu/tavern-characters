@@ -1192,7 +1192,6 @@ const currentRoadEdge = computed(() => {
 .map-diag-1 { transform: translate(-50%, -50%) rotate(45deg); }
 .map-diag-2 { transform: translate(-50%, -50%) rotate(-45deg); }
 .map-dot { position: absolute; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px; border-radius: 50%; background: #444; border: 1px solid #222; z-index: 3; cursor: pointer; }
-.map-dot:hover { background: #000; transform: scale(1.5); }
 .map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; pointer-events: none; line-height: 1.2; }
 .map-road-lines, .map-bus-lines, .map-metro-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .map-road-lines { z-index: 2; }
@@ -1207,8 +1206,8 @@ const currentRoadEdge = computed(() => {
 .map-highlight-lines line { stroke-width: 6; }
 .map-breathe-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; }
 .map-breathe-lines line { stroke: #f8a; stroke-width: 3; opacity: 0.7; animation: breathe-glow 1.5s ease-in-out infinite; }
-.map-dot.breathing { animation: breathe-pulse 1.5s ease-in-out infinite; }
-.map-dot.breathing::after { content: ''; position: absolute; width: 28px; height: 28px; left: -10px; top: -10px; border-radius: 50%; border: 2px solid #f8a; background: rgba(255,136,170,0.2); animation: breathe-ring 1.5s ease-in-out infinite; }
+.map-dot.breathing { z-index: 4; animation: breathe-pulse 1.5s ease-in-out infinite; }
+.map-dot.breathing::after { content: ''; position: absolute; width: 28px; height: 28px; left: -10px; top: -10px; border-radius: 50%; border: 2px solid #f8a; background: rgba(255,136,170,0.2); z-index: -1; animation: breathe-ring 1.5s ease-in-out infinite; }
 @keyframes breathe-glow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.9; } }
 @keyframes breathe-pulse { 0%, 100% { box-shadow: 0 0 4px 2px rgba(255,136,170,0.3); } 50% { box-shadow: 0 0 12px 6px rgba(255,136,170,0.7); } }
 @keyframes breathe-ring { 0%, 100% { transform: scale(0.6); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.15; } }
