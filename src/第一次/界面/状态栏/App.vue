@@ -408,8 +408,9 @@ const metroSegments = computed(() => {
         const hasBus = busEdgeSet.value.has(key);
         const hasRoad = roadEdgeSet.value.has(key);
         const busIdx = (busRouteMap.value.get(key) || []).slice().sort((ra, rb) => {
-          const dx = x2 - x1, dy = y2 - y1;
-          if (Math.abs(dy) > Math.abs(dx)) return (busCentroidY[ra] ?? 0) - (busCentroidY[rb] ?? 0);
+          const yd = Math.abs((busCentroidY[ra] ?? 0) - (busCentroidY[rb] ?? 0));
+          const xd = Math.abs((busCentroidX[ra] ?? 0) - (busCentroidX[rb] ?? 0));
+          if (yd > xd) return (busCentroidY[ra] ?? 0) - (busCentroidY[rb] ?? 0);
           return (busCentroidX[ra] ?? 0) - (busCentroidX[rb] ?? 0);
         });
         const base = segs.length;
@@ -610,13 +611,15 @@ const busSegments = computed(() => {
   }
   for (const [key, routes] of edgeRoutes) {
     if (edgeHasMetro.value.has(key)) continue;
-    const [a, b] = key.split('|');
-    const pa = locMap.value[a], pb = locMap.value[b];
-    if (pa && pb) {
-      const ex = pb.x - pa.x, ey = pb.y - pa.y;
-      const useY = Math.abs(ey) > Math.abs(ex);
-      routes.sort((ra, rb) => useY ? (routeCentroidY[ra] ?? 0) - (routeCentroidY[rb] ?? 0) : (routeCentroidX[ra] ?? 0) - (routeCentroidX[rb] ?? 0));
+    if (routes.length <= 1) continue;
+    let xMin = Infinity, xMax = -Infinity, yMin = Infinity, yMax = -Infinity;
+    for (const r of routes) {
+      const cx = routeCentroidX[r] ?? 0, cy = routeCentroidY[r] ?? 0;
+      if (cx < xMin) xMin = cx; if (cx > xMax) xMax = cx;
+      if (cy < yMin) yMin = cy; if (cy > yMax) yMax = cy;
     }
+    const useY = (yMax - yMin) > (xMax - xMin);
+    routes.sort((ra, rb) => useY ? (routeCentroidY[ra] ?? 0) - (routeCentroidY[rb] ?? 0) : (routeCentroidX[ra] ?? 0) - (routeCentroidX[rb] ?? 0));
   }
   for (let ri = 0; ri < busRoutes.length; ri++) {
     const route = busRoutes[ri];
