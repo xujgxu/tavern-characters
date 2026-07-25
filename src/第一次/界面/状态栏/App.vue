@@ -279,7 +279,7 @@
             <div class="map-dot" v-for="l in locations" :key="l.name"
               :style="{ left: l.x + 'px', top: l.y + 'px' }"
               :title="l.name">
-              <span class="map-dot-label">{{ l.name }}</span>
+              <span class="map-dot-label" :style="labelStyle(l)">{{ l.name }}</span>
             </div>
           </div>
         </div>
@@ -538,6 +538,26 @@ function onMetroSegEnter(s: { busRoutes: number[]; metroRoutes: number[] }) {
     hoveredMetroRoute.value = s.metroRoutes[0];
     hoveredBusRoute.value = -1;
   }
+}
+
+function labelStyle(l: { name: string; x: number; y: number }) {
+  const nearRight = l.x > 700;
+  const style: Record<string, string> = {};
+  if (nearRight) {
+    style.right = '10px';
+    style.left = 'auto';
+    style.textAlign = 'right';
+  } else {
+    style.left = '10px';
+    style.right = 'auto';
+  }
+  if (l.name === '西山半山别墅区') style.top = '-2px';
+  if (l.name === '远大电子装配厂') style.top = '-10px';
+  if (l.name === '海平湾公共海滩') style.top = '4px';
+  if (l.name === '海滨梦幻游乐园') style.top = '-2px';
+  if (l.name === '极乐世界娱乐城') style.top = '2px';
+  if (l.name === '海平市大型体育中心') style.top = '4px';
+  return style;
 }
 
 function composeAndSend() {
@@ -989,7 +1009,7 @@ const locationLabel = computed(() => {
 .map-diag-2 { transform: translate(-50%, -50%) rotate(-45deg); }
 .map-dot { position: absolute; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px; border-radius: 50%; background: #444; border: 1px solid #222; z-index: 3; cursor: pointer; }
 .map-dot:hover { background: #000; transform: scale(1.5); }
-.map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; pointer-events: none; }
+.map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; pointer-events: none; line-height: 1.2; }
 .map-road-lines, .map-bus-lines, .map-metro-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .map-road-lines { z-index: 2; }
 .map-road-lines line { stroke: #444; stroke-width: 2; }
