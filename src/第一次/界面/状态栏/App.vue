@@ -260,7 +260,7 @@
               <line v-for="(e, i) in mapEdges" :key="'r'+i"
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
             </svg>
-            <svg class="map-bus-lines" :style="busZIndex">
+            <svg class="map-bus-lines">
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
@@ -268,7 +268,7 @@
                 @mouseenter.prevent="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0], hoveredMetroRoute = -1)"
                 @mouseleave="hoveredBusRoute = -1" />
             </svg>
-            <svg class="map-metro-lines" :style="metroZIndex">
+            <svg class="map-metro-lines">
               <line v-for="(s, i) in metroSegments" :key="'m'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
@@ -313,8 +313,6 @@ const contactMsg = ref('');
 
 const hoveredBusRoute = ref(-1);
 const hoveredMetroRoute = ref(-1);
-const busZIndex = computed(() => ({ zIndex: hoveredBusRoute.value >= 0 ? 5 : (hoveredMetroRoute.value >= 0 ? 1 : 3) }));
-const metroZIndex = computed(() => ({ zIndex: hoveredMetroRoute.value >= 0 ? 5 : (hoveredBusRoute.value >= 0 ? 1 : 4) }));
 
 const metroRoutes: string[][] = [
   ['海平大学','极乐世界娱乐城','海平湾公共海滩','海滨梦幻游乐园','水云间洗浴中心','远大电子装配厂','工友平价大排档','海平轻纺制造厂','西山半山别墅区','海平市大型体育中心','文轩书店','海平大学'],
