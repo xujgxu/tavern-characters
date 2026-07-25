@@ -265,7 +265,7 @@
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
                 :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0 }"
-                @mouseenter.prevent="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0], hoveredMetroRoute = -1)"
+                @mouseenter.prevent="s.color === '#d44' && s.triggerRoute >= 0 && (hoveredBusRoute = s.triggerRoute, hoveredMetroRoute = -1)"
                 @mouseleave="hoveredBusRoute = -1" />
             </svg>
             <svg class="map-metro-lines">
@@ -538,9 +538,8 @@ const busSegments = computed(() => {
       if (seen.has(key)) {
         const idx = seen.get(key)!;
         if (roadEdgeSet.value.has(key)) {
-          if (!segs[idx * 4 + 2].busRoutes.includes(ri)) segs[idx * 4 + 2].busRoutes.push(ri);
-          segs[idx * 4 + 1].busRoutes.push(ri);
-          segs[idx * 4 + 3].busRoutes.push(ri);
+          for (let s = 0; s < 4; s++) segs[idx * 4 + s].busRoutes.push(ri);
+          if (segs[idx * 4 + 2].triggerRoute < 0) segs[idx * 4 + 2].triggerRoute = ri;
         } else {
           segs[idx].busRoutes.push(ri);
         }
@@ -548,22 +547,22 @@ const busSegments = computed(() => {
         const base = segs.length;
         seen.set(key, base / 4);
         const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [ri], metroRoutes: [] });
-        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [ri], metroRoutes: [] });
-        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [], metroRoutes: [] });
-        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: [ri], metroRoutes: [] });
+        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: ri });
+        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
+        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
+        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
       } else {
         seen.set(key, segs.length);
-        segs.push({ x1, y1, x2, y2, color: '#d44', busRoutes: [ri], metroRoutes: [] });
+        segs.push({ x1, y1, x2, y2, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: ri });
       }
     }
   }
   return segs;
 });
 
-function onMetroSegEnter(s: { busRoutes: number[]; metroRoutes: number[] }) {
+function onMetroSegEnter(s: { busRoutes: number[]; metroRoutes: number[]; triggerRoute?: number }) {
   if (s.busRoutes.length) {
-    hoveredBusRoute.value = s.busRoutes[0];
+    hoveredBusRoute.value = s.triggerRoute ?? s.busRoutes[0];
     hoveredMetroRoute.value = -1;
   } else if (s.metroRoutes.length) {
     hoveredMetroRoute.value = s.metroRoutes[0];
