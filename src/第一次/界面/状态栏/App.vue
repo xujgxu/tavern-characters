@@ -509,7 +509,7 @@ const busSegments = computed(() => {
       if (seen.has(key)) {
         const idx = seen.get(key)!;
         if (roadEdgeSet.value.has(key)) {
-          const reds = [idx, idx + 2];
+          const reds = [idx * 4, idx * 4 + 2];
           for (const p of reds) {
             if (!segs[p].busRoutes.includes(ri)) { segs[p].busRoutes.push(ri); break; }
           }
