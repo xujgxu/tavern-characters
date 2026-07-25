@@ -260,15 +260,15 @@
               <line v-for="(e, i) in mapEdges" :key="'r'+i"
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
             </svg>
-            <svg class="map-bus-lines" :style="{ zIndex: hoveredBusRoute >= 0 ? 5 : (hoveredMetroRoute >= 0 ? 1 : 3) }">
+            <svg class="map-bus-lines">
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
-                :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0 }"
+                :class="{ 'bus-hover': s.color === '#d44' && s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0 }"
                 @mouseenter.prevent="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0], hoveredMetroRoute = -1)"
                 @mouseleave="hoveredBusRoute = -1" />
             </svg>
-            <svg class="map-metro-lines" :style="{ zIndex: hoveredMetroRoute >= 0 ? 5 : (hoveredBusRoute >= 0 ? 1 : 4) }">
+            <svg class="map-metro-lines">
               <line v-for="(s, i) in metroSegments" :key="'m'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
