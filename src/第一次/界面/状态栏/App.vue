@@ -1206,7 +1206,7 @@ const currentRoadEdge = computed(() => {
 .map-highlight-lines line { stroke-width: 6; }
 .map-breathe-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; }
 .map-breathe-lines line { stroke: #f8a; stroke-width: 3; opacity: 0.7; animation: breathe-glow 1.5s ease-in-out infinite; }
-.map-dot.breathing { z-index: 4; animation: breathe-pulse 1.5s ease-in-out infinite; }
+.map-dot.breathing { z-index: 4; background: #f8a; border-color: #d67; animation: breathe-pulse 1.5s ease-in-out infinite; }
 .map-dot.breathing::after { content: ''; position: absolute; width: 28px; height: 28px; left: -10px; top: -10px; border-radius: 50%; border: 2px solid #f8a; background: rgba(255,136,170,0.2); z-index: -1; animation: breathe-ring 1.5s ease-in-out infinite; }
 @keyframes breathe-glow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.9; } }
 @keyframes breathe-pulse { 0%, 100% { box-shadow: 0 0 4px 2px rgba(255,136,170,0.3); } 50% { box-shadow: 0 0 12px 6px rgba(255,136,170,0.7); } }
