@@ -256,6 +256,11 @@
               <div class="map-diag map-diag-2"></div>
             </div>
             <div class="map-circle-inner"></div>
+            <div class="map-legend">
+              <div class="map-legend-item"><span class="map-legend-line" style="background:#444"></span>道路</div>
+              <div class="map-legend-item"><span class="map-legend-line" style="background:#d44"></span>公交</div>
+              <div class="map-legend-item"><span class="map-legend-line" style="background:#4a4"></span>地铁</div>
+            </div>
             <svg class="map-road-lines">
               <line v-for="(e, i) in roadEdges" :key="'r'+i"
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
@@ -292,13 +297,8 @@
 
       <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app' && activeTab !== 'contacts' && activeTab !== 'clothes' && activeTab !== 'map'">
         <div class="placeholder-text">{{ activeTabName }} — 待开发</div>
-          </div>
-          <div class="map-legend">
-            <div class="map-legend-item"><span class="map-legend-line" style="background:#444"></span>道路</div>
-            <div class="map-legend-item"><span class="map-legend-line" style="background:#d44"></span>公交</div>
-            <div class="map-legend-item"><span class="map-legend-line" style="background:#4a4"></span>地铁</div>
-          </div>
-        </div>
+      </div>
+    </div>
   </div>
 </template>
 
