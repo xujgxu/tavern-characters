@@ -386,6 +386,11 @@ const metroSegments = computed(() => {
     for (const name of route) { const l = locMap.value[name]; if (l) { sx += l.x; n++; } }
     return n ? sx / n : 0;
   });
+  const busCentroidY = busRoutes.map(route => {
+    let sy = 0, n = 0;
+    for (const name of route) { const l = locMap.value[name]; if (l) { sy += l.y; n++; } }
+    return n ? sy / n : 0;
+  });
   for (let ri = 0; ri < metroRoutes.length; ri++) {
     const route = metroRoutes[ri];
     for (let i = 0; i < route.length - 1; i++) {
@@ -402,7 +407,11 @@ const metroSegments = computed(() => {
       } else {
         const hasBus = busEdgeSet.value.has(key);
         const hasRoad = roadEdgeSet.value.has(key);
-        const busIdx = (busRouteMap.value.get(key) || []).slice().sort((ra, rb) => busCentroidX[ra] - busCentroidX[rb]);
+        const busIdx = (busRouteMap.value.get(key) || []).slice().sort((ra, rb) => {
+          const dx = x2 - x1, dy = y2 - y1;
+          if (Math.abs(dy) > Math.abs(dx)) return (busCentroidY[ra] ?? 0) - (busCentroidY[rb] ?? 0);
+          return (busCentroidX[ra] ?? 0) - (busCentroidX[rb] ?? 0);
+        });
         const base = segs.length;
         if (hasBus && hasRoad) {
           const dx = (x2 - x1) / 6, dy = (y2 - y1) / 6;
@@ -581,6 +590,11 @@ const busSegments = computed(() => {
     for (const name of route) { const l = locMap.value[name]; if (l) { sx += l.x; n++; } }
     return n ? sx / n : 0;
   });
+  const routeCentroidY = busRoutes.map(route => {
+    let sy = 0, n = 0;
+    for (const name of route) { const l = locMap.value[name]; if (l) { sy += l.y; n++; } }
+    return n ? sy / n : 0;
+  });
   for (let ri = 0; ri < busRoutes.length; ri++) {
     const route = busRoutes[ri];
     for (let i = 0; i < route.length - 1; i++) {
@@ -594,7 +608,13 @@ const busSegments = computed(() => {
   }
   for (const [key, routes] of edgeRoutes) {
     if (edgeHasMetro.value.has(key)) continue;
-    routes.sort((ra, rb) => routeCentroidX[ra] - routeCentroidX[rb]);
+    const [a, b] = key.split('|');
+    const pa = locMap.value[a], pb = locMap.value[b];
+    if (pa && pb) {
+      const ex = pb.x - pa.x, ey = pb.y - pa.y;
+      const useY = Math.abs(ey) > Math.abs(ex);
+      routes.sort((ra, rb) => useY ? (routeCentroidY[ra] ?? 0) - (routeCentroidY[rb] ?? 0) : (routeCentroidX[ra] ?? 0) - (routeCentroidX[rb] ?? 0));
+    }
   }
   for (let ri = 0; ri < busRoutes.length; ri++) {
     const route = busRoutes[ri];
