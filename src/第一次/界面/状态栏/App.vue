@@ -527,8 +527,8 @@ const roadEdgeSet = computed(() => {
 const busSegments = computed(() => {
   const segs: { x1: number; y1: number; x2: number; y2: number; color: string; busRoutes: number[]; metroRoutes: number[]; triggerRoute: number }[] = [];
   const seen = new Map<string, number>();
-  const triggerOverrides: Record<string, [number, number]> = {
-    '海平大学|文轩书店': [3, 0],
+  const triggerOverrides: Record<string, Record<number, number>> = {
+    '海平大学|文轩书店': { 3: 0, 0: 2 },
   };
   for (let ri = 0; ri < busRoutes.length; ri++) {
     const route = busRoutes[ri];
@@ -542,7 +542,9 @@ const busSegments = computed(() => {
         const idx = seen.get(key)!;
         if (roadEdgeSet.value.has(key)) {
           for (let s = 0; s < 4; s++) segs[idx * 4 + s].busRoutes.push(ri);
-          if (segs[idx * 4 + 2].triggerRoute < 0) segs[idx * 4 + 2].triggerRoute = ri;
+          const ov = triggerOverrides[key];
+          if (ov && ri in ov) segs[idx * 4 + ov[ri]].triggerRoute = ri;
+          else if (segs[idx * 4 + 2].triggerRoute < 0) segs[idx * 4 + 2].triggerRoute = ri;
         } else {
           segs[idx].busRoutes.push(ri);
         }
@@ -550,11 +552,13 @@ const busSegments = computed(() => {
         const base = segs.length;
         seen.set(key, base / 4);
         const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-        const ov = triggerOverrides[key];
-        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: ov ? ov[0] : ri });
+        segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
         segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
-        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: ov ? ov[1] : -1 });
+        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
         segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: [ri], metroRoutes: [], triggerRoute: -1 });
+        const ov = triggerOverrides[key];
+        if (ov && ri in ov) segs[base + ov[ri]].triggerRoute = ri;
+        else segs[base].triggerRoute = ri;
       } else {
         seen.set(key, segs.length);
         segs.push({ x1, y1, x2, y2, color: '#d44', busRoutes: [ri], metroRoutes: [], triggerRoute: ri });
