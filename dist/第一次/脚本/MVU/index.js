@@ -1,1 +1,2 @@
-import'https://testingcf.jsdelivr.net/gh/MagicalAstrogy/MagVarUpdate/artifact/bundle.js';
+import'https://testingcf.jsdelivr.net/gh/MagicalAstrogy/MagVarUpdate/artifact/bundle.js';import*as t from'https://testingcf.jsdelivr.net/npm/第一次/+esm';var r={749(){},377(r){r.exports=t}};const s={};function e(t){const o=s[t];if(void 0!==o)return o.exports;const n=s[t]={exports:{}};return r[t](n,n.exports,e),n.exports}e(749);e(377);
+//# sourceMappingURL=index.js.map
