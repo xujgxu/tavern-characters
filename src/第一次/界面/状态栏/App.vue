@@ -300,7 +300,25 @@
         </div>
       </div>
 
-      <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app' && activeTab !== 'contacts' && activeTab !== 'clothes' && activeTab !== 'map'">
+      <div class="tab-content schedule-layout" v-else-if="activeTab === 'schedule'">
+        <div class="schedule-list">
+          <div class="schedule-card" v-for="(event, i) in sortedSchedules" :key="i"
+            :class="{ expanded: expandedSchedule === i }"
+            @click="expandedSchedule = expandedSchedule === i ? -1 : i">
+            <div class="schedule-header">
+              <span class="schedule-name">{{ event.名称 }}</span>
+              <span class="schedule-time">{{ event.日期 }}{{ event.时间 ? ' ' + event.时间 : '' }}</span>
+            </div>
+            <div class="schedule-loc" v-if="event.地点">{{ event.地点 }}</div>
+            <div class="schedule-body" v-if="expandedSchedule === i">
+              <div class="schedule-content">{{ event.内容 }}</div>
+            </div>
+          </div>
+          <div class="empty-state" v-if="!sortedSchedules.length">暂无日程</div>
+        </div>
+      </div>
+
+      <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app' && activeTab !== 'contacts' && activeTab !== 'clothes' && activeTab !== 'map' && activeTab !== 'schedule'">
         <div class="placeholder-text">{{ activeTabName }} — 待开发</div>
       </div>
     </div>
@@ -325,6 +343,33 @@ const activeTab = ref('basic');
 const selectedTask = ref(-1);
 const selectedContact = ref('');
 const contactMsg = ref('');
+const expandedSchedule = ref(-1);
+
+interface ScheduleEvent {
+  名称: string;
+  日期: string;
+  时间?: string;
+  地点?: string;
+  内容: string;
+}
+
+const schedules = ref<ScheduleEvent[]>([
+  {
+    名称: '开学报到',
+    日期: '2024-09-01',
+    时间: '8:00-17:00',
+    地点: '海平大学行政楼',
+    内容: '今天是大学开学的第一天，请前往海平大学行政楼进行新生报到注册。需携带身份证、录取通知书、高考准考证等材料。报到后将领取校园卡、宿舍钥匙和新生入学指南。宿舍安排在绿洲景苑小区旁的大学城学生公寓区。',
+  },
+]);
+
+const sortedSchedules = computed(() => {
+  return [...schedules.value].sort((a, b) => {
+    const da = a.日期.replace(/-/g, '') + (a.时间?.split('-')[0]?.replace(':', '') || '0000');
+    const db = b.日期.replace(/-/g, '') + (b.时间?.split('-')[0]?.replace(':', '') || '0000');
+    return da.localeCompare(db);
+  });
+});
 
 const hoveredBusRoute = ref(-1);
 const hoveredMetroRoute = ref(-1);
@@ -1211,6 +1256,17 @@ const currentRoadEdge = computed(() => {
 @keyframes breathe-glow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.9; } }
 @keyframes breathe-pulse { 0%, 100% { box-shadow: 0 0 4px 2px rgba(255,136,170,0.3); } 50% { box-shadow: 0 0 12px 6px rgba(255,136,170,0.7); } }
 @keyframes breathe-ring { 0%, 100% { transform: scale(0.6); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.15; } }
+.schedule-layout { padding: 16px 20px; }
+.schedule-list { display: flex; flex-direction: column; gap: 10px; }
+.schedule-card { background: rgba(255,255,255,0.04); border: 1px solid var(--c-border); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: background 0.15s; }
+.schedule-card:hover { background: rgba(255,255,255,0.06); }
+.schedule-card.expanded { border-color: var(--c-accent); background: rgba(255,255,255,0.05); }
+.schedule-header { display: flex; justify-content: space-between; align-items: baseline; }
+.schedule-name { font-size: 0.85rem; font-weight: bold; color: var(--c-text); }
+.schedule-time { font-size: 0.65rem; color: var(--c-text-dim); white-space: nowrap; }
+.schedule-loc { font-size: 0.65rem; color: var(--c-accent); margin-top: 2px; }
+.schedule-body { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--c-border); }
+.schedule-content { font-size: 0.75rem; color: var(--c-text-dim); line-height: 1.6; }
 .map-legend { position: absolute; top: 8px; left: 8px; z-index: 6; background: rgba(255,255,255,0.85); padding: 6px 10px; border-radius: 4px; display: flex; flex-direction: column; gap: 4px; }
 .map-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.65rem; color: #444; }
 .map-legend-line { display: inline-block; width: 20px; height: 3px; border-radius: 2px; }
