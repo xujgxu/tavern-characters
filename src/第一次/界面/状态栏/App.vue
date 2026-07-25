@@ -257,7 +257,7 @@
             </div>
             <div class="map-circle-inner"></div>
             <svg class="map-road-lines">
-              <line v-for="(e, i) in mapEdges" :key="'r'+i"
+              <line v-for="(e, i) in roadEdges" :key="'r'+i"
                 :x1="e.x1" :y1="e.y1" :x2="e.x2" :y2="e.y2" />
             </svg>
             <svg class="map-bus-lines">
@@ -516,12 +516,40 @@ const busRoutes: string[][] = [
   ['西山半山别墅区','海平市大型体育中心','文轩书店','海平大学','海平职业技术学院','海平中学','绿洲景苑小区','万家综合超市','西山半山别墅区'],
 ];
 
-const roadEdgeSet = computed(() => {
+const edgeHasBus = computed(() => {
   const s = new Set<string>();
-  for (const [a, neighbors] of Object.entries(roadAdjacency)) {
-    for (const b of neighbors) s.add([a, b].sort().join('|'));
+  for (const route of busRoutes) {
+    for (let i = 0; i < route.length - 1; i++) s.add([route[i], route[i+1]].sort().join('|'));
   }
   return s;
+});
+
+const edgeHasMetro = computed(() => {
+  const s = new Set<string>();
+  for (const route of metroRoutes) {
+    for (let i = 0; i < route.length - 1; i++) s.add([route[i], route[i+1]].sort().join('|'));
+  }
+  return s;
+});
+
+const roadEdges = computed(() => {
+  const edges = [];
+  const seen = new Set<string>();
+  for (const [a, neighbors] of Object.entries(roadAdjacency)) {
+    const p = locMap.value[a];
+    if (!p) continue;
+    for (const b of neighbors) {
+      const q = locMap.value[b];
+      if (!q) continue;
+      const key = [a, b].sort().join('|');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      if (!edgeHasBus.value.has(key) && !edgeHasMetro.value.has(key)) {
+        edges.push({ x1: p.x, y1: p.y, x2: q.x, y2: q.y });
+      }
+    }
+  }
+  return edges;
 });
 
 const busSegments = computed(() => {
@@ -545,6 +573,7 @@ const busSegments = computed(() => {
     }
   }
   for (const [key, routes] of edgeRoutes) {
+    if (edgeHasMetro.value.has(key)) continue;
     routes.sort((ra, rb) => routeCentroidX[ra] - routeCentroidX[rb]);
   }
   for (let ri = 0; ri < busRoutes.length; ri++) {
@@ -553,6 +582,7 @@ const busSegments = computed(() => {
       const a = route[i], b = route[i + 1];
       if (!locMap.value[a] || !locMap.value[b]) continue;
       const key = [a, b].sort().join('|');
+      if (edgeHasMetro.value.has(key)) continue;
       const x1 = locMap.value[a].x, y1 = locMap.value[a].y;
       const x2 = locMap.value[b].x, y2 = locMap.value[b].y;
       if (seen.has(key)) continue;
