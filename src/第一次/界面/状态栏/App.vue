@@ -413,11 +413,16 @@ const metroSegments = computed(() => {
           if (yd > xd) return (busCentroidY[ra] ?? 0) - (busCentroidY[rb] ?? 0);
           return (busCentroidX[ra] ?? 0) - (busCentroidX[rb] ?? 0);
         });
+        let useMetroY = false;
+        if (busIdx.length > 1) {
+          const yd = Math.abs((busCentroidY[busIdx[0]] ?? 0) - (busCentroidY[busIdx[1]] ?? 0));
+          const xd = Math.abs((busCentroidX[busIdx[0]] ?? 0) - (busCentroidX[busIdx[1]] ?? 0));
+          useMetroY = yd > xd;
+        }
         const base = segs.length;
         if (hasBus && hasRoad) {
           const dx = (x2 - x1) / 6, dy = (y2 - y1) / 6;
-          const useY = Math.abs(y2 - y1) > Math.abs(x2 - x1);
-          const firstGetsSmall = useY ? (y1 <= y2) : (x1 <= x2);
+          const firstGetsSmall = useMetroY ? (y1 <= y2) : (x1 <= x2);
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri], triggerRoute: firstGetsSmall ? busIdx[0] : (busIdx[1] ?? busIdx[0]) });
           segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#4a4', busRoutes: [...busIdx], metroRoutes: [ri] });
           segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#444', busRoutes: [...busIdx], metroRoutes: [ri] });
@@ -427,8 +432,7 @@ const metroSegments = computed(() => {
           seen.set(key, { start: base, count: 6 });
         } else if (hasBus) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-          const useY = Math.abs(y2 - y1) > Math.abs(x2 - x1);
-          const firstGetsSmall = useY ? (y1 <= y2) : (x1 <= x2);
+          const firstGetsSmall = useMetroY ? (y1 <= y2) : (x1 <= x2);
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: [...busIdx], metroRoutes: [ri] });
           segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri], triggerRoute: firstGetsSmall ? busIdx[0] : (busIdx[1] ?? busIdx[0]) });
           segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: [...busIdx], metroRoutes: [ri] });
@@ -609,6 +613,7 @@ const busSegments = computed(() => {
       if (!er.includes(ri)) er.push(ri);
     }
   }
+  const edgeSortY = new Map<string, boolean>();
   for (const [key, routes] of edgeRoutes) {
     if (edgeHasMetro.value.has(key)) continue;
     if (routes.length <= 1) continue;
@@ -619,6 +624,7 @@ const busSegments = computed(() => {
       if (cy < yMin) yMin = cy; if (cy > yMax) yMax = cy;
     }
     const useY = (yMax - yMin) > (xMax - xMin);
+    edgeSortY.set(key, useY);
     routes.sort((ra, rb) => useY ? (routeCentroidY[ra] ?? 0) - (routeCentroidY[rb] ?? 0) : (routeCentroidX[ra] ?? 0) - (routeCentroidX[rb] ?? 0));
   }
   for (let ri = 0; ri < busRoutes.length; ri++) {
@@ -636,7 +642,7 @@ const busSegments = computed(() => {
         const base = segs.length;
         seen.set(key, base / 4);
         const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
-        const useY = Math.abs(y2 - y1) > Math.abs(x2 - x1);
+        const useY = edgeSortY.get(key) ?? false;
         const firstGetsSmall = useY ? (y1 <= y2) : (x1 <= x2);
         segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [...er], metroRoutes: [], triggerRoute: firstGetsSmall ? er[0] : (er[1] ?? er[0]) });
         segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [...er], metroRoutes: [], triggerRoute: -1 });
