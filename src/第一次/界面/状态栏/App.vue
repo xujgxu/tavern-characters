@@ -286,7 +286,12 @@
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color" />
             </svg>
+            <svg class="map-breathe-lines" v-if="currentRoadEdge">
+              <line :x1="currentRoadEdge.x1" :y1="currentRoadEdge.y1"
+                    :x2="currentRoadEdge.x2" :y2="currentRoadEdge.y2" />
+            </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
+              :class="{ 'breathing': l.name === currentLocName }"
               :style="{ left: l.x + 'px', top: l.y + 'px' }"
               :title="l.name">
               <span class="map-dot-label" :style="labelStyle(l)">{{ l.name }}</span>
@@ -1014,6 +1019,36 @@ const locationLabel = computed(() => {
   const detail = parts.length > 1 ? parts.slice(1).join('_') : parts[0];
   return detail.replace(/_/g, ' ');
 });
+
+const currentLocName = computed(() => {
+  const raw = store.data.世界.地点 || '';
+  // Try exact match or partial match with locations
+  for (const l of locations) {
+    if (raw.includes(l.name)) return l.name;
+  }
+  return '';
+});
+
+const currentRoadEdge = computed(() => {
+  const raw = store.data.世界.地点 || '';
+  if (!raw.includes('->') && !raw.includes('→')) return null;
+  const parts = raw.split(/->|→/);
+  if (parts.length < 2) return null;
+  const from = parts[0].trim(), to = parts[1].trim();
+  const pFrom = locMap.value[from];
+  const pTo = locMap.value[to];
+  if (pFrom && pTo) return { x1: pFrom.x, y1: pFrom.y, x2: pTo.x, y2: pTo.y };
+  // Try partial match
+  for (const l of locations) {
+    if (from.includes(l.name)) {
+      if (pTo) return { x1: l.x, y1: l.y, x2: pTo.x, y2: pTo.y };
+      for (const m of locations) {
+        if (to.includes(m.name)) return { x1: l.x, y1: l.y, x2: m.x, y2: m.y };
+      }
+    }
+  }
+  return null;
+});
 </script>
 
 <style lang="scss" scoped>
@@ -1170,6 +1205,13 @@ const locationLabel = computed(() => {
 .map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 6; }
 .map-highlight-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
 .map-highlight-lines line { stroke-width: 6; }
+.map-breathe-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; }
+.map-breathe-lines line { stroke: #f8a; stroke-width: 3; opacity: 0.7; animation: breathe-glow 1.5s ease-in-out infinite; }
+.map-dot.breathing { animation: breathe-pulse 1.5s ease-in-out infinite; }
+.map-dot.breathing::after { content: ''; position: absolute; width: 28px; height: 28px; left: -10px; top: -10px; border-radius: 50%; border: 2px solid #f8a; background: rgba(255,136,170,0.2); animation: breathe-ring 1.5s ease-in-out infinite; }
+@keyframes breathe-glow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.9; } }
+@keyframes breathe-pulse { 0%, 100% { box-shadow: 0 0 4px 2px rgba(255,136,170,0.3); } 50% { box-shadow: 0 0 12px 6px rgba(255,136,170,0.7); } }
+@keyframes breathe-ring { 0%, 100% { transform: scale(0.6); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.15; } }
 .map-legend { position: absolute; top: 8px; left: 8px; z-index: 6; background: rgba(255,255,255,0.85); padding: 6px 10px; border-radius: 4px; display: flex; flex-direction: column; gap: 4px; }
 .map-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.65rem; color: #444; }
 .map-legend-line { display: inline-block; width: 20px; height: 3px; border-radius: 2px; }
