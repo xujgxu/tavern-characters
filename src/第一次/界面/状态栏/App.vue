@@ -377,9 +377,9 @@ const metroSegments = computed(() => {
         } else if (hasBus) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
           segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
-          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
+          segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri] });
           segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#4a4', busRoutes: E(), metroRoutes: [ri] });
-          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#d44', busRoutes: [...busIdx], metroRoutes: E() });
+          segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#d44', busRoutes: [...busIdx], metroRoutes: [ri] });
           seen.set(key, { start: base, count: 4 });
         } else if (hasRoad) {
           const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
