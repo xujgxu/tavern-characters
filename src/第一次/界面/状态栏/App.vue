@@ -622,13 +622,13 @@ const busSegments = computed(() => {
   return segs;
 });
 
-function onMetroSegEnter(s: { busRoutes: number[]; metroRoutes: number[]; triggerRoute?: number }) {
-  if (s.busRoutes.length) {
-    hoveredBusRoute.value = s.triggerRoute ?? s.busRoutes[0];
-    hoveredMetroRoute.value = -1;
-  } else if (s.metroRoutes.length) {
+function onMetroSegEnter(s: { color: string; busRoutes: number[]; metroRoutes: number[]; triggerRoute?: number }) {
+  if (s.color === '#4a4' && s.metroRoutes.length) {
     hoveredMetroRoute.value = s.metroRoutes[0];
     hoveredBusRoute.value = -1;
+  } else if (s.color === '#d44' && s.busRoutes.length) {
+    hoveredBusRoute.value = s.triggerRoute ?? s.busRoutes[0];
+    hoveredMetroRoute.value = -1;
   }
 }
 
