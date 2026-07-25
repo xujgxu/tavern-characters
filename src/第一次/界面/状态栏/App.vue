@@ -305,7 +305,7 @@
           <template v-for="group in sortedScheduleGroups" :key="group.date">
             <div class="schedule-date">{{ group.date }}</div>
             <div class="schedule-card" v-for="(event, i) in group.events" :key="i"
-              :class="{ expanded: expandedSchedule === `${group.date}_${i}` }"
+              :class="[eventStatus(event), { expanded: expandedSchedule === `${group.date}_${i}` }]"
               @click="expandedSchedule = expandedSchedule === `${group.date}_${i}` ? '' : `${group.date}_${i}`">
               <div class="schedule-header">
                 <span class="schedule-name">{{ event.名称 }}</span>
@@ -354,6 +354,22 @@ interface ScheduleEvent {
   时间?: string;
   地点?: string;
   内容: string;
+  完成: boolean;
+}
+
+const todayDate = computed(() => {
+  const t = store.data.世界.时间 || '';
+  const m = t.match(/(\d{4})[-年](\d{1,2})[-月](\d{1,2})/);
+  if (m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  return '';
+});
+
+function eventStatus(e: ScheduleEvent): 'missed' | 'today' | 'done' | 'upcoming' {
+  if (e.完成) return 'done';
+  if (!todayDate.value) return 'upcoming';
+  if (e.日期 < todayDate.value) return 'missed';
+  if (e.日期 === todayDate.value) return 'today';
+  return 'upcoming';
 }
 
 const schedules = ref<ScheduleEvent[]>([
@@ -363,6 +379,7 @@ const schedules = ref<ScheduleEvent[]>([
       时间: '8:00-17:00',
       地点: '海平大学行政楼',
       内容: '开学第一天，今天要去学校报道呢，得好好收拾一下，把该带的都带上。身份证和录取通知书应该都放在文件袋里了，准考证也得翻出来。听学姐说行政楼就在北门进去右手边，希望不会迷路。',
+      完成: false,
     },
 ]);
 
@@ -370,6 +387,8 @@ const sortedScheduleGroups = computed(() => {
   const groups: { date: string; events: ScheduleEvent[] }[] = [];
   const map = new Map<string, ScheduleEvent[]>();
   for (const e of schedules.value) {
+    // Skip missed events from previous days
+    if (eventStatus(e) === 'missed') continue;
     if (!map.has(e.日期)) map.set(e.日期, []);
     map.get(e.日期)!.push(e);
   }
@@ -377,7 +396,12 @@ const sortedScheduleGroups = computed(() => {
     events.sort((a, b) => (a.时间 || '').localeCompare(b.时间 || ''));
     groups.push({ date, events });
   }
-  groups.sort((a, b) => a.date.localeCompare(b.date));
+  groups.sort((a, b) => {
+    const aDone = a.events.every(e => e.完成);
+    const bDone = b.events.every(e => e.完成);
+    if (aDone !== bDone) return aDone ? 1 : -1;
+    return a.date.localeCompare(b.date);
+  });
   return groups;
 });
 
@@ -1269,7 +1293,9 @@ const currentRoadEdge = computed(() => {
 .schedule-layout { padding: 16px 20px; }
 .schedule-list { display: flex; flex-direction: column; gap: 10px; }
 .schedule-date { font-size: 0.75rem; font-weight: bold; color: var(--c-accent); padding: 4px 0; border-bottom: 1px solid var(--c-border); margin-bottom: 2px; }
-.schedule-card { background: rgba(255,255,255,0.04); border: 1px solid var(--c-border); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: background 0.15s; }
+.schedule-card.today { border-color: #5badd4; background: rgba(91,173,212,0.08); }
+.schedule-card.missed { border-color: #e87373; background: rgba(232,115,115,0.08); }
+.schedule-card.done { border-color: #73c873; background: rgba(115,200,115,0.08); }
 .schedule-card:hover { background: rgba(255,255,255,0.06); }
 .schedule-card.expanded { border-color: var(--c-accent); background: rgba(255,255,255,0.05); }
 .schedule-header { display: flex; justify-content: space-between; align-items: baseline; }
