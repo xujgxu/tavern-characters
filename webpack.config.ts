@@ -190,7 +190,11 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
 
   return (_env, argv) => ({
     experiments: {
+<<<<<<< HEAD
       outputModule: entry.html === undefined,
+=======
+      outputModule: true,
+>>>>>>> ff2bba6705f6e8d4882c9919916e7111f4f71dea
     },
     devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
     watchOptions: {
@@ -220,7 +224,13 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       asyncChunks: true,
       clean: true,
       publicPath: '',
+<<<<<<< HEAD
       ...((entry.html === undefined) ? { library: { type: 'module' } } : {}),
+=======
+      library: {
+        type: 'module',
+      },
+>>>>>>> ff2bba6705f6e8d4882c9919916e7111f4f71dea
     },
     module: {
       rules: [
@@ -422,7 +432,11 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
           new HtmlWebpackPlugin({
             template: path.join(import.meta.dirname, entry.html),
             filename: path.parse(entry.html).base,
+<<<<<<< HEAD
             scriptLoading: 'defer',
+=======
+            scriptLoading: 'module',
+>>>>>>> ff2bba6705f6e8d4882c9919916e7111f4f71dea
             cache: false,
           }),
           new HtmlInlineScriptWebpackPlugin(),
@@ -438,6 +452,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
         { apply: watch_tavern_helper },
         { apply: schema_dump },
         { apply: tavern_sync },
+<<<<<<< HEAD
         {
           apply(compiler: webpack.Compiler) {
             compiler.hooks.emit.tap('strip_head', (compilation) => {
@@ -452,6 +467,8 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
             });
           }
         },
+=======
+>>>>>>> ff2bba6705f6e8d4882c9919916e7111f4f71dea
         new VueLoaderPlugin(),
         unpluginAutoImport({
           dts: true,
@@ -565,6 +582,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
         vue: 'Vue',
         'vue-router': 'VueRouter',
         yaml: 'YAML',
+<<<<<<< HEAD
       };
       if (request in global) {
         const g = global[request as keyof typeof global];
@@ -572,13 +590,33 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       }
       if (request === 'pinia' || request.includes('pinia')) {
         return callback();
+=======
+        zod: 'z',
+      };
+      if (request in global) {
+        return callback(null, 'var ' + global[request as keyof typeof global]);
+>>>>>>> ff2bba6705f6e8d4882c9919916e7111f4f71dea
       }
       const cdn = {
         sass: 'https://jspm.dev/sass',
       };
+<<<<<<< HEAD
       return callback(
         null,
         'module-import ' + (cdn[request as keyof typeof cdn] ?? `https://testingcf.jsdelivr.net/npm/${request}/+esm`),
+=======
+      const package_json = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'package.json'), 'utf-8')) as {
+        dependencies?: Record<string, string>;
+        devDependencies?: Record<string, string>;
+      };
+      const package_versions = { ...package_json.devDependencies, ...package_json.dependencies };
+      const version = package_versions[request]?.replace(/^[~^]/, '');
+      const versioned_request = /^[.\d]+$/.test(version) ? `${request}@${version}` : request;
+      return callback(
+        null,
+        'module-import ' +
+          (cdn[request as keyof typeof cdn] ?? `https://testingcf.jsdelivr.net/npm/${versioned_request}/+esm`),
+>>>>>>> ff2bba6705f6e8d4882c9919916e7111f4f71dea
       );
     },
   });
