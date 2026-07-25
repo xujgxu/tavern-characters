@@ -532,6 +532,14 @@ const edgeHasMetro = computed(() => {
   return s;
 });
 
+const roadEdgeSet = computed(() => {
+  const s = new Set<string>();
+  for (const [a, neighbors] of Object.entries(roadAdjacency)) {
+    for (const b of neighbors) s.add([a, b].sort().join('|'));
+  }
+  return s;
+});
+
 const roadEdges = computed(() => {
   const edges = [];
   const seen = new Set<string>();
