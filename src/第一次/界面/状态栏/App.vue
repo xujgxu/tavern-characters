@@ -292,8 +292,13 @@
 
       <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app' && activeTab !== 'contacts' && activeTab !== 'clothes' && activeTab !== 'map'">
         <div class="placeholder-text">{{ activeTabName }} — 待开发</div>
-      </div>
-    </div>
+          </div>
+          <div class="map-legend">
+            <div class="map-legend-item"><span class="map-legend-line" style="background:#444"></span>道路</div>
+            <div class="map-legend-item"><span class="map-legend-line" style="background:#d44"></span>公交</div>
+            <div class="map-legend-item"><span class="map-legend-line" style="background:#4a4"></span>地铁</div>
+          </div>
+        </div>
   </div>
 </template>
 
@@ -1130,6 +1135,9 @@ const locationLabel = computed(() => {
 .map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 6; }
 .map-highlight-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
 .map-highlight-lines line { stroke-width: 6; }
+.map-legend { position: absolute; top: 8px; left: 8px; z-index: 6; background: rgba(255,255,255,0.85); padding: 6px 10px; border-radius: 4px; display: flex; flex-direction: column; gap: 4px; }
+.map-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.65rem; color: #444; }
+.map-legend-line { display: inline-block; width: 20px; height: 3px; border-radius: 2px; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
