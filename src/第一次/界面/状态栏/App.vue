@@ -264,7 +264,7 @@
               <line v-for="(s, i) in busSegments" :key="'b'+i"
                 :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
                 :stroke="s.color"
-                :class="{ 'bus-hover': s.color === '#d44' && s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0 }"
+                :class="{ 'bus-hover': s.busRoutes.includes(hoveredBusRoute) && hoveredBusRoute >= 0 }"
                 @mouseenter.prevent="s.color === '#d44' && (hoveredBusRoute = s.busRoutes[0], hoveredMetroRoute = -1)"
                 @mouseleave="hoveredBusRoute = -1" />
             </svg>
@@ -509,10 +509,7 @@ const busSegments = computed(() => {
       if (seen.has(key)) {
         const idx = seen.get(key)!;
         if (roadEdgeSet.value.has(key)) {
-          const reds = [idx * 4, idx * 4 + 2];
-          for (const p of reds) {
-            if (!segs[p].busRoutes.includes(ri)) { segs[p].busRoutes.push(ri); break; }
-          }
+          for (let s = 0; s < 4; s++) segs[idx * 4 + s].busRoutes.push(ri);
         } else {
           segs[idx].busRoutes.push(ri);
         }
@@ -522,7 +519,7 @@ const busSegments = computed(() => {
         const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
         segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [ri], metroRoutes: [] });
         segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [ri], metroRoutes: [] });
-        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [], metroRoutes: [] });
+        segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [ri], metroRoutes: [] });
         segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: [ri], metroRoutes: [] });
       } else {
         seen.set(key, segs.length);
