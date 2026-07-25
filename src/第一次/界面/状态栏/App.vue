@@ -528,7 +528,7 @@ const busSegments = computed(() => {
   const segs: { x1: number; y1: number; x2: number; y2: number; color: string; busRoutes: number[]; metroRoutes: number[]; triggerRoute: number }[] = [];
   const seen = new Map<string, number>();
   const triggerOverrides: Record<string, Record<number, number>> = {
-    '文轩书店|海平大学': { 3: 0, 0: 2 },
+    '文轩书店|海平大学': { 3: 2, 0: 0 },
   };
   for (let ri = 0; ri < busRoutes.length; ri++) {
     const route = busRoutes[ri];
