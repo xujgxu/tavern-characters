@@ -1034,13 +1034,13 @@ const locationLabel = computed(() => {
 .map-dot-label { position: absolute; left: 10px; top: -6px; font-size: 0.6rem; white-space: nowrap; color: #444; pointer-events: none; line-height: 1.2; }
 .map-road-lines, .map-bus-lines, .map-metro-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .map-road-lines { z-index: 2; }
-.map-road-lines line { stroke: #444; stroke-width: 2; }
+.map-road-lines line { stroke: #444; stroke-width: 3; }
 .map-bus-lines { z-index: 3; }
-.map-bus-lines line { stroke-width: 2; pointer-events: stroke; }
-.map-bus-lines line.bus-hover, .map-metro-lines line.bus-hover { stroke: #d44 !important; stroke-width: 4; }
+.map-bus-lines line { stroke-width: 3; pointer-events: stroke; }
+.map-bus-lines line.bus-hover, .map-metro-lines line.bus-hover { stroke: #d44 !important; stroke-width: 5; }
 .map-metro-lines { z-index: 4; }
-.map-metro-lines line { stroke-width: 2; pointer-events: stroke; }
-.map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 4; }
+.map-metro-lines line { stroke-width: 3; pointer-events: stroke; }
+.map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 5; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
