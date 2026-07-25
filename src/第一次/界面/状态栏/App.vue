@@ -276,6 +276,11 @@
                 @mouseenter.prevent="onMetroSegEnter(s)"
                 @mouseleave="hoveredBusRoute = -1; hoveredMetroRoute = -1" />
             </svg>
+            <svg class="map-highlight-lines" v-if="highlightedSegments.length">
+              <line v-for="(s, i) in highlightedSegments" :key="'h'+i"
+                :x1="s.x1" :y1="s.y1" :x2="s.x2" :y2="s.y2"
+                :stroke="s.color" />
+            </svg>
             <div class="map-dot" v-for="l in locations" :key="l.name"
               :style="{ left: l.x + 'px', top: l.y + 'px' }"
               :title="l.name">
@@ -313,6 +318,30 @@ const contactMsg = ref('');
 
 const hoveredBusRoute = ref(-1);
 const hoveredMetroRoute = ref(-1);
+
+const highlightedSegments = computed(() => {
+  const segs: { x1: number; y1: number; x2: number; y2: number; color: string }[] = [];
+  if (hoveredBusRoute.value >= 0) {
+    for (const s of busSegments.value) {
+      if (s.busRoutes.includes(hoveredBusRoute.value)) {
+        segs.push({ x1: s.x1, y1: s.y1, x2: s.x2, y2: s.y2, color: '#d44' });
+      }
+    }
+    for (const s of metroSegments.value) {
+      if (s.busRoutes.includes(hoveredBusRoute.value)) {
+        segs.push({ x1: s.x1, y1: s.y1, x2: s.x2, y2: s.y2, color: '#d44' });
+      }
+    }
+  }
+  if (hoveredMetroRoute.value >= 0) {
+    for (const s of metroSegments.value) {
+      if (s.metroRoutes.includes(hoveredMetroRoute.value)) {
+        segs.push({ x1: s.x1, y1: s.y1, x2: s.x2, y2: s.y2, color: '#4a4' });
+      }
+    }
+  }
+  return segs;
+});
 
 const metroRoutes: string[][] = [
   ['海平大学','极乐世界娱乐城','海平湾公共海滩','海滨梦幻游乐园','水云间洗浴中心','远大电子装配厂','工友平价大排档','海平轻纺制造厂','西山半山别墅区','海平市大型体育中心','文轩书店','海平大学'],
@@ -1041,6 +1070,8 @@ const locationLabel = computed(() => {
 .map-metro-lines { z-index: 4; }
 .map-metro-lines line { stroke-width: 3; pointer-events: stroke; }
 .map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 6; }
+.map-highlight-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+.map-highlight-lines line { stroke-width: 6; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
