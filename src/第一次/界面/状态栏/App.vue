@@ -497,7 +497,7 @@ const roadEdgeSet = computed(() => {
 
 const busSegments = computed(() => {
   const segs: { x1: number; y1: number; x2: number; y2: number; color: string; busRoutes: number[]; metroRoutes: number[] }[] = [];
-  const seen = new Map<string, { base: number; slot: number }>();
+  const seen = new Map<string, number>();
   for (let ri = 0; ri < busRoutes.length; ri++) {
     const route = busRoutes[ri];
     for (let i = 0; i < route.length - 1; i++) {
@@ -507,28 +507,25 @@ const busSegments = computed(() => {
       const x1 = locMap.value[a].x, y1 = locMap.value[a].y;
       const x2 = locMap.value[b].x, y2 = locMap.value[b].y;
       if (seen.has(key)) {
-        const info = seen.get(key)!;
+        const idx = seen.get(key)!;
         if (roadEdgeSet.value.has(key)) {
-          if (info.slot < 2) {
-            const idx = info.base + (info.slot === 0 ? 0 : 2);
-            segs[idx].busRoutes = [ri];
-            info.slot++;
-          } else {
-            for (let s = 0; s < 4; s += 2) segs[info.base + s].busRoutes.push(ri);
+          const reds = [idx, idx + 2];
+          for (const p of reds) {
+            if (!segs[p].busRoutes.includes(ri)) { segs[p].busRoutes.push(ri); break; }
           }
         } else {
-          segs[info.base].busRoutes.push(ri);
+          segs[idx].busRoutes.push(ri);
         }
       } else if (roadEdgeSet.value.has(key)) {
         const base = segs.length;
-        seen.set(key, { base, slot: 1 });
+        seen.set(key, base / 4);
         const dx = (x2 - x1) / 4, dy = (y2 - y1) / 4;
         segs.push({ x1, y1, x2: x1+dx, y2: y1+dy, color: '#d44', busRoutes: [ri], metroRoutes: [] });
-        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [], metroRoutes: [] });
+        segs.push({ x1: x1+dx, y1: y1+dy, x2: x1+2*dx, y2: y1+2*dy, color: '#444', busRoutes: [ri], metroRoutes: [] });
         segs.push({ x1: x1+2*dx, y1: y1+2*dy, x2: x1+3*dx, y2: y1+3*dy, color: '#d44', busRoutes: [], metroRoutes: [] });
-        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: [], metroRoutes: [] });
+        segs.push({ x1: x1+3*dx, y1: y1+3*dy, x2, y2, color: '#444', busRoutes: [ri], metroRoutes: [] });
       } else {
-        seen.set(key, { base: segs.length, slot: 1 });
+        seen.set(key, segs.length);
         segs.push({ x1, y1, x2, y2, color: '#d44', busRoutes: [ri], metroRoutes: [] });
       }
     }
@@ -1043,10 +1040,10 @@ const locationLabel = computed(() => {
 .map-road-lines line { stroke: #444; stroke-width: 3; }
 .map-bus-lines { z-index: 3; }
 .map-bus-lines line { stroke-width: 3; pointer-events: stroke; }
-.map-bus-lines line.bus-hover, .map-metro-lines line.bus-hover { stroke: #d44 !important; stroke-width: 5; }
+.map-bus-lines line.bus-hover, .map-metro-lines line.bus-hover { stroke: #d44 !important; stroke-width: 6; }
 .map-metro-lines { z-index: 4; }
 .map-metro-lines line { stroke-width: 3; pointer-events: stroke; }
-.map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 5; }
+.map-metro-lines line.metro-hover { stroke: #4a4 !important; stroke-width: 6; }
 .map-wrapper { padding: 12px; color: #333; font-size: 0.8rem; }
 .placeholder {
   padding: 30px 16px;
