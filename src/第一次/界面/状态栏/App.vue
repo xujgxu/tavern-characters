@@ -301,21 +301,24 @@
       </div>
 
       <div class="tab-content schedule-layout" v-else-if="activeTab === 'schedule'">
-        <div class="schedule-list">
-          <div class="schedule-card" v-for="(event, i) in sortedSchedules" :key="i"
-            :class="{ expanded: expandedSchedule === i }"
-            @click="expandedSchedule = expandedSchedule === i ? -1 : i">
-            <div class="schedule-header">
-              <span class="schedule-name">{{ event.名称 }}</span>
-              <span class="schedule-time">{{ event.日期 }}{{ event.时间 ? ' ' + event.时间 : '' }}</span>
+        <div class="schedule-list" v-if="sortedScheduleGroups.length">
+          <template v-for="group in sortedScheduleGroups" :key="group.date">
+            <div class="schedule-date">{{ group.date }}</div>
+            <div class="schedule-card" v-for="(event, i) in group.events" :key="i"
+              :class="{ expanded: expandedSchedule === `${group.date}_${i}` }"
+              @click="expandedSchedule = expandedSchedule === `${group.date}_${i}` ? '' : `${group.date}_${i}`">
+              <div class="schedule-header">
+                <span class="schedule-name">{{ event.名称 }}</span>
+                <span class="schedule-time" v-if="event.时间">{{ event.时间 }}</span>
+              </div>
+              <div class="schedule-loc" v-if="event.地点">{{ event.地点 }}</div>
+              <div class="schedule-body" v-if="expandedSchedule === `${group.date}_${i}`">
+                <div class="schedule-content">{{ event.内容 }}</div>
+              </div>
             </div>
-            <div class="schedule-loc" v-if="event.地点">{{ event.地点 }}</div>
-            <div class="schedule-body" v-if="expandedSchedule === i">
-              <div class="schedule-content">{{ event.内容 }}</div>
-            </div>
-          </div>
-          <div class="empty-state" v-if="!sortedSchedules.length">暂无日程</div>
+          </template>
         </div>
+        <div class="empty-state" v-else>暂无日程</div>
       </div>
 
       <div class="tab-content placeholder" v-else-if="activeTab !== 'basic' && activeTab !== 'app' && activeTab !== 'contacts' && activeTab !== 'clothes' && activeTab !== 'map' && activeTab !== 'schedule'">
@@ -343,7 +346,7 @@ const activeTab = ref('basic');
 const selectedTask = ref(-1);
 const selectedContact = ref('');
 const contactMsg = ref('');
-const expandedSchedule = ref(-1);
+const expandedSchedule = ref('');
 
 interface ScheduleEvent {
   名称: string;
@@ -354,21 +357,28 @@ interface ScheduleEvent {
 }
 
 const schedules = ref<ScheduleEvent[]>([
-  {
-    名称: '开学报到',
-    日期: '2024-09-01',
-    时间: '8:00-17:00',
-    地点: '海平大学行政楼',
-    内容: '今天是大学开学的第一天，请前往海平大学行政楼进行新生报到注册。需携带身份证、录取通知书、高考准考证等材料。报到后将领取校园卡、宿舍钥匙和新生入学指南。宿舍安排在绿洲景苑小区旁的大学城学生公寓区。',
-  },
+    {
+      名称: '开学报到',
+      日期: '2024-09-01',
+      时间: '8:00-17:00',
+      地点: '海平大学行政楼',
+      内容: '开学第一天，今天要去学校报道呢，得好好收拾一下，把该带的都带上。身份证和录取通知书应该都放在文件袋里了，准考证也得翻出来。听学姐说行政楼就在北门进去右手边，希望不会迷路。',
+    },
 ]);
 
-const sortedSchedules = computed(() => {
-  return [...schedules.value].sort((a, b) => {
-    const da = a.日期.replace(/-/g, '') + (a.时间?.split('-')[0]?.replace(':', '') || '0000');
-    const db = b.日期.replace(/-/g, '') + (b.时间?.split('-')[0]?.replace(':', '') || '0000');
-    return da.localeCompare(db);
-  });
+const sortedScheduleGroups = computed(() => {
+  const groups: { date: string; events: ScheduleEvent[] }[] = [];
+  const map = new Map<string, ScheduleEvent[]>();
+  for (const e of schedules.value) {
+    if (!map.has(e.日期)) map.set(e.日期, []);
+    map.get(e.日期)!.push(e);
+  }
+  for (const [date, events] of map) {
+    events.sort((a, b) => (a.时间 || '').localeCompare(b.时间 || ''));
+    groups.push({ date, events });
+  }
+  groups.sort((a, b) => a.date.localeCompare(b.date));
+  return groups;
 });
 
 const hoveredBusRoute = ref(-1);
@@ -1258,6 +1268,7 @@ const currentRoadEdge = computed(() => {
 @keyframes breathe-ring { 0%, 100% { transform: scale(0.6); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.15; } }
 .schedule-layout { padding: 16px 20px; }
 .schedule-list { display: flex; flex-direction: column; gap: 10px; }
+.schedule-date { font-size: 0.75rem; font-weight: bold; color: var(--c-accent); padding: 4px 0; border-bottom: 1px solid var(--c-border); margin-bottom: 2px; }
 .schedule-card { background: rgba(255,255,255,0.04); border: 1px solid var(--c-border); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: background 0.15s; }
 .schedule-card:hover { background: rgba(255,255,255,0.06); }
 .schedule-card.expanded { border-color: var(--c-accent); background: rgba(255,255,255,0.05); }
